@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  RouteView.swift
 //  APMapPin
 //
 //  Created by Gary Hamann on 3/22/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MapPinView: View {
+struct RouteView: View {
     @StateObject var vm = CoreData()
     @State var name:String = ""
     var body: some View {
@@ -19,20 +19,20 @@ struct MapPinView: View {
                         .padding()
                 }
                 Button {
-                    if name.count > 0 {vm.addMapPin(name: name)}
+                    if name.count > 0 {vm.addRoute(name: name)}
                 } label: {
                     Text("Add")
                 }
             }
-            Text("Map Pins")
+            Text("Routes")
                 .padding()
                 .font(.headline)
-            ForEach(vm.savedPins.sorted()) {pin in
+            ForEach(vm.savedRoutes.sorted()) {route in
                 HStack{
                     Text("Name:")
-                    Text(pin.Name)
+                    Text(route.Name)
                     Button {
-                        vm.deleteMapPin(mapPin: pin)
+                        vm.deleteRoute(route: route)
                     } label: {
                         Text("Del")
                     }
@@ -42,14 +42,13 @@ struct MapPinView: View {
             .padding(.top,5)
             Spacer()
         }
-        .navigationBarItems(trailing:NavigationLink("Routes",destination: RouteView()))
     }
 }
 
-struct MapPinView_Previews: PreviewProvider {
+struct RouteView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView{
-            MapPinView()
+            RouteView()
         }
         .environmentObject(MapPinViewModel())
     }

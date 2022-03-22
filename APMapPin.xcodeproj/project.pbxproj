@@ -19,6 +19,7 @@
 		91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */; };
 		91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */; };
 		91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */; };
+		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataClass.swift"; sourceTree = "<group>"; };
 		91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteMapPinExtensions.swift; sourceTree = "<group>"; };
+		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				91047EBB27EA2855004B6070 /* MapPinView.swift */,
+				9136D33227EA7FBD00D06F7F /* RouteView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
 				91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */,
 				91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */,
 				91047EC827EA2896004B6070 /* CoreData.swift in Sources */,

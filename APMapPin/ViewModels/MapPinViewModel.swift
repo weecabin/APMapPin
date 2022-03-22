@@ -11,11 +11,14 @@ class MapPinViewModel: ObservableObject{
     // not sure if it's best to expose coredata or use the published variables below
     @Published var coreData:CoreData = CoreData()
     // If I go the following route, I can make the previous line private
-    @Published var pins:[MapPin]?
-    @Published var routes:[Route]?
+//    @Published var pins:[MapPin]?
+//    @Published var routes:[Route]?
     init(){
-        pins = coreData.savedPins
-        routes = coreData.savedRoutes
+//        pins = coreData.savedPins
+//        routes = coreData.savedRoutes
     }
     
+    func addPin(name:String){
+        coreData.addMapPin(name: name)
+    }
 }

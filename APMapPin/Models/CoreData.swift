@@ -59,9 +59,14 @@ extension CoreData{
         }
     }
     
-    func addMapPin(_ mapPin: MapPin) {
+    func addMapPin(name: String) {
         let pin = MapPin(context: container.viewContext)
-        pin.name = mapPin.name
+        pin.name = name
+        savePinData()
+    }
+    
+    func deleteMapPin(mapPin: MapPin){
+        container.viewContext.delete(mapPin)
         savePinData()
     }
     
@@ -114,9 +119,14 @@ extension CoreData{
         }
     }
     
-    func addRoute(_ route: Route){
+    func addRoute(name: String){
         let newRoute = Route(context: container.viewContext)
-        newRoute.name = route.name
+        newRoute.name = name
+        saveRouteData()
+    }
+    
+    func deleteRoute(route: Route){
+        container.viewContext.delete(route)
         saveRouteData()
     }
     
