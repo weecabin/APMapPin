@@ -12,10 +12,10 @@ struct MapPinView: View {
     var body: some View {
         VStack{
             ForEach(mvm.coreData.savedPins.sorted()) {pin in
-                Text(pin.unwrappedName)
+                Text(pin.Name)
             }
             ForEach(mvm.coreData.savedRoutes.sorted()){ route in
-                Text(route.unwrappedName)
+                Text(route.Name)
             }
         }
     }

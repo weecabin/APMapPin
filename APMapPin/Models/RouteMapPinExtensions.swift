@@ -9,10 +9,10 @@ import Foundation
 
 extension MapPin : Comparable{
     public static func < (lhs: MapPin, rhs: MapPin) -> Bool {
-        lhs.unwrappedName < rhs.unwrappedName
+        lhs.Name < rhs.Name
     }
     
-    public var unwrappedName:String{
+    public var Name:String{
         name ?? "Unknown name"
     }
     
@@ -24,10 +24,10 @@ extension MapPin : Comparable{
 
 extension Route : Comparable{
     public static func < (lhs: Route, rhs: Route) -> Bool {
-        lhs.unwrappedName < rhs.unwrappedName
+        lhs.Name < rhs.Name
     }
     
-    public var unwrappedName:String{
+    public var Name:String{
         name ?? "Unknown name"
     }
     
