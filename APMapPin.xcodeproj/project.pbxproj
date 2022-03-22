@@ -8,17 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		91047EBA27EA2855004B6070 /* APMapPinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EB927EA2855004B6070 /* APMapPinApp.swift */; };
-		91047EBC27EA2855004B6070 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EBB27EA2855004B6070 /* ContentView.swift */; };
+		91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EBB27EA2855004B6070 /* MapPinView.swift */; };
 		91047EBE27EA2856004B6070 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91047EBD27EA2856004B6070 /* Assets.xcassets */; };
 		91047EC127EA2856004B6070 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91047EC027EA2856004B6070 /* Preview Assets.xcassets */; };
+		91047EC827EA2896004B6070 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EC727EA2896004B6070 /* CoreData.swift */; };
+		91047ECB27EA29EA004B6070 /* MapPinCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */; };
+		91047ECF27EA2DA5004B6070 /* MapPinViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047ECE27EA2DA5004B6070 /* MapPinViewModel.swift */; };
+		91047EDD27EA2F01004B6070 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047ED927EA2F01004B6070 /* Route+CoreDataClass.swift */; };
+		91047EDE27EA2F01004B6070 /* Route+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDA27EA2F01004B6070 /* Route+CoreDataProperties.swift */; };
+		91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */; };
+		91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */; };
+		91047EE227EA2F44004B6070 /* CoreDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EE127EA2F43004B6070 /* CoreDataExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		91047EB627EA2855004B6070 /* APMapPin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APMapPin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91047EB927EA2855004B6070 /* APMapPinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APMapPinApp.swift; sourceTree = "<group>"; };
-		91047EBB27EA2855004B6070 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		91047EBB27EA2855004B6070 /* MapPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPinView.swift; sourceTree = "<group>"; };
 		91047EBD27EA2856004B6070 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		91047EC027EA2856004B6070 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		91047EC727EA2896004B6070 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
+		91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MapPinCoreData.xcdatamodel; sourceTree = "<group>"; };
+		91047ECE27EA2DA5004B6070 /* MapPinViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPinViewModel.swift; sourceTree = "<group>"; };
+		91047ED927EA2F01004B6070 /* Route+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataClass.swift"; sourceTree = "<group>"; };
+		91047EDA27EA2F01004B6070 /* Route+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Route+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataClass.swift"; sourceTree = "<group>"; };
+		91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		91047EE127EA2F43004B6070 /* CoreDataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +51,10 @@
 		91047EAD27EA2855004B6070 = {
 			isa = PBXGroup;
 			children = (
+				91047ED927EA2F01004B6070 /* Route+CoreDataClass.swift */,
+				91047EDA27EA2F01004B6070 /* Route+CoreDataProperties.swift */,
+				91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */,
+				91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */,
 				91047EB827EA2855004B6070 /* APMapPin */,
 				91047EB727EA2855004B6070 /* Products */,
 			);
@@ -52,7 +72,9 @@
 			isa = PBXGroup;
 			children = (
 				91047EB927EA2855004B6070 /* APMapPinApp.swift */,
-				91047EBB27EA2855004B6070 /* ContentView.swift */,
+				91047ECD27EA2D5A004B6070 /* ViewModels */,
+				91047ECC27EA2D52004B6070 /* Views */,
+				91047ED027EA2E54004B6070 /* Models */,
 				91047EBD27EA2856004B6070 /* Assets.xcassets */,
 				91047EBF27EA2856004B6070 /* Preview Content */,
 			);
@@ -65,6 +87,32 @@
 				91047EC027EA2856004B6070 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		91047ECC27EA2D52004B6070 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				91047EBB27EA2855004B6070 /* MapPinView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		91047ECD27EA2D5A004B6070 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				91047ECE27EA2DA5004B6070 /* MapPinViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		91047ED027EA2E54004B6070 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */,
+				91047EC727EA2896004B6070 /* CoreData.swift */,
+				91047EE127EA2F43004B6070 /* CoreDataExtensions.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +185,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91047EBC27EA2855004B6070 /* ContentView.swift in Sources */,
+				91047EE227EA2F44004B6070 /* CoreDataExtensions.swift in Sources */,
+				91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */,
+				91047EC827EA2896004B6070 /* CoreData.swift in Sources */,
+				91047ECF27EA2DA5004B6070 /* MapPinViewModel.swift in Sources */,
+				91047EDE27EA2F01004B6070 /* Route+CoreDataProperties.swift in Sources */,
+				91047EDD27EA2F01004B6070 /* Route+CoreDataClass.swift in Sources */,
 				91047EBA27EA2855004B6070 /* APMapPinApp.swift in Sources */,
+				91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */,
+				91047ECB27EA29EA004B6070 /* MapPinCoreData.xcdatamodeld in Sources */,
+				91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +395,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */,
+			);
+			currentVersion = 91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */;
+			path = MapPinCoreData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 91047EAE27EA2855004B6070 /* Project object */;
 }
