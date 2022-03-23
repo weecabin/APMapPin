@@ -66,20 +66,27 @@ struct RouteView: View {
                         .border(.black, width: 2)
                         Button(action: {addPinToRoute()}, label: {Text("Add Pin")})
                     }
-                    
-                    List{
-                        ForEach(editRoute!.routePointsArray){point in
-                            HStack{
-                                Text(point.pointPin?.Name ?? "?")
-                                Button(action: {deleteRoutePoint(point: point)},
-                                       label: {Image(systemName: "trash.fill")})
-                                .buttonStyle(.plain)
-                                .frame(width: 40, height: 30)
-                                .background(Color.blue)
+                    VStack{
+                        NavigationView{
+                            List{
+                                ForEach(editRoute!.routePointsArray){point in
+                                    HStack{
+                                        Text(point.pointPin?.Name ?? "?")
+                                        Text("\(point.index)")
+                                        Spacer()
+                                        Button(action: {deleteRoutePoint(point: point)},
+                                               label: {Image(systemName: "trash.fill")})
+                                        .buttonStyle(.plain)
+                                        .frame(width: 40, height: 30)
+                                        .background(Color.blue)
+                                    }
+                                }
+                                .onMove(perform: onMoveRoutePin)
                             }
-                            
+                            .toolbar{EditButton()}
                         }
                     }
+                    
                     Spacer()
                 }
                 .frame(height: 250)
@@ -88,6 +95,10 @@ struct RouteView: View {
         }
         .padding()
         .navigationBarItems(trailing:NavigationLink("RoutePoints",destination: RoutePointView()))
+    }
+    
+    func onMoveRoutePin(from:IndexSet, to:Int){
+        cd.moveRoutePoint(route: editRoute!, from: from.first!, to: to)
     }
     
     func addPinToRoute(){

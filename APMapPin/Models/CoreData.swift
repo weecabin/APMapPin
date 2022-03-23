@@ -68,10 +68,44 @@ extension CoreData{
     }
     
     func deleteRoutePoint(routePoint: RoutePoint){
+        if let count = routePoint.pointRoute?.routePointsArray.count{
+            print("points = \(count)")
+            let deletedIndex = routePoint.index
+            for point in routePoint.pointRoute!.routePointsArray{
+                if point.index > deletedIndex{
+                    point.index = point.index - 1
+                }
+            }
+        }
         container.viewContext.delete(routePoint)
         saveRoutePointData()
     }
     
+    func moveRoutePoint(route:Route, from:Int, to:Int)
+    {
+        let routeArray = route.routePointsArray
+        print(routeArray)
+        print("moving \(from) to \(to)")
+        let movedRoute = routeArray.first(where: {$0.index == from})
+        if from > to{
+            for point in routeArray{
+                if point.index >= to && point.index < from{
+                    point.index = point.index + 1
+                }
+            }
+            movedRoute!.index=Int16(to)
+        }else{
+            for point in routeArray{
+                if point.index > from && point.index < to{
+                    point.index = point.index - 1
+                }
+            }
+            movedRoute!.index=Int16(to-1)
+        }
+        
+        saveRouteData()
+        saveRoutePointData()
+    }
     func deleteRoutePoint(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         let entity = savedRoutePoints[index]
