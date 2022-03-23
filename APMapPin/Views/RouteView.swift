@@ -8,40 +8,95 @@
 import SwiftUI
 
 struct RouteView: View {
-    @StateObject var vm = CoreData()
+    @StateObject var cd = CoreData()
     @State var name:String = ""
+    @State var editRoute:Route?
+    @State var addPinIndex:Int = 0
     var body: some View {
-        VStack(alignment: .leading){
+        VStack{
             VStack{
                 HStack{
                     Text("Name:")
                     TextField("name",text: $name)
-                        .padding()
-                }
-                Button {
-                    if name.count > 0 {vm.addRoute(name: name)}
-                } label: {
-                    Text("Add")
-                }
-            }
-            Text("Routes")
-                .padding()
-                .font(.headline)
-            ForEach(vm.savedRoutes.sorted()) {route in
-                HStack{
-                    Text("Name:")
-                    Text(route.Name)
+                    
                     Button {
-                        vm.deleteRoute(route: route)
+                        if name.count > 0 {cd.addRoute(name: name)}
                     } label: {
-                        Text("Del")
+                        Text("Add")
                     }
                 }
             }
-            .padding(.leading, 10)
-            .padding(.top,5)
+            VStack{
+                Text("Routes")
+                    .font(.headline)
+                List{
+                    ForEach(cd.savedRoutes.sorted()) {route in
+                        HStack{
+                            Text("Name:")
+                            Text(route.Name)
+                            Spacer()
+                            Button(action: {cd.deleteRoute(route: route)},
+                                   label: {Image(systemName: "trash.fill")})
+                            .buttonStyle(.plain)
+                            .frame(width: 40, height: 30)
+                            .background(Color.blue)
+                            Button(action: {editRoute = route},
+                                   label: {Image(systemName: "pencil.circle")})
+                                .buttonStyle(.plain)
+                                .frame(width: 40, height: 30)
+                                .background(Color.blue)
+                        }
+                    }
+                }
+
+            }
+            .frame(height: 250)
+            
+            if editRoute != nil{
+                VStack{
+                    HStack{
+                        Text("Route \(editRoute!.Name)")
+                            .padding()
+                            .font(.headline)
+                        Picker("Pin", selection: $addPinIndex) {
+                            ForEach(0..<cd.savedPins.count, id:\.self){index in
+                                Text(cd.savedPins[index].Name).tag(index)
+                            }
+                        }
+                        .border(.black, width: 2)
+                        Button(action: {addPinToRoute()}, label: {Text("Add Pin")})
+                    }
+                    
+                    List{
+                        ForEach(editRoute!.routePointsArray){point in
+                            HStack{
+                                Text(point.pointPin?.Name ?? "?")
+                                Button(action: {deleteRoutePoint(point: point)},
+                                       label: {Image(systemName: "trash.fill")})
+                                .buttonStyle(.plain)
+                                .frame(width: 40, height: 30)
+                                .background(Color.blue)
+                            }
+                            
+                        }
+                    }
+                    Spacer()
+                }
+                .frame(height: 250)
+            }
             Spacer()
         }
+        .padding()
+        .navigationBarItems(trailing:NavigationLink("RoutePoints",destination: RoutePointView()))
+    }
+    
+    func addPinToRoute(){
+        let pin = cd.savedPins[addPinIndex]
+        cd.addPinToRoute(route: editRoute!, pin: pin)
+    }
+    
+    func deleteRoutePoint(point:RoutePoint){
+        cd.deleteRoutePoint(routePoint: point)
     }
 }
 

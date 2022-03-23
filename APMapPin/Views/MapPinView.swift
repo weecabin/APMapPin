@@ -27,19 +27,23 @@ struct MapPinView: View {
             Text("Map Pins")
                 .padding()
                 .font(.headline)
-            ForEach(vm.savedPins.sorted()) {pin in
-                HStack{
-                    Text("Name:")
-                    Text(pin.Name)
-                    Button {
-                        vm.deleteMapPin(mapPin: pin)
-                    } label: {
-                        Text("Del")
+            List{
+                ForEach(vm.savedPins.sorted()) {pin in
+                    HStack{
+                        Text("Name:")
+                        Text(pin.Name)
+                        Spacer()
+                        Button {
+                            vm.deleteMapPin(mapPin: pin)
+                        } label: {
+                            Text("Del")
+                        }
                     }
                 }
+                .padding(.horizontal, 10)
+                .padding(.top,5)
             }
-            .padding(.leading, 10)
-            .padding(.top,5)
+            
             Spacer()
         }
         .navigationBarItems(trailing:NavigationLink("Routes",destination: RouteView()))

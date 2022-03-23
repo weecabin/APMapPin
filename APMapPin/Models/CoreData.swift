@@ -127,6 +127,11 @@ extension CoreData{
     }
     
     func deleteMapPin(mapPin: MapPin){
+        if mapPin.pinPoints != nil{
+            for point in mapPin.routePointsArray{
+                deleteRoutePoint(routePoint: point)
+            }
+        }
         container.viewContext.delete(mapPin)
         savePinData()
     }
@@ -183,6 +188,15 @@ extension CoreData{
     func addRoute(name: String){
         let newRoute = Route(context: container.viewContext)
         newRoute.name = name
+        saveRouteData()
+    }
+    
+    func addPinToRoute(route: Route, pin: MapPin){
+        let routePoint = RoutePoint(context: container.viewContext)
+        routePoint.name = "Some Name"
+        routePoint.index = Int16(route.routePointsArray.count)
+        routePoint.pointPin = pin
+        route.addToPoints(routePoint)
         saveRouteData()
     }
     

@@ -39,7 +39,7 @@ extension Route : Comparable{
 
 extension RoutePoint : Comparable{
     public static func < (lhs: RoutePoint, rhs: RoutePoint) -> Bool {
-        lhs.Name < rhs.Name
+        lhs.index < rhs.index
     }
     
     public var Name:String{
