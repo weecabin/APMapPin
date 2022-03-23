@@ -87,9 +87,9 @@ struct RouteView: View {
                         }
                     }
                     
-                    Spacer()
+//                    Spacer()
                 }
-                .frame(height: 250)
+//                .frame(height: 250)
             }
             Spacer()
         }

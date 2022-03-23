@@ -38,7 +38,6 @@ extension CoreData{
         } catch let error {
             print("Error fetching. \(error)")
         }
-        //print("\(savedRoutes) route pins fetched")
     }
     
     func initRoutePoints(){
@@ -76,13 +75,13 @@ extension CoreData{
                     point.index = point.index - 1
                 }
             }
+            saveRouteData()
         }
         container.viewContext.delete(routePoint)
         saveRoutePointData()
     }
     
-    func moveRoutePoint(route:Route, from:Int, to:Int)
-    {
+    func moveRoutePoint(route:Route, from:Int, to:Int){
         let routeArray = route.routePointsArray
         print(routeArray)
         print("moving \(from) to \(to)")
@@ -102,10 +101,10 @@ extension CoreData{
             }
             movedRoute!.index=Int16(to-1)
         }
-        
         saveRouteData()
         saveRoutePointData()
-    }
+}
+    
     func deleteRoutePoint(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         let entity = savedRoutePoints[index]
