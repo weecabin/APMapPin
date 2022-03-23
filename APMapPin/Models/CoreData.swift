@@ -14,6 +14,7 @@ class CoreData: ObservableObject {
     let container: NSPersistentContainer
     @Published var savedPins: [MapPin] = []
     @Published var savedRoutes: [Route] = []
+    @Published var savedRoutePoints: [RoutePoint] = []
     init() {
         container = NSPersistentContainer(name: "MapPinCoreData")
         container.loadPersistentStores { (description, error) in
@@ -25,6 +26,66 @@ class CoreData: ObservableObject {
         }
         initPins()
         initRoutes()
+        initRoutePoints()
+    }
+}
+// RoutePoint
+extension CoreData{
+    func fetchRoutePoints(){
+        let request = NSFetchRequest<RoutePoint>(entityName: "RoutePoint")
+        do {
+            savedRoutePoints = try container.viewContext.fetch(request)
+        } catch let error {
+            print("Error fetching. \(error)")
+        }
+        //print("\(savedRoutes) route pins fetched")
+    }
+    
+    func initRoutePoints(){
+        fetchRoutePoints()
+//        deleteAllRoutePoints()
+        if savedRoutePoints.count == 0{
+            for i in (1...5){
+                let route = RoutePoint(context: container.viewContext)
+                route.name = "RP\(i)"
+            }
+            saveRoutePointData()
+        }
+        print("Saved RoutePoints = \(savedRoutePoints.count)")
+    }
+    
+    func deleteAllRoutePoints(){
+        while savedRoutePoints.count > 0{
+            deleteRoutePoint(indexSet:IndexSet(integer: 0))
+            saveRoutePointData()
+        }
+    }
+    
+    func addRoutePoint(name: String){
+        let newRoutePoint = RoutePoint(context: container.viewContext)
+        newRoutePoint.name = name
+        saveRoutePointData()
+    }
+    
+    func deleteRoutePoint(routePoint: RoutePoint){
+        container.viewContext.delete(routePoint)
+        saveRoutePointData()
+    }
+    
+    func deleteRoutePoint(indexSet: IndexSet) {
+        guard let index = indexSet.first else { return }
+        let entity = savedRoutePoints[index]
+        container.viewContext.delete(entity)
+        saveRoutePointData()
+    }
+    
+    func saveRoutePointData() {
+        do {
+            try container.viewContext.save()
+            fetchRoutePoints()
+        } catch let error {
+            print("Error saving. \(error)")
+        }
     }
 }
 

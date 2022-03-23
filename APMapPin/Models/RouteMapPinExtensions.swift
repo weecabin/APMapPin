@@ -16,9 +16,9 @@ extension MapPin : Comparable{
         name ?? "Unknown name"
     }
     
-    public var routeArray: [Route]{
-        let routeSet = routes as? Set<Route> ?? []
-        return routeSet.sorted()
+    public var routePointsArray: [RoutePoint]{
+        let pinPointSet = pinPoints as? Set<RoutePoint> ?? []
+        return pinPointSet.sorted()
     }
 }
 
@@ -31,8 +31,18 @@ extension Route : Comparable{
         name ?? "Unknown name"
     }
     
-    public var mapPinsArray: [MapPin] {
-        let mapPinSet = pins as? Set<MapPin> ?? []
-        return mapPinSet.sorted()
+    public var routePointsArray: [RoutePoint] {
+        let routePointsSet = points as? Set<RoutePoint> ?? []
+        return routePointsSet.sorted()
+    }
+}
+
+extension RoutePoint : Comparable{
+    public static func < (lhs: RoutePoint, rhs: RoutePoint) -> Bool {
+        lhs.Name < rhs.Name
+    }
+    
+    public var Name:String{
+        name ?? "Unknown name"
     }
 }

@@ -17,24 +17,24 @@ extension MapPin {
     }
 
     @NSManaged public var name: String?
-    @NSManaged public var routes: NSSet?
+    @NSManaged public var pinPoints: NSSet?
 
 }
 
-// MARK: Generated accessors for routes
+// MARK: Generated accessors for pinPoints
 extension MapPin {
 
-    @objc(addRoutesObject:)
-    @NSManaged public func addToRoutes(_ value: Route)
+    @objc(addPinPointsObject:)
+    @NSManaged public func addToPinPoints(_ value: RoutePoint)
 
-    @objc(removeRoutesObject:)
-    @NSManaged public func removeFromRoutes(_ value: Route)
+    @objc(removePinPointsObject:)
+    @NSManaged public func removeFromPinPoints(_ value: RoutePoint)
 
-    @objc(addRoutes:)
-    @NSManaged public func addToRoutes(_ values: NSSet)
+    @objc(addPinPoints:)
+    @NSManaged public func addToPinPoints(_ values: NSSet)
 
-    @objc(removeRoutes:)
-    @NSManaged public func removeFromRoutes(_ values: NSSet)
+    @objc(removePinPoints:)
+    @NSManaged public func removeFromPinPoints(_ values: NSSet)
 
 }
 

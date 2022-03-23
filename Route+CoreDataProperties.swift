@@ -17,24 +17,24 @@ extension Route {
     }
 
     @NSManaged public var name: String?
-    @NSManaged public var pins: NSSet?
+    @NSManaged public var points: NSSet?
 
 }
 
-// MARK: Generated accessors for pins
+// MARK: Generated accessors for points
 extension Route {
 
-    @objc(addPinsObject:)
-    @NSManaged public func addToPins(_ value: MapPin)
+    @objc(addPointsObject:)
+    @NSManaged public func addToPoints(_ value: RoutePoint)
 
-    @objc(removePinsObject:)
-    @NSManaged public func removeFromPins(_ value: MapPin)
+    @objc(removePointsObject:)
+    @NSManaged public func removeFromPoints(_ value: RoutePoint)
 
-    @objc(addPins:)
-    @NSManaged public func addToPins(_ values: NSSet)
+    @objc(addPoints:)
+    @NSManaged public func addToPoints(_ values: NSSet)
 
-    @objc(removePins:)
-    @NSManaged public func removeFromPins(_ values: NSSet)
+    @objc(removePoints:)
+    @NSManaged public func removeFromPoints(_ values: NSSet)
 
 }
 

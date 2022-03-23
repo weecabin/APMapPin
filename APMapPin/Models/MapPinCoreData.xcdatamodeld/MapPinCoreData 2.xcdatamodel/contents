@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E230" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="MapPin" representedClassName="MapPin" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="pinPoints" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RoutePoint" inverseName="pointPin" inverseEntity="RoutePoint"/>
+    </entity>
+    <entity name="Route" representedClassName="Route" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RoutePoint" inverseName="pointRoute" inverseEntity="RoutePoint"/>
+    </entity>
+    <entity name="RoutePoint" representedClassName="RoutePoint" syncable="YES">
+        <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="pointPin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MapPin" inverseName="pinPoints" inverseEntity="MapPin"/>
+        <relationship name="pointRoute" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Route" inverseName="points" inverseEntity="Route"/>
+    </entity>
+    <elements>
+        <element name="MapPin" positionX="-63" positionY="-18" width="128" height="59"/>
+        <element name="Route" positionX="-54" positionY="-9" width="128" height="59"/>
+        <element name="RoutePoint" positionX="-54" positionY="18" width="128" height="89"/>
+    </elements>
+</model>

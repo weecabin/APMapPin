@@ -19,6 +19,9 @@
 		91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */; };
 		91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */; };
 		91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */; };
+		911C723A27EAE01000F027DC /* RoutePoint+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723827EAE01000F027DC /* RoutePoint+CoreDataClass.swift */; };
+		911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723927EAE01000F027DC /* RoutePoint+CoreDataProperties.swift */; };
+		911C723D27EAE94500F027DC /* RoutePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723C27EAE94500F027DC /* RoutePointView.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +39,10 @@
 		91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataClass.swift"; sourceTree = "<group>"; };
 		91047EDC27EA2F01004B6070 /* MapPin+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapPin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteMapPinExtensions.swift; sourceTree = "<group>"; };
+		911C723727EADEF400F027DC /* MapPinCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MapPinCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
+		911C723827EAE01000F027DC /* RoutePoint+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoutePoint+CoreDataClass.swift"; sourceTree = "<group>"; };
+		911C723927EAE01000F027DC /* RoutePoint+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoutePoint+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		911C723C27EAE94500F027DC /* RoutePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePointView.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,6 +60,8 @@
 		91047EAD27EA2855004B6070 = {
 			isa = PBXGroup;
 			children = (
+				911C723827EAE01000F027DC /* RoutePoint+CoreDataClass.swift */,
+				911C723927EAE01000F027DC /* RoutePoint+CoreDataProperties.swift */,
 				91047ED927EA2F01004B6070 /* Route+CoreDataClass.swift */,
 				91047EDA27EA2F01004B6070 /* Route+CoreDataProperties.swift */,
 				91047EDB27EA2F01004B6070 /* MapPin+CoreDataClass.swift */,
@@ -96,6 +105,7 @@
 			children = (
 				91047EBB27EA2855004B6070 /* MapPinView.swift */,
 				9136D33227EA7FBD00D06F7F /* RouteView.swift */,
+				911C723C27EAE94500F027DC /* RoutePointView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -189,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
+				911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */,
 				91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */,
 				91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */,
 				91047EC827EA2896004B6070 /* CoreData.swift in Sources */,
@@ -196,8 +207,10 @@
 				91047EDE27EA2F01004B6070 /* Route+CoreDataProperties.swift in Sources */,
 				91047EDD27EA2F01004B6070 /* Route+CoreDataClass.swift in Sources */,
 				91047EBA27EA2855004B6070 /* APMapPinApp.swift in Sources */,
+				911C723D27EAE94500F027DC /* RoutePointView.swift in Sources */,
 				91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */,
 				91047ECB27EA29EA004B6070 /* MapPinCoreData.xcdatamodeld in Sources */,
+				911C723A27EAE01000F027DC /* RoutePoint+CoreDataClass.swift in Sources */,
 				91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,9 +417,10 @@
 		91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				911C723727EADEF400F027DC /* MapPinCoreData 2.xcdatamodel */,
 				91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */,
 			);
-			currentVersion = 91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */;
+			currentVersion = 911C723727EADEF400F027DC /* MapPinCoreData 2.xcdatamodel */;
 			path = MapPinCoreData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
