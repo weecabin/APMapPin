@@ -42,7 +42,7 @@ extension CoreData{
     
     func initRoutePoints(){
         fetchRoutePoints()
-//        deleteAllRoutePoints()
+        //        deleteAllRoutePoints()
         if savedRoutePoints.count == 0{
             for i in (1...5){
                 let route = RoutePoint(context: container.viewContext)
@@ -103,7 +103,7 @@ extension CoreData{
         }
         saveRouteData()
         saveRoutePointData()
-}
+    }
     
     func deleteRoutePoint(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
@@ -135,7 +135,7 @@ extension CoreData{
     
     func initPins(){
         fetchMapPins()
-//        deleteAllMapPins()
+        //        deleteAllMapPins()
         if savedPins.count == 0{
             for i in (1...5){
                 let pin = MapPin(context: container.viewContext)
@@ -200,7 +200,7 @@ extension CoreData{
     
     func initRoutes(){
         fetchRoutes()
-//        deleteAllRoutePins()
+        //        deleteAllRoutePins()
         if savedRoutes.count == 0{
             for i in (1...5){
                 let route = Route(context: container.viewContext)

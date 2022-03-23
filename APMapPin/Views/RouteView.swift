@@ -35,7 +35,7 @@ struct RouteView: View {
                             Text("Name:")
                             Text(route.Name)
                             Spacer()
-                            Button(action: {cd.deleteRoute(route: route)},
+                            Button(action: {deleteRoute(route:route)},
                                    label: {Image(systemName: "trash.fill")})
                             .buttonStyle(.plain)
                             .frame(width: 40, height: 30)
@@ -48,10 +48,10 @@ struct RouteView: View {
                         }
                     }
                 }
-
             }
             .frame(height: 250)
-            
+            Divider()
+                .background(Color.black)
             if editRoute != nil{
                 VStack{
                     HStack{
@@ -86,15 +86,19 @@ struct RouteView: View {
                             .toolbar{EditButton()}
                         }
                     }
-                    
-//                    Spacer()
                 }
-//                .frame(height: 250)
             }
             Spacer()
         }
         .padding()
         .navigationBarItems(trailing:NavigationLink("RoutePoints",destination: RoutePointView()))
+    }
+    
+    func deleteRoute(route:Route){
+        if editRoute == route{
+            editRoute = nil
+        }
+        cd.deleteRoute(route: route)
     }
     
     func onMoveRoutePin(from:IndexSet, to:Int){
