@@ -162,9 +162,11 @@ extension CoreData{
         }
     }
     
-    func addMapPin(name: String) {
+    func addMapPin(name: String, latitude:Double = 30, longitude:Double = -124) {
         let pin = MapPin(context: container.viewContext)
         pin.name = name
+        pin.latitude = latitude
+        pin.longitude = longitude
         savePinData()
     }
     
