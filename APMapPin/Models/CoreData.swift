@@ -11,6 +11,8 @@ import CoreData
 
 class CoreData: ObservableObject {
     
+    static let shared = CoreData()
+    
     let container: NSPersistentContainer
     @Published var savedPins: [MapPin] = []
     @Published var savedRoutes: [Route] = []
@@ -50,7 +52,7 @@ extension CoreData{
             }
             saveRoutePointData()
         }
-        print("Saved RoutePoints = \(savedRoutePoints.count)")
+//        print("Saved RoutePoints = \(savedRoutePoints.count)")
     }
     
     func deleteAllRoutePoints(){
@@ -83,8 +85,8 @@ extension CoreData{
     
     func moveRoutePoint(route:Route, from:Int, to:Int){
         let routeArray = route.routePointsArray
-        print(routeArray)
-        print("moving \(from) to \(to)")
+//        print(routeArray)
+//        print("moving \(from) to \(to)")
         let movedRoute = routeArray.first(where: {$0.index == from})
         if from > to{
             for point in routeArray{
@@ -143,7 +145,7 @@ extension CoreData{
             }
             savePinData()
         }
-        print("Saved Pins = \(savedPins.count)")
+//        print("Saved Pins = \(savedPins.count)")
     }
     
     func deleteAllMapPins(){
@@ -208,7 +210,7 @@ extension CoreData{
             }
             saveRouteData()
         }
-        print("Saved Routes = \(savedRoutes.count)")
+//        print("Saved Routes = \(savedRoutes.count)")
     }
     
     func deleteAllRoutes(){
@@ -226,7 +228,7 @@ extension CoreData{
     
     func addPinToRoute(route: Route, pin: MapPin){
         let routePoint = RoutePoint(context: container.viewContext)
-        routePoint.name = "Some Name"
+        routePoint.name = "RP"
         routePoint.index = Int16(route.routePointsArray.count)
         routePoint.pointPin = pin
         route.addToPoints(routePoint)

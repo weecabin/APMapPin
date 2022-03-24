@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RouteView: View {
-    @StateObject var cd = CoreData()
+    @StateObject var cd = CoreData.shared
     @State var name:String = ""
     @State var editRoute:Route?
     @State var addPinIndex:Int = 0
@@ -24,6 +24,10 @@ struct RouteView: View {
                     } label: {
                         Text("Add")
                     }
+                    .buttonStyle(.plain)
+                    .frame(width: 40, height: 30)
+                    .background(Color.blue)
+                    .cornerRadius(10)
                 }
             }
             VStack{
@@ -40,11 +44,13 @@ struct RouteView: View {
                             .buttonStyle(.plain)
                             .frame(width: 40, height: 30)
                             .background(Color.blue)
+                            .cornerRadius(10)
                             Button(action: {editRoute = route},
                                    label: {Image(systemName: "pencil.circle")})
                                 .buttonStyle(.plain)
                                 .frame(width: 40, height: 30)
                                 .background(Color.blue)
+                                .cornerRadius(10)
                         }
                     }
                 }
@@ -65,6 +71,10 @@ struct RouteView: View {
                         }
                         .border(.black, width: 2)
                         Button(action: {addPinToRoute()}, label: {Text("Add Pin")})
+                            .buttonStyle(.plain)
+                            .frame(width: 80, height: 30)
+                            .background(Color.blue)
+                            .cornerRadius(10)
                     }
                     VStack{
                         NavigationView{
@@ -79,11 +89,13 @@ struct RouteView: View {
                                         .buttonStyle(.plain)
                                         .frame(width: 40, height: 30)
                                         .background(Color.blue)
+                                        .cornerRadius(10)
                                     }
                                 }
                                 .onMove(perform: onMoveRoutePin)
                             }
                             .toolbar{EditButton()}
+                            .navigationBarTitle("Route Pins")
                         }
                     }
                 }

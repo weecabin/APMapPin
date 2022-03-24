@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MapPinView: View {
-    @StateObject var vm = CoreData()
+    @StateObject var vm = CoreData.shared
     @State var name:String = ""
     var body: some View {
         VStack(alignment: .leading){
@@ -23,6 +23,10 @@ struct MapPinView: View {
                 } label: {
                     Text("Add")
                 }
+                .buttonStyle(.plain)
+                .frame(width: 40, height: 30)
+                .background(Color.blue)
+                .cornerRadius(10)
             }
             Text("Map Pins")
                 .padding()
@@ -38,6 +42,10 @@ struct MapPinView: View {
                         } label: {
                             Text("Del")
                         }
+                        .buttonStyle(.plain)
+                        .frame(width: 40, height: 30)
+                        .background(Color.blue)
+                        .cornerRadius(10)
                     }
                 }
                 .padding(.horizontal, 10)
