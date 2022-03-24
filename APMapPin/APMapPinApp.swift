@@ -9,13 +9,11 @@ import SwiftUI
 
 @main
 struct APMapPinApp: App {
-    @StateObject var mvm:MapPinViewModel = MapPinViewModel()
     var body: some Scene {
         WindowGroup {
             NavigationView{
                 MapPinView()
             }
-            .environmentObject(mvm)
         }
     }
 }

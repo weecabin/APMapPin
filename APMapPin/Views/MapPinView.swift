@@ -12,24 +12,50 @@ struct MapPinView: View {
     @State var name:String = ""
     var body: some View {
         VStack(alignment: .leading){
-            VStack{
-                HStack{
-                    Text("Name:")
-                    TextField("name",text: $name)
-                        .padding()
-                }
-                Button {
-                    if name.count > 0 {vm.addMapPin(name: name)}
-                } label: {
-                    Text("Add")
-                }
-                .buttonStyle(.plain)
-                .frame(width: 40, height: 30)
-                .background(Color.blue)
-                .cornerRadius(10)
+            addNewPin
+            editPins
+            Spacer()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink("Routes",destination: RouteView())
             }
+        }
+    }
+}
+
+struct MapPinView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView{
+            MapPinView()
+        }
+        .environmentObject(MapPinViewModel())
+    }
+}
+
+extension MapPinView{
+    var addNewPin : some View{
+        VStack{
+            HStack{
+                Text("Name:")
+                TextField("name",text: $name)
+                    .padding()
+            }
+            Button {
+                if name.count > 0 {vm.addMapPin(name: name)}
+            } label: {
+                Text("Add")
+            }
+            .buttonStyle(.plain)
+            .frame(width: 40, height: 30)
+            .background(Color.blue)
+            .cornerRadius(10)
+        }
+    }
+    
+    var editPins : some View{
+        VStack{
             Text("Map Pins")
-                .padding()
                 .font(.headline)
             List{
                 ForEach(vm.savedPins.sorted()) {pin in
@@ -51,18 +77,6 @@ struct MapPinView: View {
                 .padding(.horizontal, 10)
                 .padding(.top,5)
             }
-            
-            Spacer()
         }
-        .navigationBarItems(trailing:NavigationLink("Routes",destination: RouteView()))
-    }
-}
-
-struct MapPinView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView{
-            MapPinView()
-        }
-        .environmentObject(MapPinViewModel())
     }
 }
