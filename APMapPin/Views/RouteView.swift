@@ -20,6 +20,11 @@ struct RouteView: View {
             if selectedRoute != nil{editRoute}
             Spacer()
         }
+        .onAppear(perform: {
+            if cd.savedRoutes.count > 0{
+                selectedRoute = cd.savedRoutes[0]
+            }
+        })
         .padding()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -27,6 +32,7 @@ struct RouteView: View {
             }
         }
     }
+    
 }
 
 struct RouteView_Previews: PreviewProvider {
@@ -91,20 +97,20 @@ extension RouteView{
     var editRoute: some View{
         VStack{
             HStack{
-                Text("Route \(selectedRoute!.Name)")
-                    .padding()
-                    .font(.headline)
+                Spacer()
+                Text("Select Pin >")
                 Picker("Pin", selection: $pinPickerIndex) {
                     ForEach(0..<cd.savedPins.count, id:\.self){index in
                         Text(cd.savedPins[index].Name).tag(index)
                     }
                 }
                 .border(.black, width: 2)
-                Button(action: {addPinToRoute()}, label: {Text("Add Pin")})
+                Button(action: {addPinToRoute()}, label: {Text("Add")})
                     .buttonStyle(.plain)
-                    .frame(width: 80, height: 30)
+                    .frame(width: 80)
                     .background(Color.blue)
                     .cornerRadius(10)
+                Spacer()
             }
             VStack{
                 NavigationView{
@@ -125,8 +131,9 @@ extension RouteView{
                         .onMove(perform: onMoveRoutePin)
                     }
                     .toolbar{EditButton()}
-                    .navigationTitle("Route Pins")
+                    .navigationTitle("Route \(selectedRoute!.Name)")
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }

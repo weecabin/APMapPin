@@ -62,6 +62,7 @@ extension MapPinView{
                     HStack{
                         Text("Name:")
                         Text(pin.Name)
+                        Text(" (\(vm.countInRoutes(mapPin: pin)))")
                         Spacer()
                         Button {
                             vm.deleteMapPin(mapPin: pin)

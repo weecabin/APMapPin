@@ -148,6 +148,13 @@ extension CoreData{
 //        print("Saved Pins = \(savedPins.count)")
     }
     
+    func countInRoutes(mapPin: MapPin) -> Int{
+        if let pinPoints = mapPin.pinPoints{
+            return pinPoints.count
+        }
+        return 0
+    }
+    
     func deleteAllMapPins(){
         while savedPins.count > 0{
             deleteMapPin(indexSet: IndexSet(integer: 0))
