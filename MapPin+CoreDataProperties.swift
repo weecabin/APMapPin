@@ -16,9 +16,9 @@ extension MapPin {
         return NSFetchRequest<MapPin>(entityName: "MapPin")
     }
 
-    @NSManaged public var name: String?
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
+    @NSManaged public var name: String?
     @NSManaged public var pinPoints: NSSet?
 
 }

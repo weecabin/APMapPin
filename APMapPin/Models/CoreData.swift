@@ -65,6 +65,7 @@ extension CoreData{
     func addRoutePoint(name: String){
         let newRoutePoint = RoutePoint(context: container.viewContext)
         newRoutePoint.name = name
+        newRoutePoint.target = false
         saveRoutePointData()
     }
     

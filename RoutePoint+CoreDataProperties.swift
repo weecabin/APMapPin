@@ -18,6 +18,7 @@ extension RoutePoint {
 
     @NSManaged public var index: Int16
     @NSManaged public var name: String?
+    @NSManaged public var target: Bool
     @NSManaged public var pointPin: MapPin?
     @NSManaged public var pointRoute: Route?
 

@@ -12,6 +12,7 @@ struct RouteView: View {
     @State var name:String = ""
     @State var selectedRoute:Route?
     @State var pinPickerIndex:Int = 0
+    @State var forceUpdate:Int = 0
     var body: some View {
         VStack{
             addNewRoute
@@ -113,13 +114,25 @@ extension RouteView{
                 Spacer()
             }
             VStack{
+                Text("\(String(forceUpdate))")
+                    .hidden()
                 NavigationView{
                     List{
                         ForEach(selectedRoute!.routePointsArray){point in
                             HStack{
                                 Text(point.pointPin?.Name ?? "?")
                                 Text("\(point.index)")
+                                if point.target{
+                                    Image(systemName: "target")
+                                }
                                 Spacer()
+                                Button(action: {targetThisPoint(point: point)},
+                                       label: {Image(systemName: "target")})
+                                .buttonStyle(.plain)
+                                .frame(width: 40, height: 30)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                                
                                 Button(action: {deleteRoutePoint(point: point)},
                                        label: {Image(systemName: "trash.fill")})
                                 .buttonStyle(.plain)
@@ -136,6 +149,21 @@ extension RouteView{
                 .navigationViewStyle(StackNavigationViewStyle())
             }
         }
+    }
+
+    func redraw(){
+        forceUpdate = forceUpdate + 1
+    }
+    
+    func targetThisPoint(point: RoutePoint){
+        for p in point.pointRoute!.routePointsArray{
+            if p == point{
+                p.target = true
+            }else{
+                p.target = false
+            }
+        }
+        redraw()
     }
     
     func deleteRoute(route:Route){
