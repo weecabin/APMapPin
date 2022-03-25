@@ -13,6 +13,9 @@ struct MapView: View {
     @StateObject var cd = CoreData.shared
     @State var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @State var routePickerIndex = 0
+    @State var blinkActivePinTimer:Timer?
+    @State var pinColor:Color = .red
+    @State var initialized:Bool = false
     var body: some View {
         ZStack{
             mapView
@@ -35,7 +38,8 @@ extension MapView{
         Map(coordinateRegion: $region,
             interactionModes: MapInteractionModes.all ,
             showsUserLocation: true,
-            annotationItems: cd.namedRouteArray(name: cd.savedRoutes[routePickerIndex].Name)) { mp in
+            annotationItems: cd.namedRouteArray(name: activeRoute()!.Name)) { mp in
+//            annotationItems: cd.namedRouteArray(name: cd.savedRoutes[routePickerIndex].Name)) { mp in
             MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: mp.pointPin!.latitude, longitude: mp.pointPin!.longitude)) {
                 switch mp.pointPin!.type {
                 case "fish":
@@ -48,7 +52,7 @@ extension MapView{
                     ShallowAnnotationView(label: mp.pointPin!.Name)
                     
                 case "fix":
-                    WaypointAnnotationView(label: "\(mp.pointPin!.Name)-\(mp.index)")
+                    WaypointAnnotationView(label: "\(mp.pointPin!.Name)-\(mp.index)", backColor: mp.target ? pinColor : .clear)
                     
                 default:
                     WaypointAnnotationView(label: mp.pointPin!.Name)
@@ -74,10 +78,22 @@ extension MapView{
 
                     Button {
                         let pin = cd.addMapPin(name: "fix", latitude: region.center.latitude, longitude: region.center.longitude, type: "fix")
-                        cd.addPinToRoute(routeName: cd.savedRoutes[routePickerIndex].Name, pin: pin)
+                        cd.addPinToRoute(routeName: activeRoute()!.Name, pin: pin)
                         print("Adding Pin to Route")
                     } label: {
                         Text("Add Fix")
+                            .buttonStyle(.plain)
+                            .frame(width: 70, height: 30)
+                            .background(.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    Spacer()
+                    
+                    Button {
+                        nextTarget()
+                    } label: {
+                        Text("Next")
                             .buttonStyle(.plain)
                             .frame(width: 70, height: 30)
                             .background(.blue)
@@ -94,6 +110,53 @@ extension MapView{
     }
     
     func initMap(){
-        
+        if !initialized{
+            blinkActivePinTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { Timer in
+                self.blinkPin()
+            }
+            initialized = true
+        }
+    }
+    
+    func nextTarget(){
+        if let route = activeRoute(){
+            for rp in route.routePointsArray{
+                if rp.target{
+                    if rp.index >= route.routePointsArray.count-1{
+                        print("target index = 0")
+                        route.routePointsArray[0].setTarget(enabled: true)
+                    }else{
+                        let index = Int(rp.index + 1)
+                        print("target index = \(index)")
+                        route.routePointsArray[index].setTarget(enabled: true)
+                    }
+                    rp.setTarget(enabled: false)
+                    break
+                }
+            }
+        }
+    }
+    
+    func activeRoute() -> Route?{
+        if cd.savedRoutes.count > 0{
+            return cd.savedRoutes[routePickerIndex]
+        }
+        return nil
+    }
+    
+    func blinkPin(){
+//        print("in blinkPin")
+        switch (pinColor){
+        case .yellow:
+            pinColor = .green
+            break
+        case .green:
+            pinColor = .yellow
+            break
+        default:
+            pinColor = .green
+            break
+        }
+//        print(pinColor)
     }
 }

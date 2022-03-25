@@ -45,4 +45,8 @@ extension RoutePoint : Comparable{
     public var Name:String{
         name ?? "Unknown name"
     }
+    
+    public func setTarget(enabled:Bool){
+        target = enabled
+    }
 }

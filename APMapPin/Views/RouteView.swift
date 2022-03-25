@@ -157,6 +157,7 @@ extension RouteView{
         forceUpdate = forceUpdate + 1
     }
     
+    // since not informing core data, this won't persist
     func targetThisPoint(point: RoutePoint){
         for p in point.pointRoute!.routePointsArray{
             if p == point{
