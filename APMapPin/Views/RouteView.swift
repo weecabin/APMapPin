@@ -29,7 +29,7 @@ struct RouteView: View {
         .padding()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                NavigationLink("RoutePoints",destination: RoutePointView())
+                NavigationLink("Map",destination: MapView())
             }
         }
     }
@@ -53,9 +53,11 @@ extension RouteView{
                 HStack{
                     Text("Name:")
                     TextField("name",text: $name)
+                        .textInputAutocapitalization(.never)
                     
                     Button {
                         if name.count > 0 {cd.addRoute(name: name)}
+                        print("Adding Route")
                     } label: {
                         Text("Add")
                     }

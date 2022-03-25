@@ -12,6 +12,7 @@ struct MapPinView: View {
     @State var name:String = ""
     @State var latitude:String = "30"
     @State var longitude:String = "-120"
+    @State var type:String = "fix"
     @State var selectedPin:MapPin?
     var body: some View {
         VStack(alignment: .leading){
@@ -42,14 +43,22 @@ extension MapPinView{
             HStack{
                 Text("Name:")
                 TextField("name",text: $name)
+                    .textInputAutocapitalization(.never)
             }
             HStack{
                 Text("latitude:")
                 TextField("latitude",text: $latitude)
+                    .textInputAutocapitalization(.never)
             }
             HStack{
                 Text("longitude:")
                 TextField("longitude",text: $longitude)
+                    .textInputAutocapitalization(.never)
+            }
+            HStack{
+                Text("type:")
+                TextField("longitude",text: $type)
+                    .textInputAutocapitalization(.never)
             }
             HStack{
                 Button {
@@ -104,6 +113,7 @@ extension MapPinView{
                         name = pin.Name
                         latitude = String(pin.latitude)
                         longitude = String(pin.longitude)
+                        type = pin.type ?? "?"
                     }
                 }
                 .padding(.horizontal, 10)
@@ -121,11 +131,13 @@ extension MapPinView{
         selectedPin = nil
         vm.deleteMapPin(mapPin: pin)
     }
+    
     func updatePin(){
         if let pin = selectedPin{
             pin.name = name
             pin.latitude = Double(latitude) ?? 0
             pin.longitude = Double(longitude) ?? 0
+            pin.type = type
             vm.savePinData()
         }
     }
@@ -133,7 +145,7 @@ extension MapPinView{
     func addMapPin(){
         if let lat = Double(latitude),
             let lon = Double(longitude){
-            vm.addMapPin(name: name, latitude: lat, longitude: lon)
+            vm.addMapPin(name: name, latitude: lat, longitude: lon, type:type)
         }else{ // use the defaults
             vm.addMapPin(name: name)
         }

@@ -17,6 +17,7 @@ class CoreData: ObservableObject {
     @Published var savedPins: [MapPin] = []
     @Published var savedRoutes: [Route] = []
     @Published var savedRoutePoints: [RoutePoint] = []
+    @Published var selectedRoutePoints: [RoutePoint] = []
     init() {
         container = NSPersistentContainer(name: "MapPinCoreData")
         container.loadPersistentStores { (description, error) in
@@ -27,8 +28,8 @@ class CoreData: ObservableObject {
             }
         }
         initPins()
-        initRoutes()
         initRoutePoints()
+        initRoutes()
     }
 }
 // RoutePoint
@@ -62,11 +63,12 @@ extension CoreData{
         }
     }
     
-    func addRoutePoint(name: String){
+    func addRoutePoint(name: String) -> RoutePoint{
         let newRoutePoint = RoutePoint(context: container.viewContext)
         newRoutePoint.name = name
         newRoutePoint.target = false
         saveRoutePointData()
+        return newRoutePoint
     }
     
     func deleteRoutePoint(routePoint: RoutePoint){
@@ -146,7 +148,6 @@ extension CoreData{
             }
             savePinData()
         }
-//        print("Saved Pins = \(savedPins.count)")
     }
     
     func countInRoutes(mapPin: MapPin) -> Int{
@@ -163,12 +164,14 @@ extension CoreData{
         }
     }
     
-    func addMapPin(name: String, latitude:Double = 30, longitude:Double = -124) {
+    @discardableResult func addMapPin(name: String, latitude:Double = 30, longitude:Double = -124, type:String = "fix") -> MapPin{
         let pin = MapPin(context: container.viewContext)
         pin.name = name
         pin.latitude = latitude
         pin.longitude = longitude
+        pin.type = type
         savePinData()
+        return pin
     }
     
     func deleteMapPin(mapPin: MapPin){
@@ -200,6 +203,24 @@ extension CoreData{
 
 // Route
 extension CoreData{
+    func routeNamed(name:String, createIfNotFound:Bool = false) -> Route?{
+        for route in savedRoutes{
+            if route.Name == name{return route}
+        }
+        if createIfNotFound{
+            addRoute(name: name)
+            return routeNamed(name: name)
+        }
+        return nil
+    }
+    
+    func namedRouteArray(name:String) -> [RoutePoint]{
+        if let route = routeNamed(name: name){
+            return route.routePointsArray
+        }
+        return []
+    }
+    
     func fetchRoutes(){
         let request = NSFetchRequest<Route>(entityName: "Route")
         do {
@@ -220,7 +241,6 @@ extension CoreData{
             }
             saveRouteData()
         }
-//        print("Saved Routes = \(savedRoutes.count)")
     }
     
     func deleteAllRoutes(){
@@ -234,6 +254,10 @@ extension CoreData{
         let newRoute = Route(context: container.viewContext)
         newRoute.name = name
         saveRouteData()
+    }
+    
+    func addPinToRoute(routeName:String, pin: MapPin){
+        addPinToRoute(route: routeNamed(name: routeName, createIfNotFound: true)!, pin: pin)
     }
     
     func addPinToRoute(route: Route, pin: MapPin){

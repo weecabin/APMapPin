@@ -2,7 +2,7 @@
 //  MapPin+CoreDataProperties.swift
 //  APMapPin
 //
-//  Created by Gary Hamann on 3/24/22.
+//  Created by Gary Hamann on 3/25/22.
 //
 //
 
@@ -19,6 +19,8 @@ extension MapPin {
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
     @NSManaged public var name: String?
+    @NSManaged public var course: Double
+    @NSManaged public var type: String?
     @NSManaged public var pinPoints: NSSet?
 
 }

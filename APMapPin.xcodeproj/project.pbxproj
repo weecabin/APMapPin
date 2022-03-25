@@ -21,7 +21,9 @@
 		91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */; };
 		911C723A27EAE01000F027DC /* RoutePoint+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723827EAE01000F027DC /* RoutePoint+CoreDataClass.swift */; };
 		911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723927EAE01000F027DC /* RoutePoint+CoreDataProperties.swift */; };
-		911C723D27EAE94500F027DC /* RoutePointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911C723C27EAE94500F027DC /* RoutePointView.swift */; };
+		91298EE927EDC2F000A20C36 /* MapAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EE827EDC2F000A20C36 /* MapAnnotationView.swift */; };
+		91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEA27EDC37F00A20C36 /* MapView.swift */; };
+		91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEC27EDC3D000A20C36 /* MapViewModel.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,7 +44,9 @@
 		911C723727EADEF400F027DC /* MapPinCoreData 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MapPinCoreData 2.xcdatamodel"; sourceTree = "<group>"; };
 		911C723827EAE01000F027DC /* RoutePoint+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoutePoint+CoreDataClass.swift"; sourceTree = "<group>"; };
 		911C723927EAE01000F027DC /* RoutePoint+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoutePoint+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		911C723C27EAE94500F027DC /* RoutePointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePointView.swift; sourceTree = "<group>"; };
+		91298EE827EDC2F000A20C36 /* MapAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAnnotationView.swift; sourceTree = "<group>"; };
+		91298EEA27EDC37F00A20C36 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,7 +109,7 @@
 			children = (
 				91047EBB27EA2855004B6070 /* MapPinView.swift */,
 				9136D33227EA7FBD00D06F7F /* RouteView.swift */,
-				911C723C27EAE94500F027DC /* RoutePointView.swift */,
+				91298EEA27EDC37F00A20C36 /* MapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -114,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				91047ECE27EA2DA5004B6070 /* MapPinViewModel.swift */,
+				91298EE827EDC2F000A20C36 /* MapAnnotationView.swift */,
+				91298EEC27EDC3D000A20C36 /* MapViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -198,6 +204,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91298EE927EDC2F000A20C36 /* MapAnnotationView.swift in Sources */,
+				91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */,
 				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
 				911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */,
 				91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */,
@@ -207,8 +215,8 @@
 				91047EDE27EA2F01004B6070 /* Route+CoreDataProperties.swift in Sources */,
 				91047EDD27EA2F01004B6070 /* Route+CoreDataClass.swift in Sources */,
 				91047EBA27EA2855004B6070 /* APMapPinApp.swift in Sources */,
-				911C723D27EAE94500F027DC /* RoutePointView.swift in Sources */,
 				91047EDF27EA2F01004B6070 /* MapPin+CoreDataClass.swift in Sources */,
+				91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */,
 				91047ECB27EA29EA004B6070 /* MapPinCoreData.xcdatamodeld in Sources */,
 				911C723A27EAE01000F027DC /* RoutePoint+CoreDataClass.swift in Sources */,
 				91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */,
