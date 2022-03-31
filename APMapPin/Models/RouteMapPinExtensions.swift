@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 extension MapPin : Comparable{
     public static func < (lhs: MapPin, rhs: MapPin) -> Bool {
@@ -19,6 +20,10 @@ extension MapPin : Comparable{
     public var routePointsArray: [RoutePoint]{
         let pinPointSet = pinPoints as? Set<RoutePoint> ?? []
         return pinPointSet.sorted()
+    }
+    
+    public var Location:CLLocation{
+        return CLLocation(latitude: latitude, longitude: longitude)
     }
 }
 

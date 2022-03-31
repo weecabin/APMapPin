@@ -99,6 +99,7 @@ extension RouteView{
     
     var editRoute: some View{
         VStack{
+            Text(selectedRoute?.Name ?? "?")
             HStack{
                 Spacer()
                 Text("Select Pin >")
@@ -147,6 +148,7 @@ extension RouteView{
                     }
                     .toolbar{EditButton()}
                     .navigationTitle("Route \(selectedRoute!.Name)")
+                    //.navigationBarHidden(true)
                 }
                 .navigationViewStyle(StackNavigationViewStyle())
             }

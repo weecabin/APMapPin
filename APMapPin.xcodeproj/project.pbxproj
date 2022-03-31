@@ -25,6 +25,7 @@
 		91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEA27EDC37F00A20C36 /* MapView.swift */; };
 		91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEC27EDC3D000A20C36 /* MapViewModel.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
+		91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		91298EEA27EDC37F00A20C36 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
+		91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigateRoute.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */,
 				91047EC727EA2896004B6070 /* CoreData.swift */,
 				91047EE127EA2F43004B6070 /* RouteMapPinExtensions.swift */,
+				91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91298EE927EDC2F000A20C36 /* MapAnnotationView.swift in Sources */,
+				91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */,
 				91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */,
 				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
 				911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */,
@@ -351,6 +355,9 @@
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs access to location for navigation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -380,6 +387,9 @@
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs access to location for navigation";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
