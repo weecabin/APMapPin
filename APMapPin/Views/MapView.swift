@@ -11,7 +11,7 @@ import MapKit
 struct MapView: View {
     let defaults = UserDefaults.standard
     @EnvironmentObject var mvm:MapViewModel
-    @State var routePickerIndex = 0
+
     var body: some View {
         ZStack{
             mapView
@@ -20,6 +20,11 @@ struct MapView: View {
         }
         .onAppear {
             mvm.initMap()
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink("Routes",destination: RouteView())
+            }
         }
     }
 }
@@ -36,7 +41,7 @@ extension MapView{
         Map(coordinateRegion: $mvm.region,
             interactionModes: MapInteractionModes.all ,
             showsUserLocation: true,
-            annotationItems: mvm.cd.namedRouteArray(name: activeRoute()!.Name)) { pin in
+            annotationItems: mvm.cd.namedRouteArray(name: mvm.activeRoute()!.Name)) { pin in
             MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: pin.pointPin!.latitude, longitude: pin.pointPin!.longitude)) {
                 switch pin.pointPin!.type {
                 case "fish":
@@ -61,22 +66,21 @@ extension MapView{
     var fixMenuView : some View{
         ZStack{
             VStack{
-                Text("")
+                Text(mvm.updateView ? "" : "")
                 HStack{
                     Spacer()
-                    Picker("Pin", selection: $routePickerIndex) {
+                    Picker("Pin", selection: $mvm.routePickerIndex) {
                         ForEach(0..<mvm.cd.savedRoutes.count, id:\.self){index in
                             Text(mvm.cd.savedRoutes[index].Name).tag(index)
                         }
                     }
-                    .frame(width: 100)
+                    .frame(width: 70)
                     .border(.black, width: 2)
+                    .disabled(mvm.running)
                     Spacer()
-
+                    
                     Button {
-                        let pin = mvm.cd.addMapPin(name: "fix", latitude: mvm.region.center.latitude, longitude: mvm.region.center.longitude, type: "fix")
-                        mvm.cd.addPinToRoute(routeName: activeRoute()!.Name, pin: pin)
-                        print("Adding Pin to Route")
+                        mvm.AddRoutePoint(route: mvm.activeRoute()!)
                     } label: {
                         AddPinToRouteView()
                             .buttonStyle(.plain)
@@ -85,8 +89,8 @@ extension MapView{
                             .cornerRadius(10)
                     }
                     
-                        Button {
-                        mvm.Navigate(route: activeRoute()!)
+                    Button {
+                        mvm.Navigate(route: mvm.activeRoute()!)
                     } label: {
                         RunRouteView()
                             .buttonStyle(.plain)
@@ -107,6 +111,16 @@ extension MapView{
                     }
                     .disabled(!mvm.running)
                     
+                    Button {
+                        mvm.DeleteRoutePoints(route: mvm.activeRoute()!)
+                    } label: {
+                        DeleteRouteView()
+                            .buttonStyle(.plain)
+                            .background(mvm.running ? .gray : .blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(mvm.running)
                     Spacer()
                 }
                 
@@ -125,40 +139,12 @@ extension MapView{
             }
             .background(.gray)
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.currentHeadingToTargetString)") :
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)") :
                 Text("")
                 Spacer()
             }
             .background(.gray)
             Text("")
         }
-    }
-    
-    func nextTarget(){
-        if let route = activeRoute(){
-            if route.routePointsArray.count == 0 {return}
-            for rp in route.routePointsArray{
-                if rp.target{
-                    if rp.index >= route.routePointsArray.count-1{
-                        print("target index = 0")
-                        route.routePointsArray[0].setTarget(enabled: true)
-                    }else{
-                        let index = Int(rp.index + 1)
-                        print("target index = \(index)")
-                        route.routePointsArray[index].setTarget(enabled: true)
-                    }
-                    rp.setTarget(enabled: false)
-                    return
-                }
-            }
-            route.routePointsArray[0].setTarget(enabled: true)
-        }
-    }
-    
-    func activeRoute() -> Route?{
-        if mvm.cd.savedRoutes.count > 0{
-            return mvm.cd.savedRoutes[routePickerIndex]
-        }
-        return nil
     }
 }

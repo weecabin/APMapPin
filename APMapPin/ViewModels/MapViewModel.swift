@@ -12,7 +12,9 @@ import MapKit
 class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
+    @Published var routePickerIndex = 0
     
+    @Published var updateView:Bool = false
     var locationManager : CLLocationManager?
     var navigate:NavigateRoute = NavigateRoute()
     var mapInitialized:Bool = false
@@ -52,13 +54,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
         }
     }
     
-    func Navigate(route: Route){
-        if !navigate.StartNavigation(route: route){
-            print("Failed to start navigation")
-        }
-    }
-    func StopNavigation(){
-        navigate.CancelNavigation()
+    func UpdateView(){
+        updateView.toggle()
     }
 }
 
@@ -66,6 +63,45 @@ extension MapViewModel{ // Navigation Functions
     var running:Bool{
         return navigate.running
     }
+    
+    func activeRoute() -> Route?{
+        if cd.savedRoutes.count > 0{
+            return cd.savedRoutes[routePickerIndex]
+        }
+        return nil
+    }
+    
+    func AddRoutePoint(route: Route){
+        let pin = cd.addMapPin(name: "fix", latitude: region.center.latitude, longitude: region.center.longitude, type: "fix")
+        cd.addPinToRoute(routeName: route.Name, pin: pin)
+        UpdateView()
+        print("Adding Pin to Route")
+    }
+    
+    func DeleteRoutePoints(route: Route){
+        while route.routePointsArray.count > 0{
+            cd.deleteRoutePoint(routePoint: route.routePointsArray[0])
+        }
+        UpdateView()
+    }
+    
+    func Navigate(route: Route){
+        if !navigate.StartNavigation(route: route){
+            print("Failed to start navigation")
+        }
+        UpdateView()
+    }
+    
+    func StopNavigation(){
+        navigate.CancelNavigation()
+        if let route = activeRoute(){
+            for point in route.routePointsArray{
+                point.target = false
+            }
+        }
+        UpdateView()
+    }
+    
 }
 
 extension MapViewModel{ // Location calls

@@ -13,7 +13,7 @@ struct APMapPinApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView{
-                MapPinView()
+                MapView()
             }
             .environmentObject(mvm)
         }

@@ -13,12 +13,10 @@ struct RouteView: View {
     @State var selectedRoute:Route?
     @State var pinPickerIndex:Int = 0
     @State var forceUpdate:Int = 0
+    @State var editThisRoute:Route?
     var body: some View {
         VStack{
             addNewRoute
-            Divider()
-                .background(Color.black)
-            if selectedRoute != nil{editRoute}
             Spacer()
         }
         .onAppear(perform: {
@@ -27,11 +25,11 @@ struct RouteView: View {
             }
         })
         .padding()
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                NavigationLink("Map",destination: MapView())
-            }
-        }
+//        .toolbar {
+//            ToolbarItem(placement: .primaryAction) {
+//                NavigationLink("Map",destination: MapView())
+//            }
+//        }
     }
     
 }
@@ -56,8 +54,13 @@ extension RouteView{
                         .textInputAutocapitalization(.never)
                     
                     Button {
-                        if name.count > 0 {cd.addRoute(name: name)}
-                        print("Adding Route")
+                        if name.count > 0 {
+                            cd.addRoute(name: name)
+                            print("Adding Route")
+                        }else{
+                            print("Nothing to add")
+                        }
+                        
                     } label: {
                         Text("Add")
                     }
@@ -82,19 +85,24 @@ extension RouteView{
                             .frame(width: 40, height: 30)
                             .background(Color.blue)
                             .cornerRadius(10)
-                            Button(action: {selectedRoute = route},
+                            .padding(.horizontal, 10)
+                            
+                            Button(action: {editThisRoute = route},
                                    label: {Image(systemName: "pencil.circle")})
-                                .buttonStyle(.plain)
-                                .frame(width: 40, height: 30)
-                                .background(Color.blue)
-                                .cornerRadius(10)
+                            .buttonStyle(.plain)
+                            .frame(width: 40, height: 30)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .padding(.horizontal, 10)
+                        }
+                        .sheet(item: $editThisRoute){route in
+                            RouteEditView(route: route)
                         }
                     }
                 }
             }
             .frame(height: 250)
         }
-
     }
     
     var editRoute: some View{
@@ -190,4 +198,5 @@ extension RouteView{
     func deleteRoutePoint(point:RoutePoint){
         cd.deleteRoutePoint(routePoint: point)
     }
+
 }

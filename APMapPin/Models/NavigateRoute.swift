@@ -22,12 +22,12 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     var targetPinLocation:CLLocation?
     var currentLocation:CLLocation?
     var distToTarget:Double?
-    var desiredHeadingToTarget:Double?
-    var currentHeadingToTarget:Double?
+    var desiredBearingToTarget:Double?
+    var bearingToTarget:Double?
     var lastLocation:CLLocation?
     @Published var running:Bool = false
     @Published var distToTargetString:String="?"
-    @Published var currentHeadingToTargetString:String="?"
+    @Published var bearingToTargetString:String="?"
     
     init(){
     }
@@ -46,7 +46,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         targetPinLocation = CLLocation(latitude: targetPin!.latitude, longitude: targetPin!.longitude)
         distToTarget = lastLoc.distance(from: targetPinLocation!)
         distToTargetString = distanceString(meters: distToTarget!)
-        desiredHeadingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+        desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
         running = true
         navigateRoute()
         navTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { Timer in
@@ -60,10 +60,11 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             print("Invalid lastLoc")
             return}
         distToTarget = lastLoc.distance(from: targetPinLocation!)
+        print("navigateRoute distToTarget = \(distToTarget!)")
         distToTargetString = distanceString(meters: distToTarget!)
-        currentHeadingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
-        currentHeadingToTargetString = bearingString(bearing: currentHeadingToTarget!)
-        print("Target.. Dist: \(distanceString(meters: distToTarget!)), Bearing: \(bearingString(bearing:currentHeadingToTarget!))")
+        bearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+        bearingToTargetString = bearingString(bearing: bearingToTarget!)
+        print("Target.. Dist: \(distToTargetString), Bearing: \(bearingToTargetString)")
         if distToTarget! < 30{
             if routeIndex == route!.routePointsArray.count - 1{
                 route!.routePointsArray.last!.target = false
@@ -77,8 +78,9 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             let fromPinLoc = targetPinLocation // save it to compute the desired heading
             targetPin = route!.routePointsArray[routeIndex].pointPin
             targetPinLocation = targetPin!.Location
-            desiredHeadingToTarget = getBearingBetweenTwoPoints1(point1: fromPinLoc!, point2: targetPinLocation!)
-            currentHeadingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+            desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: fromPinLoc!, point2: targetPinLocation!)
+            bearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+            bearingToTargetString = bearingString(bearing: bearingToTarget!)
             distToTarget = lastLoc.distance(from: targetPinLocation!)
             distToTargetString = distanceString(meters: distToTarget!)
             print("New Target")
@@ -94,8 +96,9 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     
     func distanceString(meters:Double) -> String{
         let miles = meters/1609.34
+        print("miles = \(miles)")
         if miles < 0.18 {
-            let ft = miles / 5280
+            let ft = miles * 5280
             return "\(String(format: "%.0f",ft))ft"
         }
         return "\(String(format: "%.1f",miles))mi"
