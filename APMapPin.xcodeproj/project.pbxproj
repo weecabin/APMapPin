@@ -26,6 +26,7 @@
 		91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEC27EDC3D000A20C36 /* MapViewModel.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
 		91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */; };
+		91E4197A27F671A4002E7ADF /* CustomButtonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4197927F671A4002E7ADF /* CustomButtonViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigateRoute.swift; sourceTree = "<group>"; };
+		91E4197927F671A4002E7ADF /* CustomButtonViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				91047EBB27EA2855004B6070 /* MapPinView.swift */,
 				9136D33227EA7FBD00D06F7F /* RouteView.swift */,
 				91298EEA27EDC37F00A20C36 /* MapView.swift */,
+				91E4197927F671A4002E7ADF /* CustomButtonViews.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				91047ECB27EA29EA004B6070 /* MapPinCoreData.xcdatamodeld in Sources */,
 				911C723A27EAE01000F027DC /* RoutePoint+CoreDataClass.swift in Sources */,
 				91047EE027EA2F01004B6070 /* MapPin+CoreDataProperties.swift in Sources */,
+				91E4197A27F671A4002E7ADF /* CustomButtonViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

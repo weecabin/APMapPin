@@ -57,6 +57,15 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
             print("Failed to start navigation")
         }
     }
+    func StopNavigation(){
+        navigate.CancelNavigation()
+    }
+}
+
+extension MapViewModel{ // Navigation Functions
+    var running:Bool{
+        return navigate.running
+    }
 }
 
 extension MapViewModel{ // Location calls

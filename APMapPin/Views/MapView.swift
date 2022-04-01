@@ -78,37 +78,35 @@ extension MapView{
                         mvm.cd.addPinToRoute(routeName: activeRoute()!.Name, pin: pin)
                         print("Adding Pin to Route")
                     } label: {
-                        Text("Add Fix")
+                        AddPinToRouteView()
                             .buttonStyle(.plain)
-                            .frame(width: 70, height: 30)
                             .background(.blue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    Spacer()
                     
-                    Button {
-                        nextTarget()
-                    } label: {
-                        Text("Next")
-                            .buttonStyle(.plain)
-                            .frame(width: 70, height: 30)
-                            .background(.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    Spacer()
-                    
-                    Button {
+                        Button {
                         mvm.Navigate(route: activeRoute()!)
                     } label: {
-                        Text("Run")
+                        RunRouteView()
                             .buttonStyle(.plain)
-                            .frame(width: 70, height: 30)
-                            .background(.blue)
+                            .background(mvm.running ? .gray : .blue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    .disabled(mvm.running)
+                    
+                    Button {
+                        mvm.StopNavigation()
+                    } label: {
+                        StopRouteView()
+                            .buttonStyle(.plain)
+                            .background(mvm.running ? .blue : .gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(!mvm.running)
+                    
                     Spacer()
                 }
                 
@@ -127,7 +125,8 @@ extension MapView{
             }
             .background(.gray)
             HStack{
-                Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.currentHeadingToTargetString)")
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.currentHeadingToTargetString)") :
+                Text("")
                 Spacer()
             }
             .background(.gray)

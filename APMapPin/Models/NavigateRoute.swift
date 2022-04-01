@@ -22,11 +22,12 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     var targetPinLocation:CLLocation?
     var currentLocation:CLLocation?
     var distToTarget:Double?
-    @Published var distToTargetString:String="?"
     var desiredHeadingToTarget:Double?
     var currentHeadingToTarget:Double?
-    @Published var currentHeadingToTargetString:String="?"
     var lastLocation:CLLocation?
+    @Published var running:Bool = false
+    @Published var distToTargetString:String="?"
+    @Published var currentHeadingToTargetString:String="?"
     
     init(){
     }
@@ -46,6 +47,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         distToTarget = lastLoc.distance(from: targetPinLocation!)
         distToTargetString = distanceString(meters: distToTarget!)
         desiredHeadingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+        running = true
         navigateRoute()
         navTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { Timer in
             self.navigateRoute()
@@ -86,6 +88,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     func CancelNavigation(){
         if let killTimer = navTimer{
             killTimer.invalidate()
+            running = false
         }
     }
     
