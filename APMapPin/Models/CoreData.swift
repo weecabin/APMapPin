@@ -45,15 +45,16 @@ extension CoreData{
     
     func initRoutePoints(){
         fetchRoutePoints()
-        //        deleteAllRoutePoints()
+        //deleteAllRoutePoints()
         if savedRoutePoints.count == 0{
             for i in (1...5){
                 let route = RoutePoint(context: container.viewContext)
                 route.name = "RP\(i)"
+                route.selected = false
             }
             saveRoutePointData()
         }
-//        print("Saved RoutePoints = \(savedRoutePoints.count)")
+        print("Saved RoutePoints = \(savedRoutePoints.count)")
     }
     
     func deleteAllRoutePoints(){
@@ -67,6 +68,7 @@ extension CoreData{
         let newRoutePoint = RoutePoint(context: container.viewContext)
         newRoutePoint.name = name
         newRoutePoint.target = false
+        newRoutePoint.selected = false
         saveRoutePointData()
         return newRoutePoint
     }
@@ -140,13 +142,14 @@ extension CoreData{
     
     func initPins(){
         fetchMapPins()
-        //        deleteAllMapPins()
+        //deleteAllMapPins()
         if savedPins.count == 0{
             for i in (1...5){
                 let pin = MapPin(context: container.viewContext)
                 pin.name = "P\(i)"
             }
             savePinData()
+            print("saved pins \(savedPins.count)")
         }
     }
     
@@ -203,6 +206,32 @@ extension CoreData{
 
 // Route
 extension CoreData{
+    func selectedPin(route:Route) -> MapPin?{
+        for pin in route.routePointsArray{
+            if pin.selected{return pin.pointPin}
+        }
+        return nil
+    }
+    
+    func selectedPinCount(route:Route) -> Int{
+        var count = 0
+        for point in route.routePointsArray{
+            if point.selected{
+                count = count + 1
+            }
+        }
+        return count
+    }
+    
+    func setTarget(route:Route, targetPoint:RoutePoint){
+        for point in route.routePointsArray{
+            if point == targetPoint{
+                point.target = true
+            }else{
+                point.target = false
+            }
+        }
+    }
     func routeNamed(name:String, createIfNotFound:Bool = false) -> Route?{
         for route in savedRoutes{
             if route.Name == name{return route}
@@ -228,12 +257,12 @@ extension CoreData{
         } catch let error {
             print("Error fetching. \(error)")
         }
-        //print("\(savedRoutes) route pins fetched")
+        print("\(savedRoutes) route pins fetched")
     }
     
     func initRoutes(){
         fetchRoutes()
-        //        deleteAllRoutePins()
+        //deleteAllRoutes()
         if savedRoutes.count == 0{
             for i in (1...5){
                 let route = Route(context: container.viewContext)

@@ -28,6 +28,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     @Published var running:Bool = false
     @Published var distToTargetString:String="?"
     @Published var bearingToTargetString:String="?"
+    @Published var desiredBearingToTargetString:String = "?"
     
     init(){
     }
@@ -47,6 +48,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         distToTarget = lastLoc.distance(from: targetPinLocation!)
         distToTargetString = distanceString(meters: distToTarget!)
         desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
+        desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
         running = true
         navigateRoute()
         navTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { Timer in
@@ -79,6 +81,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             targetPin = route!.routePointsArray[routeIndex].pointPin
             targetPinLocation = targetPin!.Location
             desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: fromPinLoc!, point2: targetPinLocation!)
+            desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
             bearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
             bearingToTargetString = bearingString(bearing: bearingToTarget!)
             distToTarget = lastLoc.distance(from: targetPinLocation!)

@@ -11,6 +11,8 @@ import MapKit
 struct MapView: View {
     let defaults = UserDefaults.standard
     @EnvironmentObject var mvm:MapViewModel
+    @State var editRoute:Bool = false
+    @State var editPin:Bool = false
 
     var body: some View {
         ZStack{
@@ -55,6 +57,11 @@ extension MapView{
                     
                 case "fix":
                     WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)", backColor: pin.target ? mvm.routePinColor : .clear)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
+                        .scaleEffect(pin.selected ? 1.5 : 1.0)
                     
                 default:
                     WaypointAnnotationView(label: pin.pointPin!.Name)
@@ -79,6 +86,22 @@ extension MapView{
                     .disabled(mvm.running)
                     Spacer()
                     
+                    Button {
+                        if mvm.cd.selectedPinCount(route: mvm.activeRoute()!) == 1{
+                            print("calling editPin")
+                            editPin.toggle()
+                        }else{
+                            editRoute.toggle()
+                        }
+                        
+                    } label: {
+                        EditView()
+                            .buttonStyle(.plain)
+                            .background(.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                           
                     Button {
                         mvm.AddRoutePoint(route: mvm.activeRoute()!)
                     } label: {
@@ -126,6 +149,12 @@ extension MapView{
                 
                 Spacer()
             }
+            .sheet(isPresented: $editRoute, content: {
+                RouteEditView(route: mvm.activeRoute()!)
+            })
+            .sheet(isPresented: $editPin, content: {
+                EditPinView(pin: mvm.cd.selectedPin(route: mvm.activeRoute()!)!)
+            })
             Text("X")
         }
     }
@@ -139,7 +168,7 @@ extension MapView{
             }
             .background(.gray)
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)") :
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)/ \(mvm.navigate.desiredBearingToTargetString)") :
                 Text("")
                 Spacer()
             }

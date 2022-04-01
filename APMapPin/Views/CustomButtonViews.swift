@@ -93,7 +93,7 @@ struct DeleteRouteView : View {
     }
 }
 
-struct GoToX : View {
+struct GoToXView : View {
     var width:CGFloat = 40
     var height:CGFloat = 40
     var body : some View{
@@ -108,6 +108,22 @@ struct GoToX : View {
         .frame(width: width, height: height, alignment: .center)
     }
 }
+
+struct EditView : View {
+    var width:CGFloat = 40
+    var height:CGFloat = 40
+    var body : some View{
+        VStack{
+            ZStack{
+                Image(systemName: "square.and.pencil")
+            }
+        }
+        .frame(width: width, height: height, alignment: .center)
+    }
+}
+
+
+
 struct CustomButtonViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
@@ -120,7 +136,9 @@ struct CustomButtonViews_Previews: PreviewProvider {
                 .background(.blue)
             DeleteRouteView()
                 .background(.blue)
-            GoToX()
+            GoToXView()
+                .background(.blue)
+            EditView()
                 .background(.blue)
         }
     }

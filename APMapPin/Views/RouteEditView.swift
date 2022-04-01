@@ -13,6 +13,10 @@ struct RouteEditView: View {
     var route:Route
     @State var forceUpdate:Bool = false
     @State var pinPickerIndex=0
+    init(route:Route){
+        self.route = route
+        print("in RouteEditView Init")
+    }
     var body: some View {
         editRoute
     }
@@ -59,8 +63,11 @@ extension RouteEditView{
                                     Image(systemName: "target")
                                 }
                                 Spacer()
-                                Button(action: {targetThisPoint(point: point)},
-                                       label: {Image(systemName: "target")})
+                                
+                                Button(action: {
+                                    cd.setTarget(route: route, targetPoint: point)
+                                    ForceUpdate()
+                                },label: {Image(systemName: "target")})
                                 .buttonStyle(.plain)
                                 .frame(width: 40, height: 30)
                                 .background(Color.blue)
@@ -96,17 +103,6 @@ extension RouteEditView{
     
     func ForceUpdate(){
         forceUpdate.toggle()
-    }
-    
-    func targetThisPoint(point: RoutePoint){
-        for p in point.pointRoute!.routePointsArray{
-            if p == point{
-                p.target = true
-            }else{
-                p.target = false
-            }
-        }
-        ForceUpdate()
     }
     
     func deleteRoutePoint(point:RoutePoint){
