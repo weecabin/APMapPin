@@ -35,8 +35,9 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     init(){
     }
     
-    func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
+    func StartNavigation(route:Route, arrivalZone:Double = 30, fromIndex:Int = 0) -> Bool{
         self.route = route
+        self.arrivalZone = arrivalZone
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
             return false}
@@ -70,6 +71,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             return}
         setTargetStats(lastLoc: lastLoc)
         if distToTarget! < arrivalZone{
+            print("distToTarget: \(distToTarget!)  arrivalZone: \(arrivalZone)")
             if routeIndex == route!.routePointsArray.count - 1{
                 route!.routePointsArray.last!.target = false
                 CancelNavigation()
@@ -102,7 +104,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         guard let timer = navTimer else {return}
         if timer.timeInterval == 1 {return}
         if let speed = lastLocation?.speed{
-            let test = (speed * 10)/distToTarget!
+            let test = (speed * 20)/distToTarget!
             //print("timerTest \(test)")
             if test > 1{
                 setNavTimer(interval: 1)

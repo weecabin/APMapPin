@@ -84,18 +84,19 @@ extension MapViewModel{ // Navigation Functions
         if simPin != nil{
             simInitialized = false
             UpdateSimulatedLocation()
-            navigate.arrivalZone = 10
-            if !navigate.StartNavigation(route: route){
+            if !navigate.StartNavigation(route: route, arrivalZone: 10){
                 print("Failed to start navigation")
                 simPin = nil
                 return
             }
-            UpdateHeading()
+        }else{
+            if !navigate.StartNavigation(route: route, arrivalZone: 30){
+                print("Failed to start navigation")
+                return
+            }
         }
-        navigate.arrivalZone = 30
-        if !navigate.StartNavigation(route: route){
-            print("Failed to start navigation")
-        }else{StartBlinkTimer()}
+        UpdateHeading()
+        StartBlinkTimer()
         UpdateView()
     }
     
