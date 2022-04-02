@@ -13,10 +13,6 @@ struct RouteEditView: View {
     var route:Route
     @State var forceUpdate:Bool = false
     @State var pinPickerIndex=0
-    init(route:Route){
-        self.route = route
-        print("in RouteEditView Init")
-    }
     var body: some View {
         editRoute
     }

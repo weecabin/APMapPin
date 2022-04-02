@@ -13,12 +13,6 @@ struct EditPinView: View {
     var mapPin:MapPin
     @State var name:String=""
 
-    init(pin:MapPin) {
-        mapPin = pin
-        name = pin.Name
-        print("pin = \(name)")
-    }
-    
     var body: some View {
         VStack{
             HStack{
@@ -29,6 +23,7 @@ struct EditPinView: View {
             HStack{
                 Text("Name:")
                 TextField("name", text: $name)
+                    .textInputAutocapitalization(.never)
             }
             Button("Update"){
                 mapPin.name = name
@@ -36,11 +31,14 @@ struct EditPinView: View {
             }
             Spacer()
         }
+        .onAppear {
+            name = mapPin.Name
+        }
     }
 }
 
 struct EditPinView_Previews: PreviewProvider {
     static var previews: some View {
-        EditPinView(pin: CoreData.shared.savedPins[0])
+        EditPinView(mapPin: CoreData.shared.savedPins[0])
     }
 }

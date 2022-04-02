@@ -208,7 +208,10 @@ extension CoreData{
 extension CoreData{
     func selectedPin(route:Route) -> MapPin?{
         for pin in route.routePointsArray{
-            if pin.selected{return pin.pointPin}
+            if pin.selected{
+                print("Found Selected Pin")
+                return pin.pointPin
+            }
         }
         return nil
     }

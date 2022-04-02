@@ -12,7 +12,7 @@ struct MapView: View {
     let defaults = UserDefaults.standard
     @EnvironmentObject var mvm:MapViewModel
     @State var editRoute:Bool = false
-    @State var editPin:Bool = false
+    @State var selectedPin:MapPin?
 
     var body: some View {
         ZStack{
@@ -88,12 +88,11 @@ extension MapView{
                     
                     Button {
                         if mvm.cd.selectedPinCount(route: mvm.activeRoute()!) == 1{
-                            print("calling editPin")
-                            editPin.toggle()
+                            selectedPin = mvm.cd.selectedPin(route: mvm.activeRoute()!)
+                            print(selectedPin!)
                         }else{
                             editRoute.toggle()
                         }
-                        
                     } label: {
                         EditView()
                             .buttonStyle(.plain)
@@ -152,9 +151,9 @@ extension MapView{
             .sheet(isPresented: $editRoute, content: {
                 RouteEditView(route: mvm.activeRoute()!)
             })
-            .sheet(isPresented: $editPin, content: {
-                EditPinView(pin: mvm.cd.selectedPin(route: mvm.activeRoute()!)!)
-            })
+            .sheet(item: $selectedPin,
+                   onDismiss: {mvm.UpdateView();print("dismissed") },
+                   content: {EditPinView(mapPin: $0) })
             Text("X")
         }
     }

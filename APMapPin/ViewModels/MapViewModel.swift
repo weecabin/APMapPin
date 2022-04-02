@@ -29,7 +29,6 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
     func initMap(){
         if !mapInitialized{
             checkLocationServicesIsOn()
-            StartBlinkTimer()
             mapInitialized = true
         }
     }
@@ -89,10 +88,14 @@ extension MapViewModel{ // Navigation Functions
         if !navigate.StartNavigation(route: route){
             print("Failed to start navigation")
         }
+        StartBlinkTimer()
         UpdateView()
     }
     
     func StopNavigation(){
+        if let killTimer = blinkPinTimer{
+            killTimer.invalidate()
+        }
         navigate.CancelNavigation()
         if let route = activeRoute(){
             for point in route.routePointsArray{
@@ -146,7 +149,6 @@ extension MapViewModel{ // Location calls
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("in locationManager")
         guard let location = locations.first else {return}
         lastLocation = location
         navigate.lastLocation = lastLocation
