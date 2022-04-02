@@ -8,8 +8,16 @@
 import SwiftUI
 import MapKit
 
+protocol NavCompleteDelegate{
+    func NavComplete()
+}
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
+class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate{
+    func NavComplete() {
+        print("in NavCompleteDelegate")
+        StopBlinkTimer()
+    }
+    
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
     @Published var routePickerIndex = 0
@@ -30,6 +38,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
         if !mapInitialized{
             checkLocationServicesIsOn()
             mapInitialized = true
+            navigate.navCompleteDeletate = self
         }
     }
     
@@ -38,7 +47,11 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate{
             self.blinkPinColor()
         }
     }
-    
+    func StopBlinkTimer(){
+        if let timer = blinkPinTimer{
+            timer.invalidate()
+        }
+    }
     func blinkPinColor(){
         switch (routePinColor){
         case .yellow:
@@ -93,9 +106,7 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func StopNavigation(){
-        if let killTimer = blinkPinTimer{
-            killTimer.invalidate()
-        }
+        StopBlinkTimer()
         navigate.CancelNavigation()
         if let route = activeRoute(){
             for point in route.routePointsArray{

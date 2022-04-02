@@ -15,6 +15,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     func currentLocation(location: CLLocation) {
         lastLocation = location
     }
+    var navCompleteDeletate:NavCompleteDelegate?
     var route:Route?
     var navTimer:Timer?
     var targetPin:MapPin?
@@ -117,6 +118,9 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             killTimer.invalidate()
         }
         running = false
+        if let navComplete = navCompleteDeletate{
+            navComplete.NavComplete()
+        }
     }
     
     func distanceString(meters:Double) -> String{
