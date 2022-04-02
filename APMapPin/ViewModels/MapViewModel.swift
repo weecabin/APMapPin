@@ -54,6 +54,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     func blinkPinColor(){
         if simPin != nil {
             UpdateSimulatedLocation()
+            UpdateHeading()
         }
         switch (routePinColor){
         case .yellow:
@@ -79,6 +80,15 @@ extension MapViewModel{ // Navigation Functions
         return navigate.running
     }
     
+    func UpdateHeading(){
+        if let pin = simPin{
+            let courseError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
+            //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
+            let newCourse = FixHeading(heading: simPin!.course - courseError)
+            simPin!.course = newCourse
+        }
+    }
+    
     func UpdateSimulatedLocation(){
         if let pin = simPin{
             if !simInitialized{
@@ -92,8 +102,9 @@ extension MapViewModel{ // Navigation Functions
                 distance: distanceTraveled)
             pin.latitude = newCoord.latitude
             pin.longitude = newCoord.longitude
-            print("lat: \(pin.latitude) lon: \(pin.longitude)")
+            //print("simPin lat: \(pin.latitude) lon: \(pin.longitude)")
             lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: 3, timestamp: Date.now)
+            //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
             navigate.lastLocation = lastLocation
             var speed = lastLocation!.speed
             speed = (speed >= 0) ? speed * 2.23694 : 0
@@ -163,13 +174,19 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func Navigate(route: Route){
-        if !navigate.StartNavigation(route: route){
-            print("Failed to start navigation")
-        }
         if simPin != nil{
             simInitialized = false
+            UpdateSimulatedLocation()
+            if !navigate.StartNavigation(route: route){
+                print("Failed to start navigation")
+                simPin = nil
+                return
+            }
+            UpdateHeading()
         }
-        StartBlinkTimer()
+        if !navigate.StartNavigation(route: route){
+            print("Failed to start navigation")
+        }else{StartBlinkTimer()}
         UpdateView()
     }
     

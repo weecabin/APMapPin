@@ -53,6 +53,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             }
             targetPin = route.routePointsArray[routeIndex].pointPin
         }
+        //print("StartNavigation lastLoc \(lastLoc)")
         route.routePointsArray[routeIndex].setTarget(enabled: true)
         targetPinLocation = CLLocation(latitude: targetPin!.latitude, longitude: targetPin!.longitude)
         desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
@@ -85,7 +86,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: fromPinLoc!, point2: targetPinLocation!)
             desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
             setTargetStats(lastLoc: lastLoc)
-            print("New Target")
+            //print("New Target")
         }
     }
     
@@ -102,7 +103,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         if timer.timeInterval == 1 {return}
         if let speed = lastLocation?.speed{
             let test = (speed * 10)/distToTarget!
-            print("timerTest \(test)")
+            //print("timerTest \(test)")
             if test > 1{
                 setNavTimer(interval: 1)
             }
