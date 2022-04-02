@@ -54,6 +54,7 @@ extension RouteEditView{
                         ForEach(route.routePointsArray){point in
                             HStack{
                                 Text(point.pointPin?.Name ?? "?")
+                                Text("(\(point.pointPin!.unwrappedType))")
                                 Text("\(point.index)")
                                 if point.target{
                                     Image(systemName: "target")

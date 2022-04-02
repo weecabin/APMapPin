@@ -45,6 +45,14 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             return false}
         routeIndex = fromIndex
         targetPin = route.routePointsArray[routeIndex].pointPin
+        // skip over any non fix points
+        while (targetPin!.unwrappedType != "fix"){
+            routeIndex = routeIndex + 1
+            if routeIndex == route.routePointsArray.count{
+                return false
+            }
+            targetPin = route.routePointsArray[routeIndex].pointPin
+        }
         route.routePointsArray[routeIndex].setTarget(enabled: true)
         targetPinLocation = CLLocation(latitude: targetPin!.latitude, longitude: targetPin!.longitude)
         desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)

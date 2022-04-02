@@ -62,9 +62,19 @@ extension MapView{
                             mvm.UpdateView()
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
+                case "sim":
+                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
                     
                 default:
                     WaypointAnnotationView(label: pin.pointPin!.Name)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
                 }
             }
         }
@@ -152,7 +162,7 @@ extension MapView{
                 RouteEditView(route: mvm.activeRoute()!)
             })
             .sheet(item: $selectedPin,
-                   onDismiss: {mvm.UpdateView();print("dismissed") },
+                   onDismiss: {mvm.editPinDismissed()},
                    content: {EditPinView(mapPin: $0) })
             Text("X")
         }

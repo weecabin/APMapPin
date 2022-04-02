@@ -17,6 +17,10 @@ extension MapPin : Comparable{
         name ?? "Unknown name"
     }
     
+    public var unwrappedType:String{
+        type ?? "Unknown type"
+    }
+    
     public var routePointsArray: [RoutePoint]{
         let pinPointSet = pinPoints as? Set<RoutePoint> ?? []
         return pinPointSet.sorted()

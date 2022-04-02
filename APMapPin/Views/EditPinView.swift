@@ -12,6 +12,7 @@ struct EditPinView: View {
     @StateObject var cd = CoreData.shared
     var mapPin:MapPin
     @State var name:String=""
+    @State var type:String=""
 
     var body: some View {
         VStack{
@@ -25,14 +26,21 @@ struct EditPinView: View {
                 TextField("name", text: $name)
                     .textInputAutocapitalization(.never)
             }
+            HStack{
+                Text("Type:")
+                TextField("type", text: $type)
+                    .textInputAutocapitalization(.never)
+            }
             Button("Update"){
                 mapPin.name = name
+                mapPin.type = type
                 cd.savePinData()
             }
             Spacer()
         }
         .onAppear {
             name = mapPin.Name
+            type = mapPin.unwrappedType
         }
     }
 }
