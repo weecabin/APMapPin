@@ -54,8 +54,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     func blinkPinColor(){
         if simPin != nil {
             UpdateSimulatedLocation()
-            UpdateHeading()
         }
+        UpdateHeading()
         switch (routePinColor){
         case .yellow:
             routePinColor = .green
@@ -80,12 +80,46 @@ extension MapViewModel{ // Navigation Functions
         return navigate.running
     }
     
+    func Navigate(route: Route){
+        if simPin != nil{
+            simInitialized = false
+            UpdateSimulatedLocation()
+            navigate.arrivalZone = 10
+            if !navigate.StartNavigation(route: route){
+                print("Failed to start navigation")
+                simPin = nil
+                return
+            }
+            UpdateHeading()
+        }
+        navigate.arrivalZone = 30
+        if !navigate.StartNavigation(route: route){
+            print("Failed to start navigation")
+        }else{StartBlinkTimer()}
+        UpdateView()
+    }
+    
+    func StopNavigation(){
+        navigate.CancelNavigation()
+    }
+    
     func UpdateHeading(){
         if let pin = simPin{
-            let courseError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
+            let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
-            let newCourse = FixHeading(heading: simPin!.course - courseError)
-            simPin!.course = newCourse
+            let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
+            let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
+            print("desired course Error \(courseError)")
+            simPin!.course = newCourseToTarget + courseError
+        }else{
+            if let lastLoc = lastLocation{
+                let lastLocCourse = lastLoc.course
+                let headingError = HeadingError(target: navigate.bearingToTarget!, actual: lastLocCourse)
+                //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
+                let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
+                let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
+                print("new course \(newCourseToTarget + courseError)")
+            }
         }
     }
     
@@ -171,27 +205,6 @@ extension MapViewModel{ // Navigation Functions
             cd.deleteRoutePoint(routePoint: route.routePointsArray[0])
         }
         UpdateView()
-    }
-    
-    func Navigate(route: Route){
-        if simPin != nil{
-            simInitialized = false
-            UpdateSimulatedLocation()
-            if !navigate.StartNavigation(route: route){
-                print("Failed to start navigation")
-                simPin = nil
-                return
-            }
-            UpdateHeading()
-        }
-        if !navigate.StartNavigation(route: route){
-            print("Failed to start navigation")
-        }else{StartBlinkTimer()}
-        UpdateView()
-    }
-    
-    func StopNavigation(){
-        navigate.CancelNavigation()
     }
     
     func getNewTargetCoordinate(position: CLLocationCoordinate2D, userBearing: Float, distance: Float)-> CLLocationCoordinate2D{
