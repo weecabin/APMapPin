@@ -77,6 +77,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
 extension MapViewModel{ // Navigation Functions
     
     var running:Bool{
+        print("running: \(navigate.running)")
         return navigate.running
     }
     
@@ -157,6 +158,7 @@ extension MapViewModel{ // Navigation Functions
         if simPin != nil{
             simPin!.latitude = simStartLocation!.latitude
             simPin!.longitude = simStartLocation!.longitude
+            simPin!.type = "fix"
             print("nulling simPin")
             simPin = nil
         }
@@ -164,10 +166,11 @@ extension MapViewModel{ // Navigation Functions
             for point in route.routePointsArray{
                 point.selected = false
                 point.target = false
-                point.pointPin!.type = "fix"
+//                point.pointPin!.type = "fix"
             }
         }
         cd.saveRoutePointData()
+        cd.savePinData()
         UpdateView()
     }
     

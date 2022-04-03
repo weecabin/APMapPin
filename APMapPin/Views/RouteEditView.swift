@@ -81,10 +81,10 @@ extension RouteEditView{
                         .onMove(perform: onMoveRoutePin)
                     }
                     .toolbar{EditButton()}
-                    .navigationTitle("Route \(route.Name)")
+                    //.navigationTitle("Route \(route.Name)")
                     //.navigationBarHidden(true)
                 }
-                .navigationViewStyle(StackNavigationViewStyle())
+                //.navigationViewStyle(StackNavigationViewStyle())
             }
         }
     }

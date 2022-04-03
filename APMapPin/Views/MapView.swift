@@ -11,8 +11,8 @@ import MapKit
 struct MapView: View {
     let defaults = UserDefaults.standard
     @EnvironmentObject var mvm:MapViewModel
-    @State var editRoute:Bool = false
     @State var selectedPin:MapPin?
+    @State var selectedRoute:Route?
 
     var body: some View {
         ZStack{
@@ -48,12 +48,27 @@ extension MapView{
                 switch pin.pointPin!.type {
                 case "fish":
                     FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
+                        .scaleEffect(pin.selected ? 1.5 : 1.0)
 
                 case "home":
                     HomeAnnotationView(label: pin.pointPin!.Name)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
+                        .scaleEffect(pin.selected ? 1.5 : 1.0)
 
                 case "shallow":
                     ShallowAnnotationView(label: pin.pointPin!.Name)
+                        .onTapGesture {
+                            pin.selected.toggle()
+                            mvm.UpdateView()
+                        }
+                        .scaleEffect(pin.selected ? 1.5 : 1.0)
                     
                 case "fix":
                     WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)", backColor: pin.target ? mvm.routePinColor : .clear)
@@ -101,7 +116,7 @@ extension MapView{
                             selectedPin = mvm.cd.selectedPin(route: mvm.activeRoute()!)
                             print(selectedPin!)
                         }else{
-                            editRoute.toggle()
+                            selectedRoute = mvm.activeRoute()
                         }
                     } label: {
                         EditView()
@@ -158,12 +173,12 @@ extension MapView{
                 
                 Spacer()
             }
-            .sheet(isPresented: $editRoute, content: {
-                RouteEditView(route: mvm.activeRoute()!)
-            })
-            .sheet(item: $selectedPin,
-                   onDismiss: {mvm.editPinDismissed()},
-                   content: {EditPinView(mapPin: $0) })
+            .fullScreenCover(item: $selectedRoute,
+                             onDismiss: {mvm.cd.saveRouteData()},
+                             content: {RouteEditView(route: $0)})
+            .fullScreenCover(item: $selectedPin,
+                             onDismiss: {mvm.editPinDismissed()},
+                             content: {EditPinView(mapPin: $0) })
             Text("X")
         }
     }
