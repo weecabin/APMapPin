@@ -2,7 +2,7 @@
 //  Route+CoreDataProperties.swift
 //  APMapPin
 //
-//  Created by Gary Hamann on 4/1/22.
+//  Created by Gary Hamann on 4/6/22.
 //
 //
 
@@ -17,6 +17,8 @@ extension Route {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var active: Bool
+    @NSManaged public var visible: Bool
     @NSManaged public var points: NSSet?
 
 }

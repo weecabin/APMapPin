@@ -51,6 +51,10 @@ extension RoutePoint : Comparable{
         lhs.index < rhs.index
     }
     
+    public var active:Bool{
+        return pointRoute!.active
+    }
+    
     public var Name:String{
         name ?? "Unknown name"
     }

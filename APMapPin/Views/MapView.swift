@@ -43,13 +43,13 @@ extension MapView{
         Map(coordinateRegion: $mvm.region,
             interactionModes: MapInteractionModes.all ,
             showsUserLocation: true,
-            annotationItems: mvm.cd.namedRouteArray(name: mvm.activeRoute()!.Name)) { pin in
+            annotationItems: mvm.cd.visiblePointsArray()) { pin in
             MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: pin.pointPin!.latitude, longitude: pin.pointPin!.longitude)) {
                 switch pin.pointPin!.type {
                 case "fish":
                     FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
@@ -57,7 +57,7 @@ extension MapView{
                 case "home":
                     HomeAnnotationView(label: pin.pointPin!.Name)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
@@ -65,7 +65,7 @@ extension MapView{
                 case "shallow":
                     ShallowAnnotationView(label: pin.pointPin!.Name)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
@@ -73,21 +73,23 @@ extension MapView{
                 case "fix":
                     WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)", backColor: pin.target ? mvm.routePinColor : .clear)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
+                            print("annotation tap \(mvm.cd.selectedRoutePoints.count)")
                             mvm.UpdateView()
+                            print("selected pin count: \(mvm.cd.selectedPinCount())")
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
                 case "sim":
                     SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                     
                 default:
                     WaypointAnnotationView(label: pin.pointPin!.Name)
                         .onTapGesture {
-                            pin.selected.toggle()
+                            mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                 }
@@ -101,30 +103,30 @@ extension MapView{
                 Text(mvm.updateView ? "" : "")
                 HStack{
                     Spacer()
-                    Picker("Pin", selection: $mvm.routePickerIndex) {
-                        ForEach(0..<mvm.cd.savedRoutes.count, id:\.self){index in
-                            Text(mvm.cd.savedRoutes[index].Name).tag(index)
-                        }
-                    }
-                    .frame(width: 70)
-                    .border(.black, width: 2)
-                    .disabled(mvm.running)
-                    Spacer()
+//                    Picker("Pin", selection: $mvm.routePickerIndex) {
+//                        ForEach(0..<mvm.cd.savedRoutes.count, id:\.self){index in
+//                            Text(mvm.cd.savedRoutes[index].Name).tag(index)
+//                        }
+//                    }
+//                    .frame(width: 70)
+//                    .border(.black, width: 2)
+//                    .disabled(mvm.running)
+//                    Spacer()
                     
                     Button {
-                        if mvm.cd.selectedPinCount(route: mvm.activeRoute()!) == 1{
-                            selectedPin = mvm.cd.selectedPin(route: mvm.activeRoute()!)
+                        if mvm.cd.selectedRoutePoints.count == 1{
+                            mvm.StopBlinkTimer()
+                            selectedPin = mvm.cd.selectedRoutePoints[0].pointPin
                             print(selectedPin!)
-                        }else{
-                            selectedRoute = mvm.activeRoute()
                         }
                     } label: {
                         EditView()
                             .buttonStyle(.plain)
-                            .background(.blue)
+                            .background(enablePinEdit() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    .disabled(!enablePinEdit())
                            
                     Button {
                         mvm.AddRoutePoint(route: mvm.activeRoute()!)
@@ -159,28 +161,35 @@ extension MapView{
                     .disabled(!mvm.running)
                     
                     Button {
-                        mvm.DeleteRoutePoints(route: mvm.activeRoute()!)
+                        mvm.DeleteSelectedPoints()
                     } label: {
                         DeleteRouteView()
                             .buttonStyle(.plain)
-                            .background(mvm.running ? .gray : .blue)
+                            .background(enableDeletePin() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(mvm.running)
+                    .disabled(!enableDeletePin())
                     Spacer()
                 }
                 
                 Spacer()
             }
             .fullScreenCover(item: $selectedRoute,
-                             onDismiss: {mvm.cd.saveRouteData()},
+                             onDismiss: {mvm.cd.saveRouteData();if mvm.running{mvm.StartBlinkTimer()}},
                              content: {RouteEditView(route: $0)})
             .fullScreenCover(item: $selectedPin,
-                             onDismiss: {mvm.editPinDismissed()},
+                             onDismiss: {mvm.editPinDismissed();if mvm.running{mvm.StartBlinkTimer()}},
                              content: {EditPinView(mapPin: $0) })
             Text("X")
         }
+    }
+    func enablePinEdit()->Bool{
+        print("\(mvm.cd.selectedPinCount()) selected pins")
+        return mvm.cd.selectedPinCount() == 1
+    }
+    func enableDeletePin()->Bool{
+        !mvm.running && mvm.cd.selectedPinCount()>0
     }
     
     var locationDetailsView : some View{

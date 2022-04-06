@@ -12,7 +12,7 @@ struct RouteView: View {
     @State var name:String = ""
     @State var selectedRoute:Route?
     @State var pinPickerIndex:Int = 0
-    @State var forceUpdate:Int = 0
+//    @State var forceUpdate:Int = 0
     @State var editThisRoute:Route?
     var body: some View {
         VStack{
@@ -25,11 +25,6 @@ struct RouteView: View {
             }
         })
         .padding()
-//        .toolbar {
-//            ToolbarItem(placement: .primaryAction) {
-//                NavigationLink("Map",destination: MapView())
-//            }
-//        }
     }
     
 }
@@ -76,24 +71,38 @@ extension RouteView{
                 List{
                     ForEach(cd.savedRoutes.sorted()) {route in
                         HStack{
-                            Text("Name:")
                             Text(route.Name)
+                            route.visible ? Image(systemName: "eye") : Image(systemName: "eye.slash")
+                            if route.active{Image(systemName: "checkmark")}
                             Spacer()
+                            
+                            Button(action: {cd.setActiveRoute(activeRoute: route)},
+                                   label: {Image(systemName: "checkmark")})
+                            .buttonStyle(.plain)
+                            .frame(width: 30, height: 30)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            
+                            Button(action: {route.visible.toggle();cd.saveRouteData()},
+                                   label: {Image(systemName: "eye")})
+                            .buttonStyle(.plain)
+                            .frame(width: 30, height: 30)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            
                             Button(action: {deleteRoute(route:route)},
                                    label: {Image(systemName: "trash.fill")})
                             .buttonStyle(.plain)
-                            .frame(width: 40, height: 30)
+                            .frame(width: 30, height: 30)
                             .background(Color.blue)
                             .cornerRadius(10)
-                            .padding(.horizontal, 10)
                             
                             Button(action: {editThisRoute = route},
                                    label: {Image(systemName: "pencil.circle")})
                             .buttonStyle(.plain)
-                            .frame(width: 40, height: 30)
+                            .frame(width: 30, height: 30)
                             .background(Color.blue)
                             .cornerRadius(10)
-                            .padding(.horizontal, 10)
                         }
                         .sheet(item: $editThisRoute){route in
                             RouteEditView(route: route)
@@ -104,99 +113,11 @@ extension RouteView{
             .frame(height: 250)
         }
     }
-    
-    var editRoute: some View{
-        VStack{
-            Text(selectedRoute?.Name ?? "?")
-            HStack{
-                Spacer()
-                Text("Select Pin >")
-                Picker("Pin", selection: $pinPickerIndex) {
-                    ForEach(0..<cd.savedPins.count, id:\.self){index in
-                        Text(cd.savedPins[index].Name).tag(index)
-                    }
-                }
-                .border(.black, width: 2)
-                Button(action: {addPinToRoute()}, label: {Text("Add")})
-                    .buttonStyle(.plain)
-                    .frame(width: 80)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-                Spacer()
-            }
-            VStack{
-                Text("\(String(forceUpdate))")
-                    .hidden()
-                NavigationView{
-                    List{
-                        ForEach(selectedRoute!.routePointsArray){point in
-                            HStack{
-                                Text(point.pointPin?.Name ?? "?")
-                                Text("\(point.index)")
-                                if point.target{
-                                    Image(systemName: "target")
-                                }
-                                Spacer()
-                                Button(action: {targetThisPoint(point: point)},
-                                       label: {Image(systemName: "target")})
-                                .buttonStyle(.plain)
-                                .frame(width: 40, height: 30)
-                                .background(Color.blue)
-                                .cornerRadius(10)
-                                
-                                Button(action: {deleteRoutePoint(point: point)},
-                                       label: {Image(systemName: "trash.fill")})
-                                .buttonStyle(.plain)
-                                .frame(width: 40, height: 30)
-                                .background(Color.blue)
-                                .cornerRadius(10)
-                            }
-                        }
-                        .onMove(perform: onMoveRoutePin)
-                    }
-                    .toolbar{EditButton()}
-                    .navigationTitle("Route \(selectedRoute!.Name)")
-                    //.navigationBarHidden(true)
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-            }
-        }
-    }
 
-    func redraw(){
-        forceUpdate = forceUpdate + 1
-    }
-    
-    // since not informing core data, this won't persist
-    func targetThisPoint(point: RoutePoint){
-        for p in point.pointRoute!.routePointsArray{
-            if p == point{
-                p.target = true
-            }else{
-                p.target = false
-            }
-        }
-        redraw()
-    }
-    
     func deleteRoute(route:Route){
         if selectedRoute == route{
             selectedRoute = nil
         }
         cd.deleteRoute(route: route)
     }
-    
-    func onMoveRoutePin(from:IndexSet, to:Int){
-        cd.moveRoutePoint(route: selectedRoute!, from: from.first!, to: to)
-    }
-    
-    func addPinToRoute(){
-        let pin = cd.savedPins[pinPickerIndex]
-        cd.addPinToRoute(route: selectedRoute!, pin: pin)
-    }
-    
-    func deleteRoutePoint(point:RoutePoint){
-        cd.deleteRoutePoint(routePoint: point)
-    }
-
 }

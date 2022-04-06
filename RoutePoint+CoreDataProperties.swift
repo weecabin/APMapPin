@@ -2,7 +2,7 @@
 //  RoutePoint+CoreDataProperties.swift
 //  APMapPin
 //
-//  Created by Gary Hamann on 4/1/22.
+//  Created by Gary Hamann on 4/6/22.
 //
 //
 
@@ -18,8 +18,8 @@ extension RoutePoint {
 
     @NSManaged public var index: Int16
     @NSManaged public var name: String?
-    @NSManaged public var target: Bool
     @NSManaged public var selected: Bool
+    @NSManaged public var target: Bool
     @NSManaged public var pointPin: MapPin?
     @NSManaged public var pointRoute: Route?
 

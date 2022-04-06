@@ -57,6 +57,7 @@
 		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		91BA559C27F8B9AB00B4A285 /* MyLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLib.swift; sourceTree = "<group>"; };
+		91BB11C227FDC4D000F195F5 /* MapPinCoreData 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MapPinCoreData 4.xcdatamodel"; sourceTree = "<group>"; };
 		91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigateRoute.swift; sourceTree = "<group>"; };
 		91E4197927F671A4002E7ADF /* CustomButtonViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonViews.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -452,11 +453,12 @@
 		91047EC927EA29EA004B6070 /* MapPinCoreData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				91BB11C227FDC4D000F195F5 /* MapPinCoreData 4.xcdatamodel */,
 				91264D2027F76E1600D216EE /* MapPinCoreData 3.xcdatamodel */,
 				911C723727EADEF400F027DC /* MapPinCoreData 2.xcdatamodel */,
 				91047ECA27EA29EA004B6070 /* MapPinCoreData.xcdatamodel */,
 			);
-			currentVersion = 91264D2027F76E1600D216EE /* MapPinCoreData 3.xcdatamodel */;
+			currentVersion = 91BB11C227FDC4D000F195F5 /* MapPinCoreData 4.xcdatamodel */;
 			path = MapPinCoreData.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

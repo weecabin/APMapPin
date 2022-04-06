@@ -15,7 +15,6 @@ protocol NavCompleteDelegate{
 class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate{
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
-    @Published var routePickerIndex = 0
     
     @Published var updateView:Bool = false
     var locationManager : CLLocationManager?
@@ -39,6 +38,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             mapInitialized = true
             navigate.navCompleteDeletate = self
         }
+        UpdateView()
     }
     
     func StartBlinkTimer(){
@@ -77,7 +77,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
 extension MapViewModel{ // Navigation Functions
     
     var running:Bool{
-        print("running: \(navigate.running)")
+//        print("running: \(navigate.running)")
         return navigate.running
     }
     
@@ -192,7 +192,7 @@ extension MapViewModel{ // Navigation Functions
     
     func activeRoute() -> Route?{
         if cd.savedRoutes.count > 0{
-            return cd.savedRoutes[routePickerIndex]
+            return cd.getActiveRoute()
         }
         return nil
     }
@@ -204,10 +204,11 @@ extension MapViewModel{ // Navigation Functions
         print("Adding Pin to Route")
     }
     
-    func DeleteRoutePoints(route: Route){
-        while route.routePointsArray.count > 0{
-            cd.deleteRoutePoint(routePoint: route.routePointsArray[0])
+    func DeleteSelectedPoints(){
+        for point in cd.selectedRoutePoints{
+            cd.deleteRoutePoint(routePoint: point)
         }
+        cd.selectedRoutePoints = []
         UpdateView()
     }
     

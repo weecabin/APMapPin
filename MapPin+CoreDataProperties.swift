@@ -2,7 +2,7 @@
 //  MapPin+CoreDataProperties.swift
 //  APMapPin
 //
-//  Created by Gary Hamann on 4/1/22.
+//  Created by Gary Hamann on 4/6/22.
 //
 //
 

@@ -43,6 +43,18 @@ extension CoreData{
         }
     }
     
+    func toggleSelected(point:RoutePoint){
+        point.selected.toggle()
+        if point.selected{
+            selectedRoutePoints.append(point)
+        }else{
+            if let index = selectedRoutePoints.firstIndex(of: point){
+                selectedRoutePoints.remove(at: index)
+            }
+            
+        }
+    }
+    
     func initRoutePoints(){
         fetchRoutePoints()
         //deleteAllRoutePoints()
@@ -206,6 +218,49 @@ extension CoreData{
 
 // Route
 extension CoreData{
+    func visiblePointsArray() -> [RoutePoint]{
+        var pointsArray:[RoutePoint] = []
+        for route in savedRoutes{
+            if route.visible{
+                pointsArray.append(contentsOf: route.routePointsArray)
+            }
+        }
+        return pointsArray
+    }
+    
+    func setActiveRoute(activeRoute:Route){
+        for route in savedRoutes{
+            if route == activeRoute{
+                route.active = true
+            }else{
+                route.active = false
+            }
+        }
+        saveRouteData()
+    }
+    
+    func getVisibleRoutes() -> [Route]{
+        var routes:[Route] = []
+        var foundActive:Bool = false
+        for route in savedRoutes{
+            if route.visible{
+                if route.active{foundActive = true}
+                routes.append(route)
+            }
+        }
+        if routes.count > 0{
+            if !foundActive{setActiveRoute(activeRoute: routes[0])}
+        }
+        return routes
+    }
+    
+    func getActiveRoute() -> Route?{
+        for route in savedRoutes{
+            if route.active {return route}
+        }
+        return nil
+    }
+    
     func selectedPin(route:Route) -> MapPin?{
         for pin in route.routePointsArray{
             if pin.selected{
@@ -215,7 +270,13 @@ extension CoreData{
         }
         return nil
     }
-    
+    func selectedPinCount()->Int{
+        var count = 0
+        for route in savedRoutes{
+            count = count + selectedPinCount(route: route)
+        }
+        return count
+    }
     func selectedPinCount(route:Route) -> Int{
         var count = 0
         for point in route.routePointsArray{
