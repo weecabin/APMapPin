@@ -10,10 +10,11 @@ import MapKit
 
 struct HomeAnnotationView: View {
     
-    let accentColor = Color.red
+    var accentColor = Color.red
     var label:String = "Home"
     
-    init(label:String = "Home"){
+    init(label:String = "Home", accentColor:Color = Color.gray){
+        self.accentColor = accentColor
         self.label = label
     }
     var body: some View {
@@ -32,10 +33,11 @@ struct HomeAnnotationView: View {
 }
 struct SimAnnotationView: View {
     
-    let accentColor  = Color.red
+    var accentColor:Color
     var label:String
     var rotate:Double
-    init(label:String = "sim", rotate:Double=0){
+    init(label:String = "sim", rotate:Double=0, accentColor:Color = .gray){
+        self.accentColor = accentColor
         self.label = label
         self.rotate = rotate
     }
@@ -58,10 +60,11 @@ struct SimAnnotationView: View {
 
 struct FishAnnotationView: View {
     
-    let accentColor  = Color.red
+    var accentColor:Color
     var label:String
     var rotate:Double
-    init(label:String = "Fish", rotate:Double=0){
+    init(label:String = "Fish", rotate:Double=0, accentColor:Color = Color.red){
+        self.accentColor = accentColor
         self.label = label
         self.rotate = rotate
     }
@@ -84,10 +87,11 @@ struct FishAnnotationView: View {
 
 struct ShallowAnnotationView: View {
     
-    let accentColor = Color.red
+    var accentColor:Color
     var label:String
     
-    init(label:String = "Shallow"){
+    init(label:String = "Shallow", accentColor:Color = Color.red){
+        self.accentColor = accentColor
         self.label = label
     }
 
@@ -117,11 +121,12 @@ struct ShallowAnnotationView: View {
 
 struct WaypointAnnotationView: View {
     
-    let accentColor = Color.red
+    var accentColor:Color
     var label:String = "Fix"
     var backColor:Color = Color.clear
     
-    init(label:String = "Fix", backColor:Color = Color.clear){
+    init(label:String = "Fix", backColor:Color = Color.clear, accentColor:Color = Color.red){
+        self.accentColor = accentColor
         self.label = label
         self.backColor = backColor
     }

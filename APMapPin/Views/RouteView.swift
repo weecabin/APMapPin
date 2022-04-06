@@ -83,7 +83,7 @@ extension RouteView{
                             .background(Color.blue)
                             .cornerRadius(10)
                             
-                            Button(action: {route.visible.toggle();cd.saveRouteData()},
+                            Button(action: {toggleRouteVisible(route: route)},
                                    label: {Image(systemName: "eye")})
                             .buttonStyle(.plain)
                             .frame(width: 30, height: 30)
@@ -110,8 +110,21 @@ extension RouteView{
                     }
                 }
             }
-            .frame(height: 250)
         }
+    }
+    func toggleRouteVisible(route:Route){
+        route.visible.toggle()
+        if route.active{
+            // make the first visible route active
+            route.active=false
+            for visRoute in cd.getVisibleRoutes(){
+                if visRoute.visible{
+                    visRoute.active = true
+                    break
+                }
+            }
+        }
+        cd.saveRouteData()
     }
 
     func deleteRoute(route:Route){

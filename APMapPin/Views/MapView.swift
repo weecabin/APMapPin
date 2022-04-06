@@ -47,7 +47,7 @@ extension MapView{
             MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: pin.pointPin!.latitude, longitude: pin.pointPin!.longitude)) {
                 switch pin.pointPin!.type {
                 case "fish":
-                    FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
+                    FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
                         .onTapGesture {
                             mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
@@ -71,7 +71,9 @@ extension MapView{
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
                     
                 case "fix":
-                    WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)", backColor: pin.target ? mvm.routePinColor : .clear)
+                    WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)",
+                                           backColor: pin.target && pin.pointRoute!.active ? mvm.routePinColor : .clear,
+                            accentColor: pin.pointRoute!.active ? .blue : .gray)
                         .onTapGesture {
                             mvm.cd.toggleSelected(point: pin)
                             print("annotation tap \(mvm.cd.selectedRoutePoints.count)")
@@ -80,14 +82,14 @@ extension MapView{
                         }
                         .scaleEffect(pin.selected ? 1.5 : 1.0)
                 case "sim":
-                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course)
+                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
                         .onTapGesture {
                             mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
                         }
                     
                 default:
-                    WaypointAnnotationView(label: pin.pointPin!.Name)
+                    WaypointAnnotationView(label: pin.pointPin!.Name, accentColor: pin.pointRoute!.active ? .blue : .gray)
                         .onTapGesture {
                             mvm.cd.toggleSelected(point: pin)
                             mvm.UpdateView()
@@ -103,16 +105,6 @@ extension MapView{
                 Text(mvm.updateView ? "" : "")
                 HStack{
                     Spacer()
-//                    Picker("Pin", selection: $mvm.routePickerIndex) {
-//                        ForEach(0..<mvm.cd.savedRoutes.count, id:\.self){index in
-//                            Text(mvm.cd.savedRoutes[index].Name).tag(index)
-//                        }
-//                    }
-//                    .frame(width: 70)
-//                    .border(.black, width: 2)
-//                    .disabled(mvm.running)
-//                    Spacer()
-                    
                     Button {
                         if mvm.cd.selectedRoutePoints.count == 1{
                             mvm.StopBlinkTimer()

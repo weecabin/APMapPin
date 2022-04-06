@@ -46,11 +46,13 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             self.blinkPinColor()
         }
     }
+    
     func StopBlinkTimer(){
         if let timer = blinkPinTimer{
             timer.invalidate()
         }
     }
+    
     func blinkPinColor(){
         if simPin != nil {
             UpdateSimulatedLocation()
