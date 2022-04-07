@@ -32,6 +32,10 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var simInitialized:Bool = false
     var simStartLocation:CLLocationCoordinate2D?
     
+    var droppingCrumbs:Bool = false
+    var breadCrumbTimer:Timer?
+    var trackRoute:Route?
+    
     func initMap(){
         if !mapInitialized{
             checkLocationServicesIsOn()
@@ -81,6 +85,33 @@ extension MapViewModel{ // Navigation Functions
     var running:Bool{
 //        print("running: \(navigate.running)")
         return navigate.running
+    }
+    
+    func StartStopBreadCrumbs(){
+        if droppingCrumbs{
+            if let route = cd.routeNamed(name: "Track"){
+                trackRoute = route
+                breadCrumbTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { Timer in
+                    self.DropACrumbTask()
+                }
+            }
+        }else{
+            if let timer = breadCrumbTimer{
+                timer.invalidate()
+            }
+        }
+    }
+    
+    func DropACrumbTask(){
+        var pin:MapPin?
+        if let loc = lastLocation{
+            pin = cd.addMapPin(name: "fish", location: loc, type: "fish")
+        }else{
+            return // no valid location
+        }
+        if let route = trackRoute{
+            cd.addPinToRoute(route: route, pin: pin!)
+        }
     }
     
     func Navigate(route: Route){

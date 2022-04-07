@@ -6,6 +6,23 @@
 //
 
 import SwiftUI
+
+struct AddBreadCrumbsView : View {
+    var width:CGFloat = 40
+    var height:CGFloat = 40
+    var body : some View{
+        VStack{
+            ZStack{
+                Image(systemName: "clock")
+                    .offset(x: 7, y: -3)
+                Image(systemName: "plus")
+                    .offset(x: -4, y: 5)
+            }
+        }
+        .frame(width: width, height: height, alignment: .center)
+    }
+}
+
 struct AddLocationView : View {
     var width:CGFloat = 40
     var height:CGFloat = 40
@@ -142,6 +159,8 @@ struct EditView : View {
 struct CustomButtonViews_Previews: PreviewProvider {
     static var previews: some View {
         VStack{
+            AddBreadCrumbsView()
+                .background(.blue)
             AddLocationView()
                 .background(.blue)
             PlusFixView()

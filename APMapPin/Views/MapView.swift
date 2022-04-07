@@ -107,6 +107,16 @@ extension MapView{
                 HStack{
                     Spacer()
                     Button {
+                        mvm.StartStopBreadCrumbs()
+                    } label: {
+                        AddBreadCrumbsView()
+                            .buttonStyle(.plain)
+                            .background(.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    
+                    Button {
                         if mvm.cd.selectedRoutePoints.count == 1{
                             mvm.StopBlinkTimer()
                             selectedPin = mvm.cd.selectedRoutePoints[0].pointPin
