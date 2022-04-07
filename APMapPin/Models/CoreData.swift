@@ -265,6 +265,13 @@ extension CoreData{
         return routes
     }
     
+    func isActiveRouteVisible() -> Bool{
+        if let route = getActiveRoute(){
+            if route.visible{return true}
+        }
+        return false
+    }
+    
     func getActiveRoute() -> Route?{
         for route in savedRoutes{
             if route.active {return route}

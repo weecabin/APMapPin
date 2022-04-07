@@ -14,6 +14,7 @@ struct RouteView: View {
     @State var pinPickerIndex:Int = 0
 //    @State var forceUpdate:Int = 0
     @State var editThisRoute:Route?
+    @State var deleteThisRoute:Route?
     var body: some View {
         VStack{
             addNewRoute
@@ -90,7 +91,7 @@ extension RouteView{
                             .background(Color.blue)
                             .cornerRadius(10)
                             
-                            Button(action: {deleteRoute(route:route)},
+                            Button(action: {deleteThisRoute = route},
                                    label: {Image(systemName: "trash.fill")})
                             .buttonStyle(.plain)
                             .frame(width: 30, height: 30)
@@ -107,11 +108,25 @@ extension RouteView{
                         .sheet(item: $editThisRoute){route in
                             RouteEditView(route: route)
                         }
+                        .alert(item: $deleteThisRoute, content: { route in
+                            getDeleteAlert(title: "Delete", message: "Route: \(route.Name)") {
+                                deleteRoute(route: route)
+                            }
+                        })
                     }
                 }
             }
         }
     }
+    
+    func getDeleteAlert(title:String, message:String, action:(()->Void)?) ->Alert{
+        return Alert(
+            title: Text(title),
+            message: Text(message),
+            primaryButton: .default(Text("OK"), action: action),
+            secondaryButton: .cancel())
+    }
+    
     func toggleRouteVisible(route:Route){
         route.visible.toggle()
         if route.active{
@@ -122,6 +137,10 @@ extension RouteView{
                     visRoute.active = true
                     break
                 }
+            }
+        }else{ // make this route the active route if there is no visible active route
+            if !cd.isActiveRouteVisible(){
+                cd.setActiveRoute(activeRoute: route)
             }
         }
         cd.saveRouteData()

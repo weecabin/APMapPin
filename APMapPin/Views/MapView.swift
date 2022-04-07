@@ -13,7 +13,7 @@ struct MapView: View {
     @EnvironmentObject var mvm:MapViewModel
     @State var selectedPin:MapPin?
     @State var selectedRoute:Route?
-
+    @State var deleteSelectedPins:Bool = false
     var body: some View {
         ZStack{
             mapView
@@ -165,7 +165,7 @@ extension MapView{
                     .disabled(!mvm.running)
                     
                     Button {
-                        mvm.DeleteSelectedPoints()
+                        deleteSelectedPins = true
                     } label: {
                         DeleteRouteView()
                             .buttonStyle(.plain)
@@ -185,13 +185,22 @@ extension MapView{
             .fullScreenCover(item: $selectedPin,
                              onDismiss: {mvm.editPinDismissed();if mvm.running{mvm.StartBlinkTimer()}},
                              content: {EditPinView(mapPin: $0) })
+            .alert(isPresented: $deleteSelectedPins) {
+                Alert(title: Text("Delete Selected Pins"),
+                      primaryButton: .default(Text("OK"), action: {mvm.DeleteSelectedPoints()}),
+                      secondaryButton: .cancel())
+            }
             Text("X")
         }
+        
     }
+        
+    
     func enablePinEdit()->Bool{
 //        print("\(mvm.cd.selectedPinCount()) selected pins")
         return mvm.cd.selectedPinCount() == 1
     }
+    
     func enableDeletePin()->Bool{
         !mvm.running && mvm.cd.selectedPinCount()>0
     }
