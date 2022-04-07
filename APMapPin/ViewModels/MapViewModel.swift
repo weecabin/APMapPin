@@ -88,24 +88,26 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func StartStopBreadCrumbs(){
-        if droppingCrumbs{
-            if let route = cd.routeNamed(name: "Track"){
+        if !droppingCrumbs{
+            if let route = cd.routeNamed(name: "Track", createIfNotFound: true){
                 trackRoute = route
                 breadCrumbTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { Timer in
                     self.DropACrumbTask()
                 }
+                droppingCrumbs = true
             }
         }else{
             if let timer = breadCrumbTimer{
                 timer.invalidate()
             }
+            droppingCrumbs = false
         }
     }
     
     func DropACrumbTask(){
         var pin:MapPin?
         if let loc = lastLocation{
-            pin = cd.addMapPin(name: "fish", location: loc, type: "fish")
+            pin = cd.addMapPin(name: "t", location: loc, type: "fish")
         }else{
             return // no valid location
         }
