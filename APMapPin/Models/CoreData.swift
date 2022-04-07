@@ -179,6 +179,17 @@ extension CoreData{
         }
     }
     
+    @discardableResult func addMapPin(name: String, location:CLLocation, type:String = "fix") -> MapPin{
+        let pin = MapPin(context: container.viewContext)
+        pin.name = name
+        pin.latitude = location.coordinate.latitude
+        pin.longitude = location.coordinate.longitude
+        pin.course = location.course
+        pin.type = type
+        savePinData()
+        return pin
+    }
+    
     @discardableResult func addMapPin(name: String, latitude:Double = 30, longitude:Double = -124, type:String = "fix") -> MapPin{
         let pin = MapPin(context: container.viewContext)
         pin.name = name

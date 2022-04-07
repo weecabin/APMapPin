@@ -97,6 +97,7 @@ extension MapView{
                 }
             }
         }
+            .ignoresSafeArea()
     }
     
     var fixMenuView : some View{
@@ -129,6 +130,17 @@ extension MapView{
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    
+                    Button {
+                        mvm.AddRoutePoint(route: mvm.activeRoute()!, source: .Location)
+                    } label: {
+                        AddLocationView()
+                            .buttonStyle(.plain)
+                            .background(enableAddLocation() ? .blue : .gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(!enableAddLocation())
                     
                     Button {
                         mvm.Navigate(route: mvm.activeRoute()!)
@@ -177,11 +189,18 @@ extension MapView{
         }
     }
     func enablePinEdit()->Bool{
-        print("\(mvm.cd.selectedPinCount()) selected pins")
+//        print("\(mvm.cd.selectedPinCount()) selected pins")
         return mvm.cd.selectedPinCount() == 1
     }
     func enableDeletePin()->Bool{
         !mvm.running && mvm.cd.selectedPinCount()>0
+    }
+    
+    func enableAddLocation()->Bool{
+        if let loc = mvm.lastLocation{
+            return loc.course >= 0
+        }
+        return false
     }
     
     var locationDetailsView : some View{

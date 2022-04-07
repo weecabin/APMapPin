@@ -198,10 +198,22 @@ extension MapViewModel{ // Navigation Functions
         }
         return nil
     }
-    
-    func AddRoutePoint(route: Route){
-        let pin = cd.addMapPin(name: "fix", latitude: region.center.latitude, longitude: region.center.longitude, type: "fix")
-        cd.addPinToRoute(routeName: route.Name, pin: pin)
+    enum LocationSource{
+        case X
+        case Location
+    }
+    func AddRoutePoint(route: Route, source:LocationSource = .X){
+        var pin:MapPin?
+        if source == .X{
+            pin = cd.addMapPin(name: "fix", latitude: region.center.latitude, longitude: region.center.longitude, type: "fix")
+        }else{
+            if let loc = lastLocation{
+                pin = cd.addMapPin(name: "fish", location: loc, type: "fish")
+            }else{
+                return
+            }
+        }
+        cd.addPinToRoute(routeName: route.Name, pin: pin!)
         UpdateView()
         print("Adding Pin to Route")
     }
