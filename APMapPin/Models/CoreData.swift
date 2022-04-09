@@ -186,6 +186,8 @@ extension CoreData{
         pin.latitude = location.coordinate.latitude
         pin.longitude = location.coordinate.longitude
         pin.course = location.course
+        pin.speed = location.speed
+        pin.altitude = location.altitude
         pin.type = type
         savePinData()
         return pin
@@ -230,6 +232,12 @@ extension CoreData{
 
 // Route
 extension CoreData{
+    func ClearSelectedPins(route:Route){
+        for pin in route.routePointsArray{
+            if pin.selected{toggleSelected(point: pin)}
+        }
+    }
+    
     func visiblePointsArray() -> [RoutePoint]{
         var pointsArray:[RoutePoint] = []
         for route in savedRoutes{
@@ -280,6 +288,15 @@ extension CoreData{
         return nil
     }
     
+    func selectedRoutePoint(route:Route) -> RoutePoint?{
+        for point in route.routePointsArray{
+            if point.selected{
+                return point
+            }
+        }
+        return nil
+    }
+    
     func selectedPin(route:Route) -> MapPin?{
         for pin in route.routePointsArray{
             if pin.selected{
@@ -289,6 +306,7 @@ extension CoreData{
         }
         return nil
     }
+    
     func selectedPinCount()->Int{
         var count = 0
         for route in savedRoutes{
@@ -296,6 +314,7 @@ extension CoreData{
         }
         return count
     }
+    
     func selectedPinCount(route:Route) -> Int{
         var count = 0
         for point in route.routePointsArray{
@@ -368,16 +387,19 @@ extension CoreData{
         saveRouteData()
     }
     
-    func addPinToRoute(routeName:String, pin: MapPin){
-        addPinToRoute(route: routeNamed(name: routeName, createIfNotFound: true)!, pin: pin)
+    func addPinToRoute(routeName:String, pin: MapPin, atIndex:Int = -1){
+        addPinToRoute(route: routeNamed(name: routeName, createIfNotFound: true)!, pin: pin, atIndex: atIndex)
     }
     
-    func addPinToRoute(route: Route, pin: MapPin){
+    func addPinToRoute(route: Route, pin: MapPin, atIndex:Int = -1){
         let routePoint = RoutePoint(context: container.viewContext)
         routePoint.name = "RP"
         routePoint.index = Int16(route.routePointsArray.count)
         routePoint.pointPin = pin
         route.addToPoints(routePoint)
+        if atIndex != -1 && atIndex < route.routePointsArray.count-2{
+            moveRoutePoint(route: route, from: route.routePointsArray.count-1, to: atIndex+1)
+        }
         saveRouteData()
     }
     

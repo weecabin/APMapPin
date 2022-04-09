@@ -29,6 +29,23 @@ extension MapPin : Comparable{
     public var Location:CLLocation{
         return CLLocation(latitude: latitude, longitude: longitude)
     }
+    
+    public var altInFeet:Double{
+        get{
+            return altitude * 3.28084
+        }
+        set(altInFt){
+            altitude = altInFt / 3.28084
+        }
+    }
+    public var speedMph:Double{
+        get{
+            return speed * 2.23694
+        }
+        set(speedInMph){
+            speed = speedInMph / 2.23694
+        }
+    }
 }
 
 extension Route : Comparable{

@@ -77,7 +77,7 @@ extension RouteView{
                             if route.active{Image(systemName: "checkmark")}
                             Spacer()
                             
-                            Button(action: {cd.setActiveRoute(activeRoute: route)},
+                            Button(action: {setActiveRoute(route: route)},
                                    label: {Image(systemName: "checkmark")})
                             .buttonStyle(.plain)
                             .frame(width: 30, height: 30)
@@ -125,6 +125,14 @@ extension RouteView{
             message: Text(message),
             primaryButton: .default(Text("OK"), action: action),
             secondaryButton: .cancel())
+    }
+    func setActiveRoute(route:Route){
+        if route == cd.getActiveRoute() || !route.visible{return}
+        if let activeRoute = cd.getActiveRoute(){
+            cd.ClearSelectedPins(route:activeRoute)
+        }
+        cd.setActiveRoute(activeRoute: route);
+        cd.saveRoutePointData()
     }
     
     func toggleRouteVisible(route:Route){

@@ -55,56 +55,6 @@ extension MapView{
                         mvm.UpdateView()
                     }
                     .scaleEffect(pin.selected ? 1.5 : 1.0)
-//                switch pin.pointPin!.type {
-//                case "fish":
-//                    FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            mvm.UpdateView()
-//                        }
-//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-//
-//                case "home":
-//                    HomeAnnotationView(label: pin.pointPin!.Name)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            mvm.UpdateView()
-//                        }
-//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-//
-//                case "shallow":
-//                    ShallowAnnotationView(label: pin.pointPin!.Name)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            mvm.UpdateView()
-//                        }
-//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-//
-//                case "fix":
-//                    WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)",
-//                                           backColor: pin.target && pin.pointRoute!.active ? mvm.routePinColor : .clear,
-//                            accentColor: pin.pointRoute!.active ? .blue : .gray)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            print("annotation tap \(mvm.cd.selectedRoutePoints.count)")
-//                            mvm.UpdateView()
-//                            print("selected pin count: \(mvm.cd.selectedPinCount())")
-//                        }
-//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-//                case "sim":
-//                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            mvm.UpdateView()
-//                        }
-//
-//                default:
-//                    WaypointAnnotationView(label: pin.pointPin!.Name, accentColor: pin.pointRoute!.active ? .blue : .gray)
-//                        .onTapGesture {
-//                            mvm.cd.toggleSelected(point: pin)
-//                            mvm.UpdateView()
-//                        }
-//                }
             }
         }
             .ignoresSafeArea()
@@ -121,7 +71,7 @@ extension MapView{
                     } label: {
                         AddBreadCrumbsView()
                             .buttonStyle(.plain)
-                            .background(.blue)
+                            .background(mvm.droppingCrumbs ? .orange : .blue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
@@ -215,7 +165,6 @@ extension MapView{
         
     }
         
-    
     func enablePinEdit()->Bool{
 //        print("\(mvm.cd.selectedPinCount()) selected pins")
         return mvm.cd.selectedPinCount() == 1

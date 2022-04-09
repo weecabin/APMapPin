@@ -95,6 +95,7 @@ extension MapViewModel{ // Navigation Functions
                     self.DropACrumbTask()
                 }
                 droppingCrumbs = true
+                route.visible = true
             }
         }else{
             if let timer = breadCrumbTimer{
@@ -102,6 +103,7 @@ extension MapViewModel{ // Navigation Functions
             }
             droppingCrumbs = false
         }
+        UpdateView()
     }
     
     func DropACrumbTask(){
@@ -109,11 +111,13 @@ extension MapViewModel{ // Navigation Functions
         if let loc = lastLocation{
             pin = cd.addMapPin(name: "t", location: loc, type: "fish")
         }else{
+            print("No valid location")
             return // no valid location
         }
         if let route = trackRoute{
             cd.addPinToRoute(route: route, pin: pin!)
         }
+        UpdateView()
     }
     
     func Navigate(route: Route){
@@ -217,7 +221,8 @@ extension MapViewModel{ // Navigation Functions
     
     func checkForSimPin(){
         simPin = nil
-        for pin in activeRoute()!.routePointsArray{
+        guard let route = activeRoute() else {return}
+        for pin in route.routePointsArray{
             if pin.pointPin!.type == "sim"{
                 simPin = pin.pointPin
                 return
@@ -231,6 +236,7 @@ extension MapViewModel{ // Navigation Functions
         }
         return nil
     }
+    
     enum LocationSource{
         case X
         case Location
@@ -246,7 +252,11 @@ extension MapViewModel{ // Navigation Functions
                 return
             }
         }
-        cd.addPinToRoute(routeName: route.Name, pin: pin!)
+        if let selectedPoint = cd.selectedRoutePoint(route: route){
+            cd.addPinToRoute(routeName: route.Name, pin: pin!, atIndex: Int(selectedPoint.index))
+        }else{
+            cd.addPinToRoute(routeName: route.Name, pin: pin!)
+        }
         UpdateView()
         print("Adding Pin to Route")
     }
