@@ -232,6 +232,45 @@ extension CoreData{
 
 // Route
 extension CoreData{
+    func fetchRoutes(){
+        let request = NSFetchRequest<Route>(entityName: "Route")
+        do {
+            savedRoutes = try container.viewContext.fetch(request)
+        } catch let error {
+            print("Error fetching. \(error)")
+        }
+        print("\(savedRoutes) route pins fetched")
+    }
+    
+    func initRoutes(){
+        fetchRoutes()
+        if deleteAllCoreData{deleteAllRoutes()}
+        if savedRoutes.count == 0{
+            for i in (1...5){
+                let route = Route(context: container.viewContext)
+                route.name = "R\(i)"
+            }
+            saveRouteData()
+        }
+    }
+    
+    func deleteAllRoutes(){
+        while savedRoutes.count > 0{
+            deleteRoute(indexSet:IndexSet(integer: 0))
+            saveRouteData()
+        }
+    }
+    
+    func ChangeRouteName(route:Route, name:String){
+        for r in savedRoutes{
+            if r == route{
+                r.name = name
+                saveRouteData()
+                return
+            }
+        }
+    }
+    
     func ClearSelectedPins(route:Route){
         for pin in route.routePointsArray{
             if pin.selected{toggleSelected(point: pin)}
@@ -350,35 +389,6 @@ extension CoreData{
             return route.routePointsArray
         }
         return []
-    }
-    
-    func fetchRoutes(){
-        let request = NSFetchRequest<Route>(entityName: "Route")
-        do {
-            savedRoutes = try container.viewContext.fetch(request)
-        } catch let error {
-            print("Error fetching. \(error)")
-        }
-        print("\(savedRoutes) route pins fetched")
-    }
-    
-    func initRoutes(){
-        fetchRoutes()
-        if deleteAllCoreData{deleteAllRoutes()}
-        if savedRoutes.count == 0{
-            for i in (1...5){
-                let route = Route(context: container.viewContext)
-                route.name = "R\(i)"
-            }
-            saveRouteData()
-        }
-    }
-    
-    func deleteAllRoutes(){
-        while savedRoutes.count > 0{
-            deleteRoute(indexSet:IndexSet(integer: 0))
-            saveRouteData()
-        }
     }
     
     func addRoute(name: String){
