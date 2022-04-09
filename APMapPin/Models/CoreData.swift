@@ -18,6 +18,7 @@ class CoreData: ObservableObject {
     @Published var savedRoutes: [Route] = []
     @Published var savedRoutePoints: [RoutePoint] = []
     @Published var selectedRoutePoints: [RoutePoint] = []
+    let deleteAllCoreData:Bool = false
     init() {
         container = NSPersistentContainer(name: "MapPinCoreData")
         container.loadPersistentStores { (description, error) in
@@ -57,7 +58,7 @@ extension CoreData{
     
     func initRoutePoints(){
         fetchRoutePoints()
-        //deleteAllRoutePoints()
+        if deleteAllCoreData{deleteAllRoutePoints()}
         if savedRoutePoints.count == 0{
             for i in (1...5){
                 let route = RoutePoint(context: container.viewContext)
@@ -154,7 +155,7 @@ extension CoreData{
     
     func initPins(){
         fetchMapPins()
-        //deleteAllMapPins()
+        if deleteAllCoreData{deleteAllMapPins()}
         if savedPins.count == 0{
             for i in (1...5){
                 let pin = MapPin(context: container.viewContext)
@@ -344,7 +345,7 @@ extension CoreData{
     
     func initRoutes(){
         fetchRoutes()
-        //deleteAllRoutes()
+        if deleteAllCoreData{deleteAllRoutes()}
         if savedRoutes.count == 0{
             for i in (1...5){
                 let route = Route(context: container.viewContext)

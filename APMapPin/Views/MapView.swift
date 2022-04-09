@@ -45,56 +45,66 @@ extension MapView{
             showsUserLocation: true,
             annotationItems: mvm.cd.visiblePointsArray()) { pin in
             MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: pin.pointPin!.latitude, longitude: pin.pointPin!.longitude)) {
-                switch pin.pointPin!.type {
-                case "fish":
-                    FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            mvm.UpdateView()
-                        }
-                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-
-                case "home":
-                    HomeAnnotationView(label: pin.pointPin!.Name)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            mvm.UpdateView()
-                        }
-                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-
-                case "shallow":
-                    ShallowAnnotationView(label: pin.pointPin!.Name)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            mvm.UpdateView()
-                        }
-                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-                    
-                case "fix":
-                    WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)",
-                                           backColor: pin.target && pin.pointRoute!.active ? mvm.routePinColor : .clear,
-                            accentColor: pin.pointRoute!.active ? .blue : .gray)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            print("annotation tap \(mvm.cd.selectedRoutePoints.count)")
-                            mvm.UpdateView()
-                            print("selected pin count: \(mvm.cd.selectedPinCount())")
-                        }
-                        .scaleEffect(pin.selected ? 1.5 : 1.0)
-                case "sim":
-                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            mvm.UpdateView()
-                        }
-                    
-                default:
-                    WaypointAnnotationView(label: pin.pointPin!.Name, accentColor: pin.pointRoute!.active ? .blue : .gray)
-                        .onTapGesture {
-                            mvm.cd.toggleSelected(point: pin)
-                            mvm.UpdateView()
-                        }
-                }
+                AnnotationView(type:pin.pointPin!.type!,
+                               label: "\(pin.pointPin!.Name)\(pin.suffix)",
+                               rotate: pin.pointPin!.course,
+                               foreColor: pin.pointRoute!.active ? .blue : .gray,
+                               backColor: pin.target && pin.pointRoute!.active ? mvm.routePinColor : .clear)
+                    .onTapGesture {
+                        mvm.cd.toggleSelected(point: pin)
+                        mvm.UpdateView()
+                    }
+                    .scaleEffect(pin.selected ? 1.5 : 1.0)
+//                switch pin.pointPin!.type {
+//                case "fish":
+//                    FishAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            mvm.UpdateView()
+//                        }
+//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
+//
+//                case "home":
+//                    HomeAnnotationView(label: pin.pointPin!.Name)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            mvm.UpdateView()
+//                        }
+//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
+//
+//                case "shallow":
+//                    ShallowAnnotationView(label: pin.pointPin!.Name)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            mvm.UpdateView()
+//                        }
+//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
+//
+//                case "fix":
+//                    WaypointAnnotationView(label: "\(pin.pointPin!.Name)-\(pin.index)",
+//                                           backColor: pin.target && pin.pointRoute!.active ? mvm.routePinColor : .clear,
+//                            accentColor: pin.pointRoute!.active ? .blue : .gray)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            print("annotation tap \(mvm.cd.selectedRoutePoints.count)")
+//                            mvm.UpdateView()
+//                            print("selected pin count: \(mvm.cd.selectedPinCount())")
+//                        }
+//                        .scaleEffect(pin.selected ? 1.5 : 1.0)
+//                case "sim":
+//                    SimAnnotationView(label: pin.pointPin!.Name, rotate: pin.pointPin!.course, accentColor: pin.pointRoute!.active ? .blue : .gray)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            mvm.UpdateView()
+//                        }
+//
+//                default:
+//                    WaypointAnnotationView(label: pin.pointPin!.Name, accentColor: pin.pointRoute!.active ? .blue : .gray)
+//                        .onTapGesture {
+//                            mvm.cd.toggleSelected(point: pin)
+//                            mvm.UpdateView()
+//                        }
+//                }
             }
         }
             .ignoresSafeArea()

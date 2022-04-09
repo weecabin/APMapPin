@@ -55,8 +55,16 @@ extension RoutePoint : Comparable{
         return pointRoute!.active
     }
     
+    public var suffix:String{
+        if pointPin!.type == "fix"{
+            return "-\(index)"
+        }else{
+            return ""
+        }
+    }
+    
     public var Name:String{
-        name ?? "Unknown name"
+            return name ?? "?"
     }
     
     public func setTarget(enabled:Bool){
