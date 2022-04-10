@@ -140,13 +140,13 @@ extension MapViewModel{ // Navigation Functions
         if simPin != nil{
             simInitialized = false
             UpdateSimulatedLocation()
-            if !navigate.StartNavigation(route: route, arrivalZone: 10){
+            if !navigate.StartNavigation(route: route){
                 print("Failed to start navigation")
                 simPin = nil
                 return
             }
         }else{
-            if !navigate.StartNavigation(route: route, arrivalZone: 30){
+            if !navigate.StartNavigation(route: route){
                 print("Failed to start navigation")
                 return
             }

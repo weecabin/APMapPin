@@ -9,10 +9,12 @@ import Foundation
 
 struct BreadCrumbs{
     let defaults = UserDefaults.standard
-
+    let defaultInterval:Double = 60
+    let defaultSeparation:Double = 30
+    
     var intervalSeconds:Double{
         get{
-            defaults.object(forKey:"CrumbSeconds") as? Double ?? 60
+            defaults.object(forKey:"CrumbSeconds") as? Double ?? defaultInterval
         }
         set(seconds){
             defaults.set(seconds, forKey:"CrumbSeconds")
@@ -20,28 +22,48 @@ struct BreadCrumbs{
     }
     var minSeparationMeters:Double{
         get{
-            defaults.object(forKey:"CrumbDistance") as? Double ?? 30
+            defaults.object(forKey:"CrumbDistance") as? Double ?? defaultSeparation
         }
-        set(feet){
-            defaults.set(feet, forKey:"CrumbDistance")
+        set(dist){
+            defaults.set(dist, forKey:"CrumbDistance")
+        }
+    }
+    var minSeparationFeet:Double{
+        get{
+            return minSeparationMeters * 3.28084
+        }
+        set(dist){
+            minSeparationMeters = dist / 3.28084
         }
     }
 }
 
 struct Navigation{
     let defaults = UserDefaults.standard
+    let defaultArrivalZone:Double = 30
+    let defaultInterval:Double = 10
     
-    var arrivalZone:Double{
+    var arrivalZoneMeters:Double{
         get{
-            defaults.object(forKey:"NavArrivalZone") as? Double ?? 30
+            defaults.object(forKey:"NavArrivalZone") as? Double ?? defaultArrivalZone
         }
         set(meters){
             defaults.set(meters, forKey:"NavArrivalZone")
         }
     }
+    
+    var arrivalZoneFeet:Double{
+        get{
+            arrivalZoneMeters * 3.28084
+        }
+        set(dist){
+            arrivalZoneMeters = dist / 3.28084
+        }
+    }
+    
     var intervalSeconds:Double{
         get{
-            defaults.object(forKey:"NavInterval") as? Double ?? 10
+            defaults.object(forKey:"NavInterval") as? Double ?? defaultInterval
         }
         set(seconds){
             defaults.set(seconds, forKey:"NavInterval")
@@ -49,6 +71,9 @@ struct Navigation{
     }
 }
 
+struct Simulator{
+    let defaults = UserDefaults.standard
+}
 struct Settings{
     var breadCrumbs:BreadCrumbs = BreadCrumbs()
     var navigation:Navigation = Navigation()

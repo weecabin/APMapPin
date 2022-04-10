@@ -25,7 +25,10 @@ struct MapView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                NavigationLink("Routes",destination: RouteView())
+                HStack{
+                    NavigationLink("Settings", destination: SettingsView())
+                    NavigationLink("Routes",destination: RouteView())
+                }
             }
         }
     }

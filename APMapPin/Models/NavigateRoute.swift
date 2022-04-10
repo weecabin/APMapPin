@@ -27,19 +27,19 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     var desiredBearingToTarget:Double?
     var bearingToTarget:Double?
     var lastLocation:CLLocation?
-    var arrivalZone:Double = 30 // assume if within this distance (m), we're at the target
+//    var arrivalZone:Double = 30 // assume if within this distance (m), we're at the target
     @Published var running:Bool = false
     @Published var distToTargetString:String="?"
     @Published var bearingToTargetString:String="?"
     @Published var desiredBearingToTargetString:String = "?"
     
     init(){
-        arrivalZone = settings.navigation.arrivalZone
     }
     
-    func StartNavigation(route:Route, arrivalZone:Double = 30, fromIndex:Int = 0) -> Bool{
+    func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
+//        arrivalZone = settings.navigation.arrivalZoneMeters
+//        print("arrivalZone set to \(arrivalZone)m")
         self.route = route
-        self.arrivalZone = arrivalZone
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
             return false}
@@ -72,8 +72,8 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             print("Invalid lastLoc")
             return}
         setTargetStats(lastLoc: lastLoc)
-        if distToTarget! < arrivalZone{
-            print("distToTarget: \(distToTarget!)  arrivalZone: \(arrivalZone)")
+        if distToTarget! < settings.navigation.arrivalZoneMeters{
+            print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")
             if routeIndex == route!.routePointsArray.count - 1{
                 route!.routePointsArray.last!.target = false
                 CancelNavigation()
