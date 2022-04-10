@@ -96,10 +96,11 @@ extension MapView{
                     } label: {
                         AddPinToRouteView()
                             .buttonStyle(.plain)
-                            .background(.blue)
+                            .background(enableButton() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    .disabled(!enableButton())
                     
                     Button {
                         mvm.AddRoutePoint(route: mvm.activeRoute()!, source: .Location)
@@ -117,22 +118,22 @@ extension MapView{
                     } label: {
                         RunRouteView()
                             .buttonStyle(.plain)
-                            .background(mvm.running ? .gray : .blue)
+                            .background(!enableStartNavButton() ? .gray : .blue)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(mvm.running)
+                    .disabled(!enableStartNavButton())
                     
                     Button {
                         mvm.StopNavigation()
                     } label: {
                         StopRouteView()
                             .buttonStyle(.plain)
-                            .background(mvm.running ? .blue : .gray)
+                            .background(enableStopNavButton() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!mvm.running)
+                    .disabled(!enableStopNavButton())
                     
                     Button {
                         deleteSelectedPins = true
@@ -164,17 +165,43 @@ extension MapView{
         }
         
     }
-        
+    func enableButton()->Bool{
+        for route in mvm.cd.savedRoutes{
+            if route.visible && route.active{
+                return true
+            }
+        }
+        return false
+    }
+    
+    func enableStartNavButton()->Bool{
+        if !enableButton(){return false}
+        if !mvm.running{
+            return true
+        }
+        return false
+    }
+    
+    func enableStopNavButton()->Bool{
+        if !enableButton(){return false}
+        if mvm.running{
+            return true
+        }
+        return false
+    }
+
     func enablePinEdit()->Bool{
-//        print("\(mvm.cd.selectedPinCount()) selected pins")
+        if !enableButton(){return false}
         return mvm.cd.selectedPinCount() == 1
     }
     
     func enableDeletePin()->Bool{
-        !mvm.running && mvm.cd.selectedPinCount()>0
+        if !enableButton(){return false}
+        return !mvm.running && mvm.cd.selectedPinCount()>0
     }
     
     func enableAddLocation()->Bool{
+        if !enableButton(){return false}
         if let loc = mvm.lastLocation{
             return loc.course >= 0
         }

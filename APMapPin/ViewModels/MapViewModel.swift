@@ -17,6 +17,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     @Published var cd = CoreData.shared
     
     @Published var updateView:Bool = false
+    var settings:Settings = Settings()
     var locationManager : CLLocationManager?
     var navigate:NavigateRoute = NavigateRoute()
     var mapInitialized:Bool = false
@@ -91,7 +92,7 @@ extension MapViewModel{ // Navigation Functions
         if !droppingCrumbs{
             if let route = cd.routeNamed(name: "Track", createIfNotFound: true){
                 trackRoute = route
-                breadCrumbTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { Timer in
+                breadCrumbTimer = Timer.scheduledTimer(withTimeInterval: settings.breadCrumbs.intervalSeconds, repeats: true) { Timer in
                     self.DropACrumbTask()
                 }
                 droppingCrumbs = true
@@ -109,7 +110,13 @@ extension MapViewModel{ // Navigation Functions
     func DropACrumbTask(){
         var pin:MapPin?
         if let loc = lastLocation{
-            pin = cd.addMapPin(name: "t", location: loc, type: "fish")
+            if let distToPreviousPin = distToPreviousPin(loc: loc){
+                if distToPreviousPin < settings.breadCrumbs.minSeparationMeters{
+                    print("Didn't meet min separation distance")
+                    return
+                }
+            }
+            pin = cd.addMapPin(name: "", location: loc, type: "fish")
         }else{
             print("No valid location")
             return // no valid location
@@ -118,6 +125,15 @@ extension MapViewModel{ // Navigation Functions
             cd.addPinToRoute(route: route, pin: pin!)
         }
         UpdateView()
+    }
+    
+    func distToPreviousPin(loc:CLLocation) -> Double?{
+        if let route = trackRoute{
+            if let prevPin = route.routePointsArray.last{
+                return prevPin.pointPin!.Location.distance(from: loc)
+            }
+        }
+        return nil
     }
     
     func Navigate(route: Route){
