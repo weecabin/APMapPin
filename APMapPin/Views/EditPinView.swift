@@ -12,12 +12,14 @@ struct EditPinView: View {
     @StateObject var cd = CoreData.shared
     @State var mapPin:MapPin
     @State var name:String=""
-    @State var type:String=""
+//    @State var type:String=""
     @State var latitude:String = ""
     @State var longitude:String = ""
     @State var altitude:String = ""
     @State var speed:String = ""
     @State var pinID:ObjectIdentifier?
+    var typeNames:[String] = ["fix","fish","shallow","home","track","sim"]
+    @State var typeNameIndex:Int = 0
     let h:CGFloat = 20
     var body: some View {
         VStack{
@@ -28,9 +30,9 @@ struct EditPinView: View {
             }
             HStack{
                 VStack(alignment: .trailing){
-                    HStack{
+//                    HStack{
                         Text("Name:")
-                    }
+//                    }
                     .frame(height: h)
                     HStack{
                         Text("Type:")
@@ -64,8 +66,13 @@ struct EditPinView: View {
                     }
                     .frame(height: h)
                     HStack{
-                        TextField("type", text: $type)
-                            .textInputAutocapitalization(.never)
+                        Picker("Pin", selection: $typeNameIndex) {
+                            ForEach(0..<typeNames.count, id:\.self){index in
+                                Text(typeNames[index])
+                                    .tag(index)
+                            }
+                        }
+                        Spacer()
                     }
                     .frame(height: h)
                     HStack{
@@ -97,7 +104,7 @@ struct EditPinView: View {
             }
             Button {
                 mapPin.name = name
-                mapPin.type = type
+                mapPin.type = typeNames[typeNameIndex]
                 mapPin.speedMph = Double(speed) ?? 0
                 mapPin.altInFeet = Double(altitude) ?? 0
                 mapPin.latitude = Double(latitude) ?? 0
@@ -156,7 +163,8 @@ struct EditPinView: View {
     func setup(){
         pinID = mapPin.id
         name = mapPin.Name
-        type = mapPin.unwrappedType
+//        type = mapPin.unwrappedType
+        typeNameIndex = typeNames.firstIndex(of: mapPin.unwrappedType) ?? 0
         latitude = String(mapPin.latitude)
         longitude = String(mapPin.longitude)
         altitude = String(mapPin.altInFeet)

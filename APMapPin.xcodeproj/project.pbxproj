@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		91047EBA27EA2855004B6070 /* APMapPinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EB927EA2855004B6070 /* APMapPinApp.swift */; };
-		91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EBB27EA2855004B6070 /* MapPinView.swift */; };
 		91047EBE27EA2856004B6070 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91047EBD27EA2856004B6070 /* Assets.xcassets */; };
 		91047EC127EA2856004B6070 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91047EC027EA2856004B6070 /* Preview Assets.xcassets */; };
 		91047EC827EA2896004B6070 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91047EC727EA2896004B6070 /* CoreData.swift */; };
@@ -37,7 +36,6 @@
 /* Begin PBXFileReference section */
 		91047EB627EA2855004B6070 /* APMapPin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APMapPin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91047EB927EA2855004B6070 /* APMapPinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APMapPinApp.swift; sourceTree = "<group>"; };
-		91047EBB27EA2855004B6070 /* MapPinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPinView.swift; sourceTree = "<group>"; };
 		91047EBD27EA2856004B6070 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		91047EC027EA2856004B6070 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		91047EC727EA2896004B6070 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
@@ -123,7 +121,6 @@
 		91047ECC27EA2D52004B6070 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				91047EBB27EA2855004B6070 /* MapPinView.swift */,
 				9136D33227EA7FBD00D06F7F /* RouteView.swift */,
 				91298EEA27EDC37F00A20C36 /* MapView.swift */,
 				91E4197927F671A4002E7ADF /* CustomButtonViews.swift */,
@@ -235,7 +232,6 @@
 				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
 				911C723B27EAE01000F027DC /* RoutePoint+CoreDataProperties.swift in Sources */,
 				91047EE227EA2F44004B6070 /* RouteMapPinExtensions.swift in Sources */,
-				91047EBC27EA2855004B6070 /* MapPinView.swift in Sources */,
 				91047EC827EA2896004B6070 /* CoreData.swift in Sources */,
 				91047ECF27EA2DA5004B6070 /* MapPinViewModel.swift in Sources */,
 				91047EDE27EA2F01004B6070 /* Route+CoreDataProperties.swift in Sources */,
