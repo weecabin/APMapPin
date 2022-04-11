@@ -27,6 +27,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     var desiredBearingToTarget:Double?
     var bearingToTarget:Double?
     var lastLocation:CLLocation?
+    var closeToTarget:Bool=false
 //    var arrivalZone:Double = 30 // assume if within this distance (m), we're at the target
     @Published var running:Bool = false
     @Published var distToTargetString:String="?"
@@ -39,6 +40,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
 //        arrivalZone = settings.navigation.arrivalZoneMeters
 //        print("arrivalZone set to \(arrivalZone)m")
+        closeToTarget = false
         self.route = route
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
@@ -73,6 +75,10 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             return}
         print("nav timer interval \(settings.navigation.intervalSeconds)")
         setTargetStats(lastLoc: lastLoc)
+        if !closeToTarget{
+            // change sample time if setting has changed
+            startNavTimer(interval: settings.navigation.intervalSeconds)
+        }
         if distToTarget! < settings.navigation.arrivalZoneMeters{
             print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")
             if routeIndex == route!.routePointsArray.count - 1{
@@ -80,14 +86,16 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
                 CancelNavigation()
                 return
             }
-            // head to the next point
-            setNavTimer(interval: settings.navigation.intervalSeconds)
+            // setup for the next point
+            closeToTarget = false
+            startNavTimer(interval: settings.navigation.intervalSeconds)
             route!.routePointsArray[routeIndex].target = false
             routeIndex = routeIndex + 1
             route!.routePointsArray[routeIndex].target = true
             let fromPinLoc = targetPinLocation // save it to compute the desired heading
             targetPin = route!.routePointsArray[routeIndex].pointPin
             targetPinLocation = targetPin!.Location
+            // calculate the bearing to the target from the previous pin
             desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: fromPinLoc!, point2: targetPinLocation!)
             desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
             setTargetStats(lastLoc: lastLoc)
@@ -110,18 +118,23 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             let test = (speed * 20)/distToTarget!
             //print("timerTest \(test)")
             if test > 1{
-                setNavTimer(interval: 1)
+                closeToTarget = true
+                startNavTimer(interval: 1)
             }
         }
     }
     
-    func setNavTimer(interval:Double){
-        if navTimer!.timeInterval == interval {return}
-        navTimer!.invalidate()
-        startNavTimer(interval: interval)
-    }
+//    func setNavTimer(interval:Double){
+//        if navTimer!.timeInterval == interval {return}
+//        navTimer!.invalidate()
+//        startNavTimer(interval: interval)
+//    }
     
     func startNavTimer(interval:Double){
+        if let timer = navTimer{
+            if timer.timeInterval == interval{return}
+            timer.invalidate()
+        }
         navTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { Timer in
             self.navigateRoute()
         }

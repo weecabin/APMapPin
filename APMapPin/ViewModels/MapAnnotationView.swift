@@ -35,9 +35,10 @@ struct AnnotationView: View{
                         .foregroundColor(foreColor)
                         .background(backColor.opacity(0.5))
                         .rotationEffect(Angle(degrees: rotate >= 0 ? -45 + rotate : 0))
+                        .offset(y:10)
                     Text(label)
                         .font(.footnote)
-                        .offset(y:-5)
+                        .offset(y:5)
                 }
             case "fish":
                 VStack(spacing:0){
@@ -63,6 +64,7 @@ struct AnnotationView: View{
                         .frame(width: 20, height: 20)
                         .foregroundColor(foreColor)
                         .background(backColor.opacity(0.5))
+                        .offset(y:10)
                     Text(label)
                         .font(.footnote)
                         .offset(y:-5)
@@ -78,9 +80,10 @@ struct AnnotationView: View{
                         .background(backColor.opacity(0.5))
                     //                .opacity(0.3)
                         .cornerRadius(10)
+                        .offset(y:10)
                     Text(label)
                         .font(.footnote)
-                        .offset(y:-5)
+                        .offset(y:5)
                 }
             case "shallow":
                 VStack{
@@ -98,6 +101,7 @@ struct AnnotationView: View{
                             .frame(width: 20, height: 20)
                             .foregroundColor(.red)
                     }
+                    .offset(y:10)
 //                    Text(label)
 //                        .font(.footnote)
 //                        .offset(y:-10)

@@ -17,7 +17,7 @@ struct MapView: View {
     var body: some View {
         ZStack{
             mapView
-            fixMenuView
+            topButtonView
             locationDetailsView
         }
         .onAppear {
@@ -34,13 +34,6 @@ struct MapView: View {
     }
 }
 
-struct MapView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapView()
-            .environmentObject(MapViewModel())
-    }
-}
-    
 extension MapView{
     var mapView : some View{
         Map(coordinateRegion: $mvm.region,
@@ -63,7 +56,7 @@ extension MapView{
             .ignoresSafeArea()
     }
     
-    var fixMenuView : some View{
+    var topButtonView : some View{
         ZStack{
             VStack{
                 Text(mvm.updateView ? "" : "")
@@ -117,26 +110,16 @@ extension MapView{
                     .disabled(!enableAddLocation())
                     
                     Button {
-                        mvm.Navigate(route: mvm.activeRoute()!)
+                        if mvm.running{mvm.StopNavigation()}
+                        else{mvm.Navigate(route: mvm.activeRoute()!)}
                     } label: {
                         RunRouteView()
                             .buttonStyle(.plain)
-                            .background(!enableStartNavButton() ? .gray : .blue)
+                            .background(navButtonCollor())
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!enableStartNavButton())
-                    
-                    Button {
-                        mvm.StopNavigation()
-                    } label: {
-                        StopRouteView()
-                            .buttonStyle(.plain)
-                            .background(enableStopNavButton() ? .blue : .gray)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .disabled(!enableStopNavButton())
+                    .disabled(!enableButton())
                     
                     Button {
                         deleteSelectedPins = true
@@ -186,6 +169,12 @@ extension MapView{
         return false
     }
     
+    func navButtonCollor()->Color{
+        if !enableButton(){return .gray}
+        if mvm.running{return .orange}
+        return .blue
+    }
+    
     func enableStopNavButton()->Bool{
         if !enableButton(){return false}
         if mvm.running{
@@ -230,3 +219,11 @@ extension MapView{
         }
     }
 }
+
+struct MapView_Previews: PreviewProvider {
+    static var previews: some View {
+        MapView()
+            .environmentObject(MapViewModel())
+    }
+}
+    
