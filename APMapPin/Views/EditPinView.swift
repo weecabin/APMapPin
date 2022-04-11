@@ -30,41 +30,25 @@ struct EditPinView: View {
             }
             HStack{
                 VStack(alignment: .trailing){
-//                    HStack{
-                        Text("Name:")
-//                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Type:")
-                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Latitude:")
-                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Longitude:")
-                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Altitude(ft):")
-                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Speed(mph):")
-                    }
-                    .frame(height: h)
-                    HStack{
-                        Text("Routes:")
-                    }
-                    .frame(height: h)
+                    Text("Name:")
+                        .frame(height: h)
+                    Text("Type:")
+                        .frame(height: h)
+                    Text("Latitude:")
+                        .frame(height: h)
+                    Text("Longitude:")
+                        .frame(height: h)
+                    Text("Altitude(ft):")
+                        .frame(height: h)
+                    Text("Speed(mph):")
+                        .frame(height: h)
+                    Text("Routes:")
+                        .frame(height: h)
                 }
                 VStack{
-                    HStack{
-                        TextField("name", text: $name)
-                            .textInputAutocapitalization(.never)
-                    }
-                    .frame(height: h)
+                    TextField("name", text: $name)
+                        .textInputAutocapitalization(.never)
+                        .frame(height: h)
                     HStack{
                         Picker("Pin", selection: $typeNameIndex) {
                             ForEach(0..<typeNames.count, id:\.self){index in
@@ -75,26 +59,18 @@ struct EditPinView: View {
                         Spacer()
                     }
                     .frame(height: h)
-                    HStack{
-                        TextField("lat", text: $latitude)
-                            .textInputAutocapitalization(.never)
-                    }
-                    .frame(height: h)
-                    HStack{
-                        TextField("lon", text: $longitude)
-                            .textInputAutocapitalization(.never)
-                    }
-                    .frame(height: h)
-                    HStack{
-                        TextField("altitude", text: $altitude)
-                            .textInputAutocapitalization(.never)
-                    }
-                    .frame(height: h)
-                    HStack{
-                        TextField("speed", text: $speed)
-                            .textInputAutocapitalization(.never)
-                    }
-                    .frame(height: h)
+                    TextField("lat", text: $latitude)
+                        .textInputAutocapitalization(.never)
+                        .frame(height: h)
+                    TextField("lon", text: $longitude)
+                        .textInputAutocapitalization(.never)
+                        .frame(height: h)
+                    TextField("altitude", text: $altitude)
+                        .textInputAutocapitalization(.never)
+                        .frame(height: h)
+                    TextField("speed", text: $speed)
+                        .textInputAutocapitalization(.never)
+                        .frame(height: h)
                     HStack{
                         Text(pinRoutes())
                         Spacer()
