@@ -28,6 +28,7 @@ struct MapView: View {
                 HStack{
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())
+                    Button("Pins"){if mvm.cd.savedPins.count > 0{selectedPin = mvm.cd.savedPins[0]}}
                 }
             }
         }

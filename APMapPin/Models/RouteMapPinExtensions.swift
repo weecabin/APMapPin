@@ -18,7 +18,7 @@ extension MapPin : Comparable{
     }
     
     public var unwrappedType:String{
-        type ?? "Unknown type"
+        type ?? "type?"
     }
     
     public var routePointsArray: [RoutePoint]{

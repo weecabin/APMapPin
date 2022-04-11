@@ -116,7 +116,7 @@ extension MapViewModel{ // Navigation Functions
                     return
                 }
             }
-            pin = cd.addMapPin(name: "", location: loc, type: "fish")
+            pin = cd.addMapPin(name: "", location: loc, type: "track")
         }else{
             print("No valid location")
             return // no valid location

@@ -10,19 +10,20 @@ import SwiftUI
 struct EditPinView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var cd = CoreData.shared
-    var mapPin:MapPin
+    @State var mapPin:MapPin
     @State var name:String=""
     @State var type:String=""
     @State var latitude:String = ""
     @State var longitude:String = ""
     @State var altitude:String = ""
     @State var speed:String = ""
-    let h:CGFloat = 30
+    @State var pinID:ObjectIdentifier?
+    let h:CGFloat = 20
     var body: some View {
         VStack{
             HStack{
                 Button("Exit"){presentationMode.wrappedValue.dismiss()}
-                    .padding()
+//                    .padding()
                 Spacer()
             }
             HStack{
@@ -49,6 +50,10 @@ struct EditPinView: View {
                     .frame(height: h)
                     HStack{
                         Text("Speed(mph):")
+                    }
+                    .frame(height: h)
+                    HStack{
+                        Text("Routes:")
                     }
                     .frame(height: h)
                 }
@@ -83,6 +88,11 @@ struct EditPinView: View {
                             .textInputAutocapitalization(.never)
                     }
                     .frame(height: h)
+                    HStack{
+                        Text(pinRoutes())
+                        Spacer()
+                    }
+                    .frame(height: h)
                 }
             }
             Button {
@@ -100,18 +110,71 @@ struct EditPinView: View {
                     .foregroundColor(.white)
                     .cornerRadius(30)
             }
+            Divider()
+            HStack{
+                Text("Map Pins, tap to edit")
+                Spacer()
+            }
 
+            ScrollView {
+                ScrollViewReader{proxy in
+                    ForEach(cd.savedPins){pin in
+                        HStack{
+                            Text(pin.unwrappedType)
+                            Text(pin.Name)
+                            Text("In(\(pin.pinPoints!.count))")
+                            Spacer()
+                            Button(
+                                action: {deletePin(pin: pin)},
+                                label: {Image(systemName: "trash")}
+                            )
+                        }
+                        .id(pin.id)
+                        .padding(10)
+                        .background(pin==mapPin ? .orange : .teal)
+                        .cornerRadius(10)
+                        .onTapGesture {
+                            pinTapped(pin: pin)
+                        }
+                    }
+                    .onChange(of: pinID) { id in
+                        proxy.scrollTo(id)
+                    }
+                }
+            }
+            
             Spacer()
         }
         .padding()
-        .onAppear {
-            name = mapPin.Name
-            type = mapPin.unwrappedType
-            latitude = String(mapPin.latitude)
-            longitude = String(mapPin.longitude)
-            altitude = String(mapPin.altInFeet)
-            speed = String(mapPin.speedMph)
+        .onAppear {setup()}
+
+    }
+    func pinTapped(pin:MapPin){
+        mapPin = pin
+        setup()
+    }
+    func setup(){
+        pinID = mapPin.id
+        name = mapPin.Name
+        type = mapPin.unwrappedType
+        latitude = String(mapPin.latitude)
+        longitude = String(mapPin.longitude)
+        altitude = String(mapPin.altInFeet)
+        speed = String(mapPin.speedMph)
+    }
+    func deletePin(pin:MapPin){
+        cd.deleteMapPin(mapPin: pin)
+        mapPin = cd.savedPins[0]
+    }
+    func pinRoutes()->String{
+        var routes:String = ""
+        for point in mapPin.routePointsArray{
+            if let route = point.pointRoute{
+                if routes.count > 0 {routes.append(",")}
+                routes.append(route.Name)
+            }
         }
+        return routes
     }
 }
 

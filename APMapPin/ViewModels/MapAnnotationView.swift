@@ -55,6 +55,21 @@ struct AnnotationView: View{
                         .font(.footnote)
                         .offset(y:5)
                 }
+            case "track":
+                VStack(spacing:0){
+                    Image(systemName: rotate >= 0 ? "paperplane.fill" : "questionmark.diamond")
+                        .resizable()
+                        .scaledToFit()
+                        .font(.headline)
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(foreColor)
+                        .background(backColor.opacity(0.5))
+                        .rotationEffect(Angle(degrees: rotate >= 0 ? -45 + rotate : 0))
+                        .offset(y:10)
+                    Text(label)
+                        .font(.footnote)
+                        .offset(y:5)
+                }
             case "Home":
                 VStack(spacing:0){
                     Image(systemName: "house.circle")
