@@ -55,7 +55,8 @@ extension RouteEditView{
                 Text("Select Pin >")
                 Picker("Pin", selection: $pinPickerIndex) {
                     ForEach(0..<cd.savedPins.count, id:\.self){index in
-                        Text(cd.savedPins[index].Name).tag(index)
+                        Text("\(cd.savedPins[index].Name)(\(cd.savedPins[index].unwrappedType))")
+                            .tag(index)
                     }
                 }
 
@@ -104,10 +105,7 @@ extension RouteEditView{
                         .onMove(perform: onMoveRoutePin)
                     }
                     .toolbar{EditButton()}
-                    //.navigationTitle("Route \(route.Name)")
-                    //.navigationBarHidden(true)
                 }
-                //.navigationViewStyle(StackNavigationViewStyle())
             }
         }
         .onAppear {
@@ -115,7 +113,6 @@ extension RouteEditView{
         }
     }
     func updateRouteName(){
-//        route.name = name
         cd.ChangeRouteName(route: route, name: name)
     }
     

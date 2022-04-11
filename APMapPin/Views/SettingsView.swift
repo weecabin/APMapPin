@@ -38,7 +38,7 @@ struct SettingsView: View {
                 .padding(0)
             }
 
-            
+            Divider()
             Text("Navigation")
             HStack{
                 VStack(alignment: .trailing){
@@ -60,6 +60,7 @@ struct SettingsView: View {
                         .frame(height: 20)
                 }
             }
+            Divider()
             HStack{
                 Spacer()
                 Button("OK"){saveSettings()}
@@ -75,7 +76,7 @@ struct SettingsView: View {
                     .cornerRadius(10)
                 Spacer()
             }
-            .padding(.top, 40)
+            .padding(.top, 20)
             
             Spacer()
         }

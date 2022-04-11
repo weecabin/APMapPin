@@ -12,7 +12,6 @@ struct EditPinView: View {
     @StateObject var cd = CoreData.shared
     @State var mapPin:MapPin
     @State var name:String=""
-//    @State var type:String=""
     @State var latitude:String = ""
     @State var longitude:String = ""
     @State var altitude:String = ""
@@ -25,7 +24,6 @@ struct EditPinView: View {
         VStack{
             HStack{
                 Button("Exit"){presentationMode.wrappedValue.dismiss()}
-//                    .padding()
                 Spacer()
             }
             HStack{
@@ -103,8 +101,8 @@ struct EditPinView: View {
                 ScrollViewReader{proxy in
                     ForEach(cd.savedPins){pin in
                         HStack{
-                            Text(pin.unwrappedType)
                             Text(pin.Name)
+                            Text("(\(pin.unwrappedType))")
                             Text("In(\(pin.pinPoints!.count))")
                             Spacer()
                             Button(
@@ -125,7 +123,6 @@ struct EditPinView: View {
                     }
                 }
             }
-            
             Spacer()
         }
         .padding()
@@ -139,7 +136,6 @@ struct EditPinView: View {
     func setup(){
         pinID = mapPin.id
         name = mapPin.Name
-//        type = mapPin.unwrappedType
         typeNameIndex = typeNames.firstIndex(of: mapPin.unwrappedType) ?? 0
         latitude = String(mapPin.latitude)
         longitude = String(mapPin.longitude)

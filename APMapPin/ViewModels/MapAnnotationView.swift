@@ -50,11 +50,11 @@ struct AnnotationView: View{
                         .foregroundColor(foreColor)
                         .background(backColor.opacity(0.5))
                         .rotationEffect(Angle(degrees: rotate >= 0 ? -45 + rotate : 0))
-                        .offset(y:10)
                     Text(label)
                         .font(.footnote)
                         .offset(y:5)
                 }
+                .offset(y:8)
             case "track":
                 VStack(spacing:0){
                     Image(systemName: rotate >= 0 ? "paperplane.fill" : "questionmark.diamond")
@@ -95,11 +95,11 @@ struct AnnotationView: View{
                         .background(backColor.opacity(0.5))
                     //                .opacity(0.3)
                         .cornerRadius(10)
-                        .offset(y:10)
                     Text(label)
                         .font(.footnote)
                         .offset(y:5)
                 }
+                .offset(y:8)
             case "shallow":
                 VStack{
                     ZStack{
@@ -116,7 +116,7 @@ struct AnnotationView: View{
                             .frame(width: 20, height: 20)
                             .foregroundColor(.red)
                     }
-                    .offset(y:10)
+//                    .offset(y:10)
 //                    Text(label)
 //                        .font(.footnote)
 //                        .offset(y:-10)
@@ -146,15 +146,39 @@ struct MapAnnotationView_Previews: PreviewProvider {
     static var previews: some View {
         HStack{
             VStack{
-                AnnotationView(type:"fish",label:"fish",rotate: 0)
-                AnnotationView(type:"fish",label:"fish",rotate: 90)
-                AnnotationView(type:"fish",label:"fish",rotate: 180)
-                AnnotationView(type:"fish",label:"fish",rotate: -1)
+                ZStack{
+                    AnnotationView(type:"fish",label:"fish",rotate: 0)
+                    Text("X")
+                }
+                ZStack{
+                    AnnotationView(type:"fish",label:"fish",rotate: 90)
+                    Text("X")
+                }
+                ZStack{
+                    AnnotationView(type:"fish",label:"fish",rotate: 180)
+                    Text("X")
+                }
+                ZStack{
+                    AnnotationView(type:"fish",label:"fish",rotate: -1)
+                    Text("X")
+                }
             }
             VStack{
-                AnnotationView(type:"shallow")
-                AnnotationView(type:"Home", label: "Home")
-                AnnotationView(type:"fix",backColor:.blue)
+                ZStack{
+                    AnnotationView(type:"shallow")
+                    Text("X")
+                }
+                ZStack{
+                    AnnotationView(type:"Home", label: "Home")
+                    Text("X")
+                }
+                ZStack{
+                    AnnotationView(type:"fix",backColor:.blue)
+                    Text("X")
+                }
+                
+                
+                
             }
         }
 //        HStack{
