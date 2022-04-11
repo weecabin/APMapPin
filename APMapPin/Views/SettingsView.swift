@@ -14,6 +14,7 @@ struct SettingsView: View {
     @State var crumbDistance:String = ""
     @State var navArrivalZone:String = ""
     @State var navInterval:String = ""
+    @State var navProportional:String = ""
     
     var body: some View {
         VStack(alignment: .leading){
@@ -45,6 +46,8 @@ struct SettingsView: View {
                         .frame(height: 20)
                     Text("ArrivalZone(ft):")
                         .frame(height: 20)
+                    Text("PID-kp:")
+                        .frame(height: 20)
                 }
                 .frame(width: 180)
                 
@@ -52,6 +55,8 @@ struct SettingsView: View {
                     TextField("interval", text: $navInterval)
                         .frame(height: 20)
                     TextField("arrivalZone", text: $navArrivalZone)
+                        .frame(height: 20)
+                    TextField("PID-kp", text: $navProportional)
                         .frame(height: 20)
                 }
             }
@@ -85,6 +90,7 @@ struct SettingsView: View {
         crumbInterval = String(settings.breadCrumbs.intervalSeconds)
         navInterval = String(settings.navigation.intervalSeconds)
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
+        navProportional = String(settings.navigation.proportionalTerm)
     }
     
     func saveSettings(){
@@ -92,6 +98,7 @@ struct SettingsView: View {
         settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.breadCrumbs.intervalSeconds = Double(crumbInterval) ?? settings.breadCrumbs.defaultInterval
         settings.breadCrumbs.minSeparationFeet = Double(crumbDistance) ?? settings.breadCrumbs.defaultSeparation
+        settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
         presentationMode.wrappedValue.dismiss()
     }
 }

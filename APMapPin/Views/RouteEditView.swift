@@ -51,14 +51,14 @@ extension RouteEditView{
             }
             .padding()
             HStack{
-//                Spacer()
+
                 Text("Select Pin >")
                 Picker("Pin", selection: $pinPickerIndex) {
                     ForEach(0..<cd.savedPins.count, id:\.self){index in
                         Text(cd.savedPins[index].Name).tag(index)
                     }
                 }
-                .border(.black, width: 2)
+
                 Spacer()
                 Button(action: {addPinToRoute()}, label: {Text("Add")})
                     .buttonStyle(.plain)

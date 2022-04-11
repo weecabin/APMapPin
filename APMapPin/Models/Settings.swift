@@ -42,6 +42,16 @@ struct Navigation{
     let defaults = UserDefaults.standard
     let defaultArrivalZone:Double = 30
     let defaultInterval:Double = 10
+    let defaultProportionalTerm:Double = 2
+    
+    var proportionalTerm:Double{
+        get{
+            defaults.object(forKey:"NavProportionalTerm") as? Double ?? defaultProportionalTerm
+        }
+        set(multiple){
+            defaults.set(multiple, forKey:"NavProportionalTerm")
+        }
+    }
     
     var arrivalZoneMeters:Double{
         get{

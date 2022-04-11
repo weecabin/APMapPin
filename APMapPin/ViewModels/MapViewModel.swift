@@ -167,7 +167,7 @@ extension MapViewModel{ // Navigation Functions
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
             let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
             print("desired course Error \(courseError)")
-            simPin!.course = newCourseToTarget + courseError
+            simPin!.course = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
         }else{
             if let lastLoc = lastLocation{
                 let lastLocCourse = lastLoc.course
@@ -175,7 +175,8 @@ extension MapViewModel{ // Navigation Functions
                 //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
                 let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
-                print("new course \(newCourseToTarget + courseError)")
+                let newHeading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+                print("new course \(newHeading)")
             }
         }
     }

@@ -71,6 +71,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
             return}
+        print("nav timer interval \(settings.navigation.intervalSeconds)")
         setTargetStats(lastLoc: lastLoc)
         if distToTarget! < settings.navigation.arrivalZoneMeters{
             print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")

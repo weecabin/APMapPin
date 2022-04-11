@@ -168,6 +168,7 @@ extension MapView{
         }
         
     }
+    
     func enableButton()->Bool{
         for route in mvm.cd.savedRoutes{
             if route.visible && route.active{
