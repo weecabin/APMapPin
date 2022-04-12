@@ -29,10 +29,11 @@ struct AddLocationView : View {
     var body : some View{
         VStack{
             ZStack{
-                Image(systemName: "paperplane")
-                    .offset(x: 7, y: -3)
+                Image("FishImage")
+                    .resizable()
+                    .offset(x: 0, y: -3)
                 Image(systemName: "plus")
-                    .offset(x: -4, y: 5)
+                    .offset(x: -8, y: 9)
             }
         }
         .frame(width: width, height: height, alignment: .center)
