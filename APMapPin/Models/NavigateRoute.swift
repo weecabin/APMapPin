@@ -8,13 +8,9 @@
 import SwiftUI
 import CoreLocation
 
-protocol CurrentLocationDelegate{
-    func currentLocation(location:CLLocation)
-}
-class NavigateRoute : ObservableObject, CurrentLocationDelegate{
-    func currentLocation(location: CLLocation) {
-        lastLocation = location
-    }
+
+class NavigateRoute : ObservableObject{
+    var navUpdateReadyDelegate:NavUpdateReadyDelegate?
     var settings:Settings = Settings()
     var navCompleteDeletate:NavCompleteDelegate?
     var route:Route?
@@ -75,6 +71,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             return}
         print("nav timer interval \(settings.navigation.intervalSeconds)")
         setTargetStats(lastLoc: lastLoc)
+        
         if !closeToTarget{
             // change sample time if setting has changed
             startNavTimer(interval: settings.navigation.intervalSeconds)
@@ -100,6 +97,9 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
             desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
             setTargetStats(lastLoc: lastLoc)
             //print("New Target")
+        }
+        if let navupdate = navUpdateReadyDelegate{
+            navupdate.navUpdateReady()
         }
     }
     
@@ -141,6 +141,7 @@ class NavigateRoute : ObservableObject, CurrentLocationDelegate{
     }
     
     func CancelNavigation(){
+        print("in CancelNavigation")
         if let killTimer = navTimer{
             killTimer.invalidate()
         }

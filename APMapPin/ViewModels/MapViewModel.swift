@@ -12,11 +12,13 @@ protocol NavCompleteDelegate{
     func NavComplete()
 }
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate{
+class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate{
+    
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
     
     @Published var updateView:Bool = false
+    var ble:BLEManager?
     var settings:Settings = Settings()
     var locationManager : CLLocationManager?
     var navigate:NavigateRoute = NavigateRoute()
@@ -37,11 +39,12 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var breadCrumbTimer:Timer?
     var trackRoute:Route?
     
-    func initMap(){
+    func initMap(ble:BLEManager){
         if !mapInitialized{
             checkLocationServicesIsOn()
             mapInitialized = true
             navigate.navCompleteDeletate = self
+            self.ble = ble
         }
         UpdateView()
     }
@@ -62,7 +65,6 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
         if simPin != nil {
             UpdateSimulatedLocation()
         }
-        UpdateHeading()
         switch (routePinColor){
         case .yellow:
             routePinColor = .green
@@ -81,13 +83,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     }
 }
 
-extension MapViewModel{ // Navigation Functions
-    
-    var running:Bool{
-//        print("running: \(navigate.running)")
-        return navigate.running
-    }
-    
+extension MapViewModel{ // BreadCrumb Functions
     func StartStopBreadCrumbs(){
         if !droppingCrumbs{
             if let route = cd.routeNamed(name: "Track", createIfNotFound: true){
@@ -135,8 +131,17 @@ extension MapViewModel{ // Navigation Functions
         }
         return nil
     }
+}
+
+extension MapViewModel{ // Navigation Functions
+    
+    var running:Bool{
+//        print("running: \(navigate.running)")
+        return navigate.running
+    }
     
     func Navigate(route: Route){
+        navigate.navUpdateReadyDelegate = self
         if simPin != nil{
             simInitialized = false
             UpdateSimulatedLocation()
@@ -151,7 +156,6 @@ extension MapViewModel{ // Navigation Functions
                 return
             }
         }
-        UpdateHeading()
         StartBlinkTimer()
         UpdateView()
     }
@@ -160,7 +164,7 @@ extension MapViewModel{ // Navigation Functions
         navigate.CancelNavigation()
     }
     
-    func UpdateHeading(){
+    func navUpdateReady() {
         if let pin = simPin{
             let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
@@ -176,11 +180,12 @@ extension MapViewModel{ // Navigation Functions
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
                 let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
                 let newHeading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
-                print("new course \(newHeading)")
+                print("Sending AP: ht\(newHeading)")
+                ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",newHeading))")
             }
         }
     }
-    
+
     func UpdateSimulatedLocation(){
         if let pin = simPin{
             if !simInitialized{
