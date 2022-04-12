@@ -12,7 +12,7 @@ protocol NavCompleteDelegate{
     func NavComplete()
 }
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate{
+class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate, MapMessageDelegate{
     
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
@@ -45,6 +45,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             mapInitialized = true
             navigate.navCompleteDeletate = self
             self.ble = ble
+            ble.mapMessageDelegate = self
         }
         UpdateView()
     }
@@ -80,6 +81,42 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     
     func UpdateView(){
         updateView.toggle()
+    }
+    
+    func mapMessage(msg: String) {
+        print("Watch msg: \(msg)")
+        if let route = activeRoute(){
+            print("Updating \(route.Name)")
+            switch (msg){
+            case "FishOn":
+                DispatchQueue.main.async {
+                    print("in DispatchQueue")
+                    if let loc = self.lastLocation{
+                        print("Adding fish")
+                        let pin = self.cd.addMapPin(name: "", location: loc, type: "fish")
+                        self.cd.addPinToRoute(route: route, pin: pin)
+                        self.UpdateView()
+                    }else{
+                        print("no valid location found")
+                    }
+                  }
+                break
+            case "Shallow":
+                DispatchQueue.main.async {
+                    print("Adding shallow")
+                    if let loc = self.lastLocation{
+                        let pin = self.cd.addMapPin(name: "", location: loc, type: "shallow")
+                        self.cd.addPinToRoute(route: route, pin: pin)
+                        self.UpdateView()
+                    }else{
+                        print("no valid location found")
+                    }
+                  }
+                break
+            default:
+                break
+            }
+        }
     }
 }
 
