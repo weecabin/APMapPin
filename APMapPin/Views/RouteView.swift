@@ -126,6 +126,7 @@ extension RouteView{
             primaryButton: .default(Text("OK"), action: action),
             secondaryButton: .cancel())
     }
+    
     func setActiveRoute(route:Route){
         if route == cd.getActiveRoute() || !route.visible{return}
         if let activeRoute = cd.getActiveRoute(){
@@ -137,21 +138,26 @@ extension RouteView{
     
     func toggleRouteVisible(route:Route){
         route.visible.toggle()
-        if route.active{
-            // make the first visible route active
-            route.active=false
-            for visRoute in cd.getVisibleRoutes(){
-                if visRoute.visible{
-                    visRoute.active = true
-                    break
+        if !route.visible{
+            cd.clearTargetedPin(route: route)
+            cd.ClearSelectedPins(route: route)
+            if route.active{
+                // make the first visible route active
+                route.active=false
+                for visRoute in cd.getVisibleRoutes(){
+                    if visRoute.visible{
+                        visRoute.active = true
+                        break
+                    }
                 }
-            }
-        }else{ // make this route the active route if there is no visible active route
-            if !cd.isActiveRouteVisible(){
-                cd.setActiveRoute(activeRoute: route)
+            }else{ // make this route the active route if there is no visible active route
+                if !cd.isActiveRouteVisible(){
+                    cd.setActiveRoute(activeRoute: route)
+                }
             }
         }
         cd.saveRouteData()
+        cd.saveRoutePointData()
     }
 
     func deleteRoute(route:Route){

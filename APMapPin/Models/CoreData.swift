@@ -373,6 +373,16 @@ extension CoreData{
             }
         }
     }
+    
+    func clearTargetedPin(route:Route){
+        for point in route.routePointsArray{
+            if point.target{
+                point.target = false
+                return
+            }
+        }
+    }
+    
     func routeNamed(name:String, createIfNotFound:Bool = false) -> Route?{
         for route in savedRoutes{
             if route.Name == name{return route}
