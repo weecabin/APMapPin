@@ -99,6 +99,18 @@ func bearingString(bearing:Double) -> String{
     return "\(String(format: "%.1f",bearing))deg"
 }
 
+func timeString(seconds:Int) -> String{
+    let time = secondsToHoursMinutesSeconds(seconds)
+    let hours:String = time.0>0 ? "\(time.0)h" : ""
+    let mins:String = time.1>0 ? "\(time.1)m" : ""
+    let secs:String = "\(time.2)s"
+    return "\(hours)\(mins)\(secs)"
+}
+
+func secondsToHoursMinutesSeconds(_ seconds: Int) -> (Int, Int, Int) {
+    return (seconds / 3600, (seconds % 3600) / 60, (seconds % 3600) % 60)
+}
+
 func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
 
 func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }

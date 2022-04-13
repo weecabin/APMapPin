@@ -11,31 +11,30 @@ import CoreLocation
 
 class NavigateRoute : ObservableObject{
     var navUpdateReadyDelegate:NavUpdateReadyDelegate?
-    var settings:Settings = Settings()
     var navCompleteDeletate:NavCompleteDelegate?
-    var route:Route?
-    var navTimer:Timer?
-    var targetPin:MapPin?
-    var routeIndex:Int = -1
-    var targetPinLocation:CLLocation?
-    var currentLocation:CLLocation?
-    var distToTarget:Double?
     var desiredBearingToTarget:Double?
     var bearingToTarget:Double?
-    var lastLocation:CLLocation?
-    var closeToTarget:Bool=false
-//    var arrivalZone:Double = 30 // assume if within this distance (m), we're at the target
+    
     @Published var running:Bool = false
     @Published var distToTargetString:String="?"
     @Published var bearingToTargetString:String="?"
     @Published var desiredBearingToTargetString:String = "?"
+    @Published var timeToTargetPin:String="?"
+    
+    private var distToTarget:Double?
+    private var targetPinLocation:CLLocation?
+    private var navTimer:Timer?
+    private var targetPin:MapPin?
+    private var routeIndex:Int = -1
+    private var settings:Settings = Settings()
+    private var route:Route?
+    private var lastLocation:CLLocation?
+    private var closeToTarget:Bool=false
     
     init(){
     }
     
     func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
-//        arrivalZone = settings.navigation.arrivalZoneMeters
-//        print("arrivalZone set to \(arrivalZone)m")
         closeToTarget = false
         self.route = route
         guard let lastLoc = lastLocation else {
@@ -54,7 +53,6 @@ class NavigateRoute : ObservableObject{
             }
             targetPin = route.routePointsArray[routeIndex].pointPin
         }
-        //print("StartNavigation lastLoc \(lastLoc)")
         route.routePointsArray[routeIndex].setTarget(enabled: true)
         targetPinLocation = CLLocation(latitude: targetPin!.latitude, longitude: targetPin!.longitude)
         desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
@@ -108,6 +106,8 @@ class NavigateRoute : ObservableObject{
         distToTargetString = distanceString(meters: distToTarget!)
         bearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
         bearingToTargetString = bearingString(bearing: bearingToTarget!)
+        let timeToPin = distToTarget!/lastLoc.speed
+        timeToTargetPin = timeString(seconds: Int(timeToPin))
         adjustTimerInterval()
     }
     
@@ -123,12 +123,6 @@ class NavigateRoute : ObservableObject{
             }
         }
     }
-    
-//    func setNavTimer(interval:Double){
-//        if navTimer!.timeInterval == interval {return}
-//        navTimer!.invalidate()
-//        startNavTimer(interval: interval)
-//    }
     
     func startNavTimer(interval:Double){
         if let timer = navTimer{
@@ -151,5 +145,8 @@ class NavigateRoute : ObservableObject{
         }
     }
     
+    func locationUpdate(location:CLLocation){
+        lastLocation = location
+    }
     
 }

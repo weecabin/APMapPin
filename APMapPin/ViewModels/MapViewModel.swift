@@ -173,11 +173,13 @@ extension MapViewModel{ // BreadCrumb Functions
 extension MapViewModel{ // Navigation Functions
     
     func selectedPinToX()->String{
-        if let pin = cd.selectedRoutePoints[0].pointPin{
-            let xloc = CLLocation(latitude: region.center.latitude, longitude: region.center.longitude)
-            let dist = pin.Location.distance(from: xloc)
-            let bearing = getBearingBetweenTwoPoints1(point1: pin.Location, point2: xloc)
-            return "\(distanceString(meters: dist)) \(bearingString(bearing:bearing))"
+        if cd.selectedRoutePoints.count > 0{
+            if let pin = cd.selectedRoutePoints[0].pointPin{
+                let xloc = CLLocation(latitude: region.center.latitude, longitude: region.center.longitude)
+                let dist = pin.Location.distance(from: xloc)
+                let bearing = getBearingBetweenTwoPoints1(point1: pin.Location, point2: xloc)
+                return "\(distanceString(meters: dist)) \(bearingString(bearing:bearing))"
+            }
         }
         return "?"
     }
@@ -260,7 +262,7 @@ extension MapViewModel{ // Navigation Functions
             //print("simPin lat: \(pin.latitude) lon: \(pin.longitude)")
             lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: 3, timestamp: Date.now)
             //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
-            navigate.lastLocation = lastLocation
+            navigate.locationUpdate(location: lastLocation!)
             var speed = lastLocation!.speed
             speed = (speed >= 0) ? speed * 2.23694 : 0
             lastLocationSpeed =  String(format: "%.1f",speed)
@@ -412,7 +414,7 @@ extension MapViewModel{ // Location calls
         guard let location = locations.first else {return}
         if simPin != nil {return}
         lastLocation = location
-        navigate.lastLocation = lastLocation
+        navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
         speed = (speed >= 0) ? speed * 2.23694 : 0
         lastLocationSpeed =  String(format: "%.1f",speed)
