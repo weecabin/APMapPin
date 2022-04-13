@@ -252,7 +252,8 @@ extension MapViewModel{ // Navigation Functions
                 simStartLocation = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
                 simInitialized = true
             }
-            let distanceTraveled = Float(3)
+            let speedInMetersPerSec = settings.navigation.simulatedSpeed / 2.23694
+            let distanceTraveled = Float(speedInMetersPerSec)
             let newCoord = getNewTargetCoordinate(
                 position: CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude),
                 userBearing: Float(pin.course),
@@ -260,7 +261,8 @@ extension MapViewModel{ // Navigation Functions
             pin.latitude = newCoord.latitude
             pin.longitude = newCoord.longitude
             //print("simPin lat: \(pin.latitude) lon: \(pin.longitude)")
-            lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: 3, timestamp: Date.now)
+            
+            lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: speedInMetersPerSec, timestamp: Date.now)
             //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
             navigate.locationUpdate(location: lastLocation!)
             var speed = lastLocation!.speed

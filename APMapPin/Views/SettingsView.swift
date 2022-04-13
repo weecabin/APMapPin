@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State var navArrivalZone:String = ""
     @State var navInterval:String = ""
     @State var navProportional:String = ""
+    @State var navSimulatedSpeed:String = ""
     
     var body: some View {
         VStack(alignment: .leading){
@@ -48,6 +49,8 @@ struct SettingsView: View {
                         .frame(height: 20)
                     Text("PID-kp:")
                         .frame(height: 20)
+                    Text("SimSpeed(mph)")
+                        .frame(height: 20)
                 }
                 .frame(width: 180)
                 
@@ -57,6 +60,8 @@ struct SettingsView: View {
                     TextField("arrivalZone", text: $navArrivalZone)
                         .frame(height: 20)
                     TextField("PID-kp", text: $navProportional)
+                        .frame(height: 20)
+                    TextField("NavSimSpeed", text: $navSimulatedSpeed)
                         .frame(height: 20)
                 }
             }
@@ -92,6 +97,7 @@ struct SettingsView: View {
         navInterval = String(settings.navigation.intervalSeconds)
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
+        navSimulatedSpeed = String(settings.navigation.simulatedSpeed)
     }
     
     func saveSettings(){
@@ -100,6 +106,7 @@ struct SettingsView: View {
         settings.breadCrumbs.intervalSeconds = Double(crumbInterval) ?? settings.breadCrumbs.defaultInterval
         settings.breadCrumbs.minSeparationFeet = Double(crumbDistance) ?? settings.breadCrumbs.defaultSeparation
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
+        settings.navigation.simulatedSpeed = Double(navSimulatedSpeed) ?? settings.navigation.defaultSimulatedSpeed
         presentationMode.wrappedValue.dismiss()
     }
 }

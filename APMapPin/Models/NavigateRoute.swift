@@ -129,6 +129,7 @@ class NavigateRoute : ObservableObject{
             }
         }
         let timeToPin = distToTarget!/lastLoc.speed
+//        print("dist: \(distToTarget!) time: \(timeToPin)")
         let targetToEndTime = timeToPin + distanceAfterTarget/lastLoc.speed
         timeToEnd = distanceAfterTarget > 0 ? timeString(seconds: Int(targetToEndTime)) : ""
     }

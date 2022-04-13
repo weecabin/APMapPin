@@ -43,6 +43,16 @@ struct Navigation{
     let defaultArrivalZone:Double = 30
     let defaultInterval:Double = 10
     let defaultProportionalTerm:Double = 2
+    let defaultSimulatedSpeed:Double = 10
+    
+    var simulatedSpeed:Double{
+        get{
+            defaults.object(forKey:"NavSimulatedSpeed") as? Double ?? defaultSimulatedSpeed
+        }
+        set(multiple){
+            defaults.set(multiple, forKey:"NavSimulatedSpeed")
+        }
+    }
     
     var proportionalTerm:Double{
         get{
