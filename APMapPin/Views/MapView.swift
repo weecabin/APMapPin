@@ -225,8 +225,14 @@ extension MapView{
             .background(.gray)
 
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)/ \(mvm.navigate.desiredBearingToTargetString) \(mvm.navigate.timeToTargetPin)") :
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)") :
                 Text("Nav:")
+                Spacer()
+            }
+            .background(.gray)
+            HStack{
+                mvm.navigate.running ? Text("ETE: \(mvm.navigate.timeToTargetPin) \(mvm.navigate.timeToEnd)") :
+                Text("ETE:")
                 Spacer()
             }
             .background(.gray)

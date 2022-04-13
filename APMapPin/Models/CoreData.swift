@@ -336,6 +336,17 @@ extension CoreData{
         return nil
     }
     
+    func distanceTo(route:Route, routePoint:RoutePoint)->Double?{
+        if let index = route.routePointsArray.firstIndex(of: routePoint){
+            if index > 0{
+                if let fromPin = route.routePointsArray[index-1].pointPin{
+                    return fromPin.Location.distance(from: routePoint.pointPin!.Location)
+                }
+            }
+        }
+        return nil
+    }
+    
     func selectedPin(route:Route) -> MapPin?{
         for pin in route.routePointsArray{
             if pin.selected{

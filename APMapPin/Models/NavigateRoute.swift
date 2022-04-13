@@ -10,6 +10,7 @@ import CoreLocation
 
 
 class NavigateRoute : ObservableObject{
+    var cd = CoreData.shared
     var navUpdateReadyDelegate:NavUpdateReadyDelegate?
     var navCompleteDeletate:NavCompleteDelegate?
     var desiredBearingToTarget:Double?
@@ -20,6 +21,7 @@ class NavigateRoute : ObservableObject{
     @Published var bearingToTargetString:String="?"
     @Published var desiredBearingToTargetString:String = "?"
     @Published var timeToTargetPin:String="?"
+    @Published var timeToEnd:String="?"
     
     private var distToTarget:Double?
     private var targetPinLocation:CLLocation?
@@ -108,7 +110,27 @@ class NavigateRoute : ObservableObject{
         bearingToTargetString = bearingString(bearing: bearingToTarget!)
         let timeToPin = distToTarget!/lastLoc.speed
         timeToTargetPin = timeString(seconds: Int(timeToPin))
+        updateTimeToEnd(lastLoc: lastLoc)
         adjustTimerInterval()
+    }
+    
+    func updateTimeToEnd(lastLoc:CLLocation){
+        var distanceAfterTarget:Double = 0
+        var lastIndex = route!.routePointsArray.count - 1
+        if let index = route!.routePointsArray.firstIndex(where: {$0.selected}){
+            lastIndex = index
+        }
+        if routeIndex < lastIndex{
+            for index in (routeIndex+1...lastIndex){
+                let rp = route!.routePointsArray[index]
+                if let dist = cd.distanceTo(route: route!, routePoint: rp){
+                    distanceAfterTarget = distanceAfterTarget + dist
+                }
+            }
+        }
+        let timeToPin = distToTarget!/lastLoc.speed
+        let targetToEndTime = timeToPin + distanceAfterTarget/lastLoc.speed
+        timeToEnd = distanceAfterTarget > 0 ? timeString(seconds: Int(targetToEndTime)) : ""
     }
     
     func adjustTimerInterval(){
