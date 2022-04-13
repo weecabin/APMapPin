@@ -198,7 +198,10 @@ extension MapView{
     func enableAddLocation()->Bool{
         if !enableButton(){return false}
         if let loc = mvm.lastLocation{
-            return loc.course >= 0
+            //print ("horiz accuracy: \(loc.horizontalAccuracy)")
+            if loc.horizontalAccuracy < 10{
+                return true
+            }
         }
         return false
     }
@@ -211,12 +214,23 @@ extension MapView{
                 Spacer()
             }
             .background(.gray)
+            
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)/ \(mvm.navigate.desiredBearingToTargetString)") :
-                Text("")
+                let singlePin = mvm.cd.selectedPinCount()==1
+                singlePin ? Text("Pin >") : Text("Loc >")
+                Text("X ")
+                singlePin ? Text("\(mvm.selectedPinToX())") : Text("\(mvm.locationToX())")
                 Spacer()
             }
             .background(.gray)
+
+            HStack{
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)/ \(mvm.navigate.desiredBearingToTargetString)") :
+                Text("Nav:")
+                Spacer()
+            }
+            .background(.gray)
+
             Text("")
         }
     }
@@ -227,6 +241,7 @@ struct MapView_Previews: PreviewProvider {
         NavigationView{
             MapView()
                 .environmentObject(MapViewModel())
+                .environmentObject(BLEManager())
         }
         
     }

@@ -172,6 +172,27 @@ extension MapViewModel{ // BreadCrumb Functions
 
 extension MapViewModel{ // Navigation Functions
     
+    func selectedPinToX()->String{
+        if let pin = cd.selectedRoutePoints[0].pointPin{
+            let xloc = CLLocation(latitude: region.center.latitude, longitude: region.center.longitude)
+            let dist = pin.Location.distance(from: xloc)
+            let bearing = getBearingBetweenTwoPoints1(point1: pin.Location, point2: xloc)
+            return "\(distanceString(meters: dist)) \(bearingString(bearing:bearing))"
+        }
+        return "?"
+    }
+    
+    func locationToX()->String{
+        if let loc = lastLocation{
+            let xloc = CLLocation(latitude: region.center.latitude, longitude: region.center.longitude)
+            let dist = loc.distance(from: xloc)
+            let bearing = getBearingBetweenTwoPoints1(point1: loc, point2: xloc)
+            return "\(distanceString(meters: dist)) \(bearingString(bearing: bearing))"
+        }
+        return "?"
+
+    }
+    
     var running:Bool{
 //        print("running: \(navigate.running)")
         return navigate.running
