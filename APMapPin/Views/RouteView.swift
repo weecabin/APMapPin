@@ -150,10 +150,11 @@ extension RouteView{
                         break
                     }
                 }
-            }else{ // make this route the active route if there is no visible active route
-                if !cd.isActiveRouteVisible(){
-                    cd.setActiveRoute(activeRoute: route)
-                }
+            }
+        }
+        if cd.getActiveRoute()==nil{
+            if let route = cd.getVisibleRoutes().first{
+                route.active = true
             }
         }
         cd.saveRouteData()
