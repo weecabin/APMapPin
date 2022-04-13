@@ -225,7 +225,7 @@ extension MapView{
             .background(.gray)
 
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)") :
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)>\(mvm.navigate.desiredBearingToTargetString)") :
                 Text("Nav:")
                 Spacer()
             }
