@@ -62,6 +62,7 @@ class NavigateRoute : ObservableObject{
         desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
         running = true
         startNavTimer(interval: settings.navigation.intervalSeconds)
+        setTargetStats(lastLoc: lastLoc)
         navigateRoute()
         return true
     }
@@ -72,7 +73,7 @@ class NavigateRoute : ObservableObject{
             print("Invalid lastLoc")
             return}
         //print("nav timer interval \(settings.navigation.intervalSeconds)")
-        setTargetStats(lastLoc: lastLoc)
+        //setTargetStats(lastLoc: lastLoc)
         
         if !closeToTarget{
             // change sample time if setting has changed
@@ -189,6 +190,8 @@ class NavigateRoute : ObservableObject{
     
     func locationUpdate(location:CLLocation){
         lastLocation = location
+        if running{
+            setTargetStats(lastLoc: lastLocation!)
+        }
     }
-    
 }
