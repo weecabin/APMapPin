@@ -45,6 +45,15 @@ struct Navigation{
     let defaultProportionalTerm:Double = 2
     let defaultSimulatedSpeed:Double = 10
     
+    var enableSimulation:Bool{
+        get{
+            defaults.object(forKey:"NavEnableSimulation") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"NavEnableSimulation")
+        }
+    }
+    
     var simulatedSpeed:Double{
         get{
             defaults.object(forKey:"NavSimulatedSpeed") as? Double ?? defaultSimulatedSpeed

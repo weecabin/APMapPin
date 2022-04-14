@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State var navInterval:String = ""
     @State var navProportional:String = ""
     @State var navSimulatedSpeed:String = ""
+    @State var navEnableSimulation:String = "false"
     
     var body: some View {
         VStack(alignment: .leading){
@@ -49,7 +50,9 @@ struct SettingsView: View {
                         .frame(height: 20)
                     Text("PID-kp:")
                         .frame(height: 20)
-                    Text("SimSpeed(mph)")
+                    Text("Simulate:")
+                        .frame(height: 20)
+                    Text("SimSpeed(mph):")
                         .frame(height: 20)
                 }
                 .frame(width: 180)
@@ -60,6 +63,8 @@ struct SettingsView: View {
                     TextField("arrivalZone", text: $navArrivalZone)
                         .frame(height: 20)
                     TextField("PID-kp", text: $navProportional)
+                        .frame(height: 20)
+                    enableSimView
                         .frame(height: 20)
                     TextField("NavSimSpeed", text: $navSimulatedSpeed)
                         .frame(height: 20)
@@ -90,6 +95,19 @@ struct SettingsView: View {
             initView()
         }
     }
+    var enableSimView:some View{
+        HStack{
+            Button {
+                if navEnableSimulation=="false"{
+                    navEnableSimulation = "true"
+                }else{
+                    navEnableSimulation = "false"
+                }
+            } label: {
+                Text(navEnableSimulation)
+            }
+        }
+    }
     
     func initView(){
         crumbDistance = String(settings.breadCrumbs.minSeparationFeet)
@@ -98,6 +116,7 @@ struct SettingsView: View {
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
         navSimulatedSpeed = String(settings.navigation.simulatedSpeed)
+        navEnableSimulation = settings.navigation.enableSimulation ? "true" : "false"
     }
     
     func saveSettings(){
@@ -107,6 +126,7 @@ struct SettingsView: View {
         settings.breadCrumbs.minSeparationFeet = Double(crumbDistance) ?? settings.breadCrumbs.defaultSeparation
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
         settings.navigation.simulatedSpeed = Double(navSimulatedSpeed) ?? settings.navigation.defaultSimulatedSpeed
+        settings.navigation.enableSimulation = navEnableSimulation == "true"
         presentationMode.wrappedValue.dismiss()
     }
 }

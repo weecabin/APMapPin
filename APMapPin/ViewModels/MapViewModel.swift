@@ -84,15 +84,15 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     }
     
     func mapMessage(msg: String) {
-        print("Watch msg: \(msg)")
+//        print("Watch msg: \(msg)")
         if let route = activeRoute(){
-            print("Updating \(route.Name)")
+//            print("Updating \(route.Name)")
             switch (msg){
             case "FishOn":
                 DispatchQueue.main.async {
-                    print("in DispatchQueue")
+//                    print("in DispatchQueue")
                     if let loc = self.lastLocation{
-                        print("Adding fish")
+//                        print("Adding fish")
                         let pin = self.cd.addMapPin(name: "", location: loc, type: "fish")
                         self.cd.addPinToRoute(route: route, pin: pin)
                         self.UpdateView()
@@ -103,7 +103,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
                 break
             case "Shallow":
                 DispatchQueue.main.async {
-                    print("Adding shallow")
+//                    print("Adding shallow")
                     if let loc = self.lastLocation{
                         let pin = self.cd.addMapPin(name: "", location: loc, type: "shallow")
                         self.cd.addPinToRoute(route: route, pin: pin)
@@ -202,16 +202,21 @@ extension MapViewModel{ // Navigation Functions
     
     func Navigate(route: Route){
         navigate.navUpdateReadyDelegate = self
-        if simPin != nil{
+        var startFromIndex = 0
+        if let selectedIndex = route.routePointsArray.firstIndex(where: {$0.selected}){
+            startFromIndex = selectedIndex
+        }
+        if settings.navigation.enableSimulation{
+            setSimPin()
             simInitialized = false
             UpdateSimulatedLocation()
-            if !navigate.StartNavigation(route: route){
+            if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 simPin = nil
                 return
             }
         }else{
-            if !navigate.StartNavigation(route: route){
+            if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 return
             }
@@ -230,7 +235,7 @@ extension MapViewModel{ // Navigation Functions
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
             let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
-            print("desired course Error \(courseError)")
+//            print("desired course Error \(courseError)")
             simPin!.course = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
         }else{
             if let lastLoc = lastLocation{
@@ -240,7 +245,7 @@ extension MapViewModel{ // Navigation Functions
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
                 let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
                 let newHeading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
-                print("Sending AP: ht\(newHeading)")
+//                print("Sending AP: ht\(newHeading)")
                 ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",newHeading))")
             }
         }
@@ -276,13 +281,13 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func NavComplete() {
-        print("in NavCompleteDelegate")
+//        print("in NavCompleteDelegate")
         StopBlinkTimer()
         if simPin != nil{
             simPin!.latitude = simStartLocation!.latitude
             simPin!.longitude = simStartLocation!.longitude
             simPin!.type = "fix"
-            print("nulling simPin")
+//            print("nulling simPin")
             simPin = nil
         }
         if let route = activeRoute(){
@@ -298,20 +303,14 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func editPinDismissed(){
-        checkForSimPin()
         UpdateView();
-        print("EditPinView dismissed")
+//        print("EditPinView dismissed")
     }
     
-    func checkForSimPin(){
-        simPin = nil
+    func setSimPin(){
         guard let route = activeRoute() else {return}
-        for pin in route.routePointsArray{
-            if pin.pointPin!.type == "sim"{
-                simPin = pin.pointPin
-                return
-            }
-        }
+        simPin = route.routePointsArray[0].pointPin
+        simPin!.type = "sim"
     }
     
     func activeRoute() -> Route?{
@@ -342,7 +341,7 @@ extension MapViewModel{ // Navigation Functions
             cd.addPinToRoute(routeName: route.Name, pin: pin!)
         }
         UpdateView()
-        print("Adding Pin to Route")
+//        print("Adding Pin to Route")
     }
     
     func DeleteSelectedPoints(){
@@ -414,7 +413,7 @@ extension MapViewModel{ // Location calls
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else {return}
-        if simPin != nil {return}
+        if settings.navigation.enableSimulation {return}
         lastLocation = location
         navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
