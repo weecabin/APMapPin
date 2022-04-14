@@ -32,6 +32,7 @@ class NavigateRoute : ObservableObject{
     private var route:Route?
     private var lastLocation:CLLocation?
     private var closeToTarget:Bool=false
+    private let epsilon:Double = 0.0000001
     
     init(){
     }
@@ -108,8 +109,12 @@ class NavigateRoute : ObservableObject{
         distToTargetString = distanceString(meters: distToTarget!)
         bearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
         bearingToTargetString = bearingString(bearing: bearingToTarget!)
-        let timeToPin = distToTarget!/lastLoc.speed
-        timeToTargetPin = timeString(seconds: Int(timeToPin))
+        if lastLoc.speed != 0{
+            let timeToPin = distToTarget!/lastLoc.speed
+            timeToTargetPin = timeString(seconds: Int(timeToPin))
+        }else{
+            timeToTargetPin = "?"
+        }
         updateTimeToEnd(lastLoc: lastLoc)
         adjustTimerInterval()
     }
@@ -130,8 +135,12 @@ class NavigateRoute : ObservableObject{
         }
         let timeToPin = distToTarget!/lastLoc.speed
 //        print("dist: \(distToTarget!) time: \(timeToPin)")
-        let targetToEndTime = timeToPin + distanceAfterTarget/lastLoc.speed
-        timeToEnd = distanceAfterTarget > 0 ? timeString(seconds: Int(targetToEndTime)) : ""
+        if lastLoc.speed != 0 {
+            let targetToEndTime = timeToPin + distanceAfterTarget/lastLoc.speed
+            timeToEnd = distanceAfterTarget > 0 ? timeString(seconds: Int(targetToEndTime)) : ""
+        }else{
+            timeToEnd = "?"
+        }
     }
     
     func adjustTimerInterval(){
