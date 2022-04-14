@@ -435,6 +435,12 @@ extension CoreData{
     }
     
     func deleteRoute(route: Route){
+        for point in route.routePointsArray{
+            if point.pointPin?.pinPoints?.count==1{
+                deleteMapPin(mapPin: point.pointPin!)
+            }
+            deleteRoutePoint(routePoint: point)
+        }
         container.viewContext.delete(route)
         saveRouteData()
     }
@@ -442,7 +448,8 @@ extension CoreData{
     func deleteRoute(indexSet: IndexSet) {
         guard let index = indexSet.first else { return }
         let entity = savedRoutes[index]
-        container.viewContext.delete(entity)
+        deleteRoute(route: entity)
+//        container.viewContext.delete(entity)
         saveRouteData()
     }
     

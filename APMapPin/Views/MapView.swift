@@ -29,7 +29,7 @@ struct MapView: View {
                 HStack{
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())
-                    Button("Pins"){if mvm.cd.savedPins.count > 0{selectedPin = mvm.cd.savedPins[0]}}
+                    Button("Pins"){setSelectedPinForPinEdit()}
                 }
             }
         }
@@ -152,6 +152,15 @@ extension MapView{
             Text("X")
         }
         
+    }
+    func setSelectedPinForPinEdit(){
+        if let selPin = mvm.cd.selectedRoutePoints.first{
+            selectedPin = selPin.pointPin
+            return
+        }
+        if mvm.cd.savedPins.count > 0{
+            selectedPin = mvm.cd.savedPins[0]
+        }
     }
     
     func enableButton()->Bool{
