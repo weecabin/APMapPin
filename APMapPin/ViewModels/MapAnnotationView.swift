@@ -52,7 +52,7 @@ struct AnnotationView: View{
                         .rotationEffect(Angle(degrees: rotate >= 0 ? -90 + rotate : 0))
                     Text(label)
                         .font(.footnote)
-                        .offset(y:5)
+                        .offset(y:-3)
                 }
                 .offset(y:8)
             case "track":
@@ -70,7 +70,7 @@ struct AnnotationView: View{
                         .font(.footnote)
                         .offset(y:5)
                 }
-            case "Home":
+            case "home":
                 VStack(spacing:0){
                     Image(systemName: "house.circle")
                         .resizable()
@@ -82,7 +82,7 @@ struct AnnotationView: View{
                         .offset(y:10)
                     Text(label)
                         .font(.footnote)
-                        .offset(y:-5)
+                        .offset(y:5)
                 }
             case "fix":
                 VStack(spacing:0){
@@ -97,7 +97,7 @@ struct AnnotationView: View{
                         .cornerRadius(10)
                     Text(label)
                         .font(.footnote)
-                        .offset(y:5)
+                        .offset(y:-2)
                 }
                 .offset(y:8)
             case "shallow":
@@ -169,7 +169,7 @@ struct MapAnnotationView_Previews: PreviewProvider {
                     Text("X")
                 }
                 ZStack{
-                    AnnotationView(type:"Home", label: "Home")
+                    AnnotationView(type:"home", label: "home")
                     Text("X")
                 }
                 ZStack{
