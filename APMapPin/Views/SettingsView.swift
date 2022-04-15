@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State var navProportional:String = ""
     @State var navSimulatedSpeed:String = ""
     @State var navEnableSimulation:String = "false"
+    @State var navTimerMode:String = "false"
     
     var body: some View {
         VStack(alignment: .leading){
@@ -44,6 +45,8 @@ struct SettingsView: View {
             Text("Navigation")
             HStack{
                 VStack(alignment: .trailing){
+                    Text("TimerMode:")
+                        .frame(height: 20)
                     Text("interval(s):")
                         .frame(height: 20)
                     Text("ArrivalZone(ft):")
@@ -58,6 +61,8 @@ struct SettingsView: View {
                 .frame(width: 180)
                 
                 VStack(alignment: .leading){
+                    timerModeView
+                        .frame(height: 20)
                     TextField("interval", text: $navInterval)
                         .frame(height: 20)
                     TextField("arrivalZone", text: $navArrivalZone)
@@ -95,6 +100,21 @@ struct SettingsView: View {
             initView()
         }
     }
+    
+    var timerModeView:some View{
+        HStack{
+            Button {
+                if navTimerMode=="false"{
+                    navTimerMode = "true"
+                }else{
+                    navTimerMode = "false"
+                }
+            } label: {
+                Text(navTimerMode)
+            }
+        }
+    }
+    
     var enableSimView:some View{
         HStack{
             Button {
@@ -117,6 +137,7 @@ struct SettingsView: View {
         navProportional = String(settings.navigation.proportionalTerm)
         navSimulatedSpeed = String(settings.navigation.simulatedSpeed)
         navEnableSimulation = settings.navigation.enableSimulation ? "true" : "false"
+        navTimerMode = settings.navigation.timerMode ? "true" : "false"
     }
     
     func saveSettings(){
@@ -127,6 +148,7 @@ struct SettingsView: View {
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
         settings.navigation.simulatedSpeed = Double(navSimulatedSpeed) ?? settings.navigation.defaultSimulatedSpeed
         settings.navigation.enableSimulation = navEnableSimulation == "true"
+        settings.navigation.timerMode = navTimerMode == "true"
         presentationMode.wrappedValue.dismiss()
     }
 }

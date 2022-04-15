@@ -33,11 +33,13 @@ class NavigateRoute : ObservableObject{
     private var lastLocation:CLLocation?
     private var closeToTarget:Bool=false
     private let epsilon:Double = 0.0000001
+    private var timerCounter:Double = 0
+    private var timerCounterLimit:Double = 1
     
     init(){
     }
-    
     func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
+        timerCounter = 0
         closeToTarget = false
         self.route = route
         guard let lastLoc = lastLocation else {
@@ -81,15 +83,14 @@ class NavigateRoute : ObservableObject{
         }
         //print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")
         if distToTarget! < settings.navigation.arrivalZoneMeters{
-//            print("close to target")
+            print("close to target")
             if routeIndex == route!.routePointsArray.count - 1{
                 route!.routePointsArray.last!.target = false
                 CancelNavigation()
                 return
             }
             // setup for the next point
-            closeToTarget = false
-            startNavTimer(interval: settings.navigation.intervalSeconds)
+
             route!.routePointsArray[routeIndex].target = false
             routeIndex = routeIndex + 1
             route!.routePointsArray[routeIndex].target = true
@@ -101,6 +102,8 @@ class NavigateRoute : ObservableObject{
             desiredBearingToTargetString = bearingString(bearing: desiredBearingToTarget!)
             setTargetStats(lastLoc: lastLoc)
             //print("New Target")
+            closeToTarget = false
+            startNavTimer(interval: settings.navigation.intervalSeconds)
         }
         if let navupdate = navUpdateReadyDelegate{
             navupdate.navUpdateReady()
@@ -120,7 +123,7 @@ class NavigateRoute : ObservableObject{
             timeToTargetPin = "?"
         }
         updateTimeToEnd(lastLoc: lastLoc)
-        adjustTimerInterval()
+        reduceTimerInterval()
     }
     
     func updateTimeToEnd(lastLoc:CLLocation){
@@ -148,32 +151,51 @@ class NavigateRoute : ObservableObject{
         }
     }
     
-    func adjustTimerInterval(){
-//        print("in adjustTimerInterval")
-        guard let timer = navTimer else {return}
-        if timer.timeInterval == 1 {return}
+    func reduceTimerInterval(){
+        if settings.navigation.timerMode{
+            guard let timer = navTimer else {return}
+            if timer.timeInterval == 1 {return}
+        }else{
+            if timerCounter == 1 {return}
+        }
         if let speed = lastLocation?.speed{
             let test = (speed * 20)/distToTarget!
 //            print("timerTest \(test)")
             if test > 1 && !closeToTarget{
                 closeToTarget = true
-                startNavTimer(interval: 1)
+                print("setting timer interval to 1")
+                if settings.navigation.timerMode{
+                    startNavTimer(interval: 1)
+                }else{
+                    timerCounterLimit = 1}
             }
         }
+        
+    }
+    
+    func testCloseToTarget(speed:Double)->Bool{
+        let sampleDistance = speed * settings.navigation.intervalSeconds
+        if (sampleDistance * 2) > (distToTarget!){
+            return true
+        }
+        return false
     }
     
     func startNavTimer(interval:Double){
-//        print("in startNavTimer \(interval)")
-        if let timer = navTimer{
-//            print("invalidating existing timer")
-            if timer.timeInterval == interval{
-//                print("exiting startNavTimer")
-                return}
-            timer.invalidate()
-        }
-        navTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { Timer in
-            self.navigateRoute()
-        }
+        print("in startNavTimer \(interval)")
+        if settings.navigation.timerMode{
+            if let timer = navTimer{
+    //            print("invalidating existing timer")
+                if timer.timeInterval == interval{
+    //                print("exiting startNavTimer")
+                    return}
+                timer.invalidate()
+            }
+            navTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { Timer in
+                self.navigateRoute()
+            }
+        }else{
+            timerCounterLimit = interval}
     }
     
     func CancelNavigation(){
@@ -192,6 +214,13 @@ class NavigateRoute : ObservableObject{
         lastLocation = location
         if running{
             setTargetStats(lastLoc: lastLocation!)
+            if !settings.navigation.timerMode{
+                timerCounter = timerCounter + 1
+                if timerCounter >= timerCounterLimit{
+                    timerCounter = 0
+                    navigateRoute()
+                }
+            }
         }
     }
 }

@@ -45,6 +45,15 @@ struct Navigation{
     let defaultProportionalTerm:Double = 2
     let defaultSimulatedSpeed:Double = 10
     
+    var timerMode:Bool{
+        get{
+            defaults.object(forKey:"NavTimerMode") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"NavTimerMode")
+        }
+    }
+    
     var enableSimulation:Bool{
         get{
             defaults.object(forKey:"NavEnableSimulation") as? Bool ?? false
