@@ -245,7 +245,7 @@ extension MapViewModel{ // Navigation Functions
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
                 let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
                 let newHeading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
-//                print("Sending AP: ht\(newHeading)")
+                print("Sending AP: ht\(newHeading)")
                 ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",newHeading))")
             }
         }
@@ -401,6 +401,7 @@ extension MapViewModel{ // Location calls
                                             span: region.span)
             mapInitialized = true
             locationManager.startUpdatingLocation()
+            locationManager.allowsBackgroundLocationUpdates = true
         }
         @unknown default:
             break
@@ -412,9 +413,11 @@ extension MapViewModel{ // Location calls
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.first else {return}
+        print("in locationManager - didUpdateLocations")
+        guard let location = locations.last else {return}
         if settings.navigation.enableSimulation {return}
         lastLocation = location
+        print("calling navigate.locationUpdate")
         navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
         speed = (speed >= 0) ? speed * 2.23694 : 0
@@ -424,5 +427,4 @@ extension MapViewModel{ // Location calls
         if heading >= 0 {lastLocationCourse = String(format: "%.1f",heading)}
         else{lastLocationCourse = "?"}
     }
-
 }

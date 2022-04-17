@@ -70,7 +70,7 @@ class NavigateRoute : ObservableObject{
     }
     
     private func navigateRoute(){
-//        print("in navigateRoute")
+        print("in navigateRoute")
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
             return}

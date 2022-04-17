@@ -127,6 +127,7 @@
 		91B40B1F280600E3004B5955 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		91BA559C27F8B9AB00B4A285 /* MyLib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLib.swift; sourceTree = "<group>"; };
 		91BB11C227FDC4D000F195F5 /* MapPinCoreData 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MapPinCoreData 4.xcdatamodel"; sourceTree = "<group>"; };
+		91D4FF05280C9E01009F57BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigateRoute.swift; sourceTree = "<group>"; };
 		91E4197927F671A4002E7ADF /* CustomButtonViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonViews.swift; sourceTree = "<group>"; };
 		91F67BC028062DA700829E63 /* APWatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APWatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -193,6 +194,7 @@
 		91047EB827EA2855004B6070 /* APMapPin */ = {
 			isa = PBXGroup;
 			children = (
+				91D4FF05280C9E01009F57BD /* Info.plist */,
 				91047EB927EA2855004B6070 /* APMapPinApp.swift */,
 				91047ECD27EA2D5A004B6070 /* ViewModels */,
 				91047ECC27EA2D52004B6070 /* Views */,
@@ -606,6 +608,7 @@
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = APMapPin/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need bluetooth to access the autopilot peripheral";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
@@ -639,6 +642,7 @@
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = APMapPin/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need bluetooth to access the autopilot peripheral";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
