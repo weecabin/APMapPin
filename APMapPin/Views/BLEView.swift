@@ -13,6 +13,7 @@ struct BLEView: View {
     @State var BLEName = "Adafruit Bluefruit LE"
     @State var GoToAPView:Bool = false
     @EnvironmentObject var bleManager: BLEManager
+    @EnvironmentObject var gvm:GlobalViewModel
 //    @EnvironmentObject var bleManager: BLESimulator
     
     var body: some View {
@@ -28,7 +29,7 @@ struct BLEView: View {
             destination: APConfigView(),
             label: {Text("Control")}))
         .onAppear {
-            bleManager.hasAppeared()
+            bleManager.hasAppeared(gvm:gvm)
         }
     }
 }

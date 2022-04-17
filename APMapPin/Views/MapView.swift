@@ -12,6 +12,8 @@ struct MapView: View {
     let defaults = UserDefaults.standard
     @EnvironmentObject var mvm:MapViewModel
     @EnvironmentObject var ble:BLEManager
+    @EnvironmentObject var gvm:GlobalViewModel
+    
     @State var selectedPin:MapPin?
     @State var selectedRoute:Route?
     @State var deleteSelectedPins:Bool = false
@@ -22,7 +24,7 @@ struct MapView: View {
             locationDetailsView
         }
         .onAppear {
-            mvm.initMap(ble:ble)
+            mvm.initMap(ble:ble, gvm:gvm)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {

@@ -34,6 +34,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     
     var messageReceivedFromAPDelegate: ReceiveApMessageDelegate!
     var mapMessageDelegate: MapMessageDelegate?
+    var gvm:GlobalViewModel?
     var myCentral: CBCentralManager!
     @Published var isSwitchedOn = false
     @Published var peripherals = [Peripheral]()
@@ -42,6 +43,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     @Published var rcvMessage: String = ""
     @Published var found:Bool = false
     @Published var rcvMsg:String = ""
+    var initialized:Bool = false
     var rcvString: String = ""
     var txCharacteristic: CBCharacteristic!
     var rxCharacteristic: CBCharacteristic!
@@ -63,7 +65,10 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         }
     }
 
-    func hasAppeared(){
+    func hasAppeared(gvm:GlobalViewModel){
+        if !initialized{
+            self.gvm = gvm
+        }
         print("in hasAppeared")
         if !vewIsReady{
             startScanning(stopOn: peripheralName)
@@ -251,7 +256,6 @@ extension BLEManager{
     }
     
     func sendMessageToAP(data: String){
-          
         let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
         
         if let foundPeripheral = foundPeripheral {
@@ -293,6 +297,9 @@ extension BLEManager : WCSessionDelegate{
         case "APMessage":
             if let msgStr = message["APMessage"] as? String{
                 if connected {
+                    if gvm!.navType != NavType.none{
+                        gvm!.stopNavigation()
+                    }
                     sendMessageToAP(data: msgStr)
                 }
             }

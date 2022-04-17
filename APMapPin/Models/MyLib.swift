@@ -10,7 +10,6 @@ import MapKit
 
 enum NavType{
     case none
-    case singlePin
     case route
 }
 

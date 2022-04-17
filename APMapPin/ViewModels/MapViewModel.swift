@@ -12,13 +12,14 @@ protocol NavCompleteDelegate{
     func NavComplete()
 }
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate, MapMessageDelegate{
+class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate, MapMessageDelegate, StopNavigationDelegate{
     
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
     
     @Published var updateView:Bool = false
     var ble:BLEManager?
+    var gvm:GlobalViewModel?
     var settings:Settings = Settings()
     var locationManager : CLLocationManager?
     var navigate:NavigateRoute = NavigateRoute()
@@ -39,13 +40,15 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var breadCrumbTimer:Timer?
     var trackRoute:Route?
     
-    func initMap(ble:BLEManager){
+    func initMap(ble:BLEManager, gvm:GlobalViewModel){
         if !mapInitialized{
             checkLocationServicesIsOn()
             mapInitialized = true
             navigate.navCompleteDeletate = self
+            self.gvm = gvm
             self.ble = ble
             ble.mapMessageDelegate = self
+            gvm.stopNavigationDelegate = self
         }
         UpdateView()
     }
@@ -201,6 +204,7 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func Navigate(route: Route){
+        gvm!.navType = .route
         navigate.navUpdateReadyDelegate = self
         var startFromIndex = 0
         if let selectedIndex = route.routePointsArray.firstIndex(where: {$0.selected}){
@@ -213,11 +217,13 @@ extension MapViewModel{ // Navigation Functions
             if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 simPin = nil
+                gvm?.navType = .none
                 return
             }
         }else{
             if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
+                gvm?.navType = .none
                 return
             }
         }
@@ -225,11 +231,20 @@ extension MapViewModel{ // Navigation Functions
         UpdateView()
     }
     
+    // Stop Nav delegate
+    func stopNav() {
+        StopNavigation()
+    }
+    
     func StopNavigation(){
         navigate.CancelNavigation()
     }
     
     func navUpdateReady() {
+        if gvm!.navType == .none{
+            StopNavigation()
+            return
+        }
         if let pin = simPin{
             let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
@@ -297,6 +312,7 @@ extension MapViewModel{ // Navigation Functions
 //                point.pointPin!.type = "fix"
             }
         }
+        gvm!.navType = .none
         cd.saveRoutePointData()
         cd.savePinData()
         UpdateView()
