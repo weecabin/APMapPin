@@ -12,7 +12,10 @@ protocol NavCompleteDelegate{
     func NavComplete()
 }
 
-class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate, MapMessageDelegate, StopNavigationDelegate{
+class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavCompleteDelegate, NavUpdateReadyDelegate,
+                        MapMessageDelegate, StopNavigationDelegate{
+    
+    
     
     @Published var region:MKCoordinateRegion = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.97869683639129, longitude: -120.53599956870863), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     @Published var cd = CoreData.shared
@@ -26,8 +29,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var mapInitialized:Bool = false
     
     var lastLocation:CLLocation?
-    var lastLocationSpeed:String = ""
-    var lastLocationCourse:String = ""
+    @Published var lastLocationSpeed:String = ""
+    @Published var lastLocationCourse:String = ""
     
     @Published var routePinColor:Color = .red
     var blinkPinTimer:Timer?
@@ -51,6 +54,49 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             gvm.stopNavigationDelegate = self
         }
         UpdateView()
+    }
+    
+    
+    
+    func CalibrateAP(){
+        if settings.navigation.enableSimulation{
+            gvm?.apIsCalibrated = true
+            return
+        }else{
+            if lastLocationCourse == "?"{gvm?.apIsCalibrated = false;return}
+        }
+        ble?.sendMessageToAP(data: "hc\(lastLocationCourse)")
+        gvm?.apIsCalibrated = true
+    }
+}
+
+extension MapViewModel{ // Map Functions
+    
+    func UpdateMapCenter(){
+        if settings.map.trackLocation{
+            if let lastLoc = lastLocation{
+                if let delta = locationToCenterDelta(){
+                    if delta > 0.1{
+                        withAnimation(.easeInOut){
+                            region.center = lastLoc.coordinate
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    func locationToCenterDelta()->Double?{
+        if let lastLoc = lastLocation?.coordinate{
+            let deltaLat = abs((region.center.latitude - lastLoc.latitude)/region.span.latitudeDelta)
+            let deltaLon = abs((region.center.longitude - lastLoc.longitude)/region.span.longitudeDelta)
+            if deltaLat > deltaLon{
+                return deltaLat
+            }
+            return deltaLon
+        }
+        return nil
     }
     
     func StartBlinkTimer(){
@@ -283,6 +329,7 @@ extension MapViewModel{ // Navigation Functions
             //print("simPin lat: \(pin.latitude) lon: \(pin.longitude)")
             
             lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: speedInMetersPerSec, timestamp: Date.now)
+            UpdateMapCenter()
             //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
             navigate.locationUpdate(location: lastLocation!)
             var speed = lastLocation!.speed
@@ -429,11 +476,12 @@ extension MapViewModel{ // Location calls
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("in locationManager - didUpdateLocations")
+//        print("in locationManager - didUpdateLocations")
         guard let location = locations.last else {return}
         if settings.navigation.enableSimulation {return}
         lastLocation = location
-        print("calling navigate.locationUpdate")
+        UpdateMapCenter()
+//        print("calling navigate.locationUpdate")
         navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
         speed = (speed >= 0) ? speed * 2.23694 : 0

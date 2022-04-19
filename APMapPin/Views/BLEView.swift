@@ -14,7 +14,6 @@ struct BLEView: View {
     @State var GoToAPView:Bool = false
     @EnvironmentObject var bleManager: BLEManager
     @EnvironmentObject var gvm:GlobalViewModel
-//    @EnvironmentObject var bleManager: BLESimulator
     
     var body: some View {
         VStack {
@@ -114,7 +113,6 @@ extension BLEView{
 
 struct StopScanning: View{
     @EnvironmentObject var bleManager: BLEManager
-//    @EnvironmentObject var bleManager: BLESimulator
     var body: some View{
         Button(action: {
             bleManager.stopScanning()
@@ -130,7 +128,6 @@ struct StopScanning: View{
 
 struct DisConnect: View{
     @EnvironmentObject var bleManager: BLEManager
-//    @EnvironmentObject var bleManager: BLESimulator
     var body: some View{
         Button(action: {
             bleManager.disconnect()
@@ -150,6 +147,7 @@ struct BLEView_Previews: PreviewProvider {
             NavigationView{
             BLEView()
                 .environmentObject(BLEManager())
+                .environmentObject(GlobalViewModel())
             }
             .navigationViewStyle(.stack)
         }

@@ -70,7 +70,7 @@ class NavigateRoute : ObservableObject{
     }
     
     private func navigateRoute(){
-        print("in navigateRoute")
+//        print("in navigateRoute")
         guard let lastLoc = lastLocation else {
             print("Invalid lastLoc")
             return}
@@ -182,7 +182,7 @@ class NavigateRoute : ObservableObject{
     }
     
     func startNavTimer(interval:Double){
-        print("in startNavTimer \(interval)")
+//        print("in startNavTimer \(interval)")
         if settings.navigation.timerMode{
             if let timer = navTimer{
     //            print("invalidating existing timer")

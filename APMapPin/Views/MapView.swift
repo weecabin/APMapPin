@@ -17,6 +17,8 @@ struct MapView: View {
     @State var selectedPin:MapPin?
     @State var selectedRoute:Route?
     @State var deleteSelectedPins:Bool = false
+    @State var showCalAlert:Bool = false
+    
     var body: some View {
         ZStack{
             mapView
@@ -29,6 +31,7 @@ struct MapView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
+                    Button {showCalAlert = true} label: {Text("Cal")}
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())
                     Button("Pins"){setSelectedPinForPinEdit()}
@@ -123,7 +126,7 @@ extension MapView{
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!enableButton())
+                    .disabled(!enableStartNavButton())
                     
                     Button {
                         deleteSelectedPins = true
@@ -150,11 +153,18 @@ extension MapView{
                 Alert(title: Text("Delete Selected Pins"),
                       primaryButton: .default(Text("OK"), action: {mvm.DeleteSelectedPoints()}),
                       secondaryButton: .cancel())
+                
+            }
+            .alert(isPresented: $showCalAlert) {
+                Alert(title: Text("Press OK while maintaining a constant course"),
+                      primaryButton: .default(Text("OK"), action: {mvm.CalibrateAP()}),
+                      secondaryButton: .cancel())
             }
             Text("X")
         }
         
     }
+    
     func setSelectedPinForPinEdit(){
         if let selPin = mvm.cd.selectedRoutePoints.first{
             selectedPin = selPin.pointPin
@@ -175,26 +185,25 @@ extension MapView{
     }
     
     func enableStartNavButton()->Bool{
-        if !enableButton(){return false}
-        if !mvm.running{
-            return true
-        }
-        return false
+        if mvm.running {return true}
+        if !enableButton() || !gvm.apIsCalibrated{return false}
+        return true
     }
     
     func navButtonCollor()->Color{
-        if !enableButton(){return .gray}
         if mvm.running{return .orange}
+        if !enableButton(){return .gray}
+        if !gvm.apIsCalibrated{return .gray}
         return .blue
     }
     
-    func enableStopNavButton()->Bool{
-        if !enableButton(){return false}
-        if mvm.running{
-            return true
-        }
-        return false
-    }
+//    func enableStopNavButton()->Bool{
+//        if !enableButton(){return false}
+//        if mvm.running{
+//            return true
+//        }
+//        return false
+//    }
 
     func enablePinEdit()->Bool{
         if !enableButton(){return false}
@@ -259,6 +268,7 @@ struct MapView_Previews: PreviewProvider {
             MapView()
                 .environmentObject(MapViewModel())
                 .environmentObject(BLEManager())
+                .environmentObject(GlobalViewModel())
         }
         
     }

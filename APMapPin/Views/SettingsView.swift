@@ -7,17 +7,23 @@
 
 import SwiftUI
 
+
+
 struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var gvm:GlobalViewModel
     @State var settings:Settings = Settings()
     @State var crumbInterval:String = ""
     @State var crumbDistance:String = ""
     @State var navArrivalZone:String = ""
+    
     @State var navInterval:String = ""
     @State var navProportional:String = ""
     @State var navSimulatedSpeed:String = ""
     @State var navEnableSimulation:String = "false"
     @State var navTimerMode:String = "false"
+    
+    @State var mapTrackLocation:String = "false"
     
     var body: some View {
         VStack(alignment: .leading){
@@ -76,6 +82,20 @@ struct SettingsView: View {
                 }
             }
             Divider()
+            Text("Map Settings")
+            HStack{
+                VStack(alignment: .trailing){
+                    Text("TrackLocation:")
+                        .frame(height: 20)
+                }
+                VStack(alignment: .leading){
+                    trackLocationView
+                        .frame(height: 20)
+                }
+            }
+            .frame(width: 180)
+            
+            Divider()
             HStack{
                 Spacer()
                 Button("OK"){saveSettings()}
@@ -92,12 +112,24 @@ struct SettingsView: View {
                 Spacer()
             }
             .padding(.top, 20)
-            
-            Spacer()
         }
         .padding()
         .onAppear {
             initView()
+        }
+    }
+    
+    var trackLocationView:some View{
+        HStack{
+            Button {
+                if mapTrackLocation=="false"{
+                    mapTrackLocation = "true"
+                }else{
+                    mapTrackLocation = "false"
+                }
+            } label: {
+                Text(mapTrackLocation)
+            }
         }
     }
     
@@ -132,24 +164,34 @@ struct SettingsView: View {
     func initView(){
         crumbDistance = String(settings.breadCrumbs.minSeparationFeet)
         crumbInterval = String(settings.breadCrumbs.intervalSeconds)
+        
         navInterval = String(settings.navigation.intervalSeconds)
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
         navSimulatedSpeed = String(settings.navigation.simulatedSpeed)
         navEnableSimulation = settings.navigation.enableSimulation ? "true" : "false"
         navTimerMode = settings.navigation.timerMode ? "true" : "false"
+        
+        mapTrackLocation = settings.map.trackLocation ? "true" : "false"
     }
     
     func saveSettings(){
-        settings.navigation.arrivalZoneFeet = Double(navArrivalZone) ?? settings.navigation.defaultArrivalZone
-        settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.breadCrumbs.intervalSeconds = Double(crumbInterval) ?? settings.breadCrumbs.defaultInterval
         settings.breadCrumbs.minSeparationFeet = Double(crumbDistance) ?? settings.breadCrumbs.defaultSeparation
+        
+        settings.navigation.arrivalZoneFeet = Double(navArrivalZone) ?? settings.navigation.defaultArrivalZone
+        settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
         settings.navigation.simulatedSpeed = Double(navSimulatedSpeed) ?? settings.navigation.defaultSimulatedSpeed
+        let prevSimMode = settings.navigation.enableSimulation
         settings.navigation.enableSimulation = navEnableSimulation == "true"
+        if prevSimMode == true && settings.navigation.enableSimulation == false{
+            gvm.apIsCalibrated = false
+        }
         settings.navigation.timerMode = navTimerMode == "true"
         presentationMode.wrappedValue.dismiss()
+        
+        settings.map.trackLocation = mapTrackLocation == "true"
     }
 }
 

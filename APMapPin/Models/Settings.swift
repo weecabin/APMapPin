@@ -109,10 +109,23 @@ struct Navigation{
     }
 }
 
-struct Simulator{
+struct MapSettings{
     let defaults = UserDefaults.standard
+    var trackLocation:Bool{
+        get{
+            defaults.object(forKey:"MapTrackLocation") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"MapTrackLocation")
+        }
+    }
 }
+
+//struct Simulator{
+//    let defaults = UserDefaults.standard
+//}
 struct Settings{
     var breadCrumbs:BreadCrumbs = BreadCrumbs()
     var navigation:Navigation = Navigation()
+    var map:MapSettings = MapSettings()
 }
