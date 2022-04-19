@@ -111,7 +111,10 @@ extension MapView{
                     .disabled(!enableButton())
                     
                     Button {
-                        mvm.AddRoutePoint(route: mvm.activeRoute()!, source: .Location)
+                        if let route = mvm.cd.routeNamed(name: "Dropped", createIfNotFound: true){
+                            route.visible = true
+                            mvm.AddRoutePoint(route: route, source: .Location)
+                        }
                     } label: {
                         AddLocationView()
                             .buttonStyle(.plain)

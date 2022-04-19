@@ -134,7 +134,8 @@ extension MapViewModel{ // Map Functions
     
     func mapMessage(msg: String) {
 //        print("Watch msg: \(msg)")
-        if let route = activeRoute(){
+        if let route = cd.routeNamed(name: "Dropped", createIfNotFound: true){
+            route.visible = true
 //            print("Updating \(route.Name)")
             switch (msg){
             case "FishOn":
@@ -404,7 +405,6 @@ extension MapViewModel{ // Navigation Functions
             cd.addPinToRoute(routeName: route.Name, pin: pin!)
         }
         UpdateView()
-//        print("Adding Pin to Route")
     }
     
     func DeleteSelectedPoints(){
