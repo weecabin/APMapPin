@@ -36,6 +36,11 @@ struct MapView: View {
                     NavigationLink("Routes",destination: RouteView())
                     Button("Pins"){setSelectedPinForPinEdit()}
                 }
+                // this alert has to be here or it prevents the other alert from firing
+                .alert(isPresented: $showCalAlert) {
+                    Alert(title: Text("Press OK while maintaining a constant course"),
+                          primaryButton: .default(Text("OK"), action: {mvm.CalibrateAP()}),
+                          secondaryButton: .cancel())}
             }
         }
     }
@@ -138,6 +143,10 @@ extension MapView{
                             .cornerRadius(10)
                     }
                     .disabled(!enableDeletePin())
+                    .alert(isPresented: $deleteSelectedPins) {
+                        Alert(title: Text("Delete Selected Pins"),
+                              primaryButton: .default(Text("OK"), action: {mvm.DeleteSelectedPoints()}),
+                              secondaryButton: .cancel())}
                     Spacer()
                 }
                 
@@ -146,20 +155,10 @@ extension MapView{
             .fullScreenCover(item: $selectedRoute,
                              onDismiss: {mvm.cd.saveRouteData();if mvm.running{mvm.StartBlinkTimer()}},
                              content: {RouteEditView(route: $0)})
+            
             .fullScreenCover(item: $selectedPin,
                              onDismiss: {mvm.editPinDismissed();if mvm.running{mvm.StartBlinkTimer()}},
                              content: {EditPinView(mapPin: $0) })
-            .alert(isPresented: $deleteSelectedPins) {
-                Alert(title: Text("Delete Selected Pins"),
-                      primaryButton: .default(Text("OK"), action: {mvm.DeleteSelectedPoints()}),
-                      secondaryButton: .cancel())
-                
-            }
-            .alert(isPresented: $showCalAlert) {
-                Alert(title: Text("Press OK while maintaining a constant course"),
-                      primaryButton: .default(Text("OK"), action: {mvm.CalibrateAP()}),
-                      secondaryButton: .cancel())
-            }
             Text("X")
         }
         
@@ -196,14 +195,6 @@ extension MapView{
         if !gvm.apIsCalibrated{return .gray}
         return .blue
     }
-    
-//    func enableStopNavButton()->Bool{
-//        if !enableButton(){return false}
-//        if mvm.running{
-//            return true
-//        }
-//        return false
-//    }
 
     func enablePinEdit()->Bool{
         if !enableButton(){return false}
