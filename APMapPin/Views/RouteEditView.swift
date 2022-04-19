@@ -55,7 +55,7 @@ extension RouteEditView{
                 Text("Select Pin >")
                 Picker("Pin", selection: $pinPickerIndex) {
                     ForEach(0..<cd.savedPins.count, id:\.self){index in
-                        Text("\(cd.savedPins[index].Name)(\(cd.savedPins[index].unwrappedType))")
+                        Text("\(cd.savedPins[index].Name)(\(cd.savedPins[index].unwrappedType)) \(pinIsSelected(pin:cd.savedPins[index]) ? "X" : "")")
                             .tag(index)
                     }
                 }
@@ -81,17 +81,18 @@ extension RouteEditView{
                                 if point.target{
                                     Image(systemName: "target")
                                 }
+                                Text("\(pinIsSelected(pin:point.pointPin!) ? "X" : "")")
                                 Spacer()
                                 
-                                Button(action: {
-                                    cd.setTarget(route: route, targetPoint: point)
-                                    ForceUpdate()
-                                },label: {Image(systemName: "target")})
-                                .buttonStyle(.plain)
-                                .frame(width: 40, height: 30)
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+//                                Button(action: {
+//                                    cd.setTarget(route: route, targetPoint: point)
+//                                    ForceUpdate()
+//                                },label: {Image(systemName: "target")})
+//                                .buttonStyle(.plain)
+//                                .frame(width: 40, height: 30)
+//                                .background(Color.blue)
+//                                .foregroundColor(.white)
+//                                .cornerRadius(10)
                                 
                                 Button(action: {deleteRoutePoint(point: point)},
                                        label: {Image(systemName: "trash.fill")})
@@ -111,6 +112,14 @@ extension RouteEditView{
         .onAppear {
             name = route.Name
         }
+    }
+    func pinIsSelected(pin:MapPin)->Bool{
+        for point in pin.routePointsArray{
+            if point.selected{
+                return true
+            }
+        }
+        return false
     }
     
     func updateRouteName(){
