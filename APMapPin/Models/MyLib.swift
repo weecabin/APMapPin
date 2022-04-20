@@ -158,18 +158,21 @@ func getNewTargetCoordinate(position: CLLocationCoordinate2D, userBearing: Float
     return CLLocationCoordinate2DMake(latitude2, longitude2)
 }
 
-class SimulatePosition{
+class SimulatedLocation{
     var settings:Settings = Settings()
     var prevLocation:CLLocation?
     var location:CLLocation?
     var heading:Double
-    var windInfluence:Double
+    var windPercent:Double
     let feetPerLatitude:Double = 364000
+    let metersPerFoot:Double = 0.3048
+    let metersPerLatitude:Double = 11094.72
+    var initialized:Bool = false
     
     init(location:CLLocation, heading:Double, windPercent:Double = 0){
         self.location = location
         self.prevLocation = location
-        windInfluence = windPercent
+        self.windPercent = windPercent * 0.01
         self.heading = heading
     }
     
@@ -177,18 +180,19 @@ class SimulatePosition{
         prevLocation = location
         if let prevCoord = prevLocation?.coordinate{
             let now = Date.now
-            let interval = now.timeIntervalSince(prevLocation!.timestamp)
+            let interval:Double = now.timeIntervalSince(prevLocation!.timestamp)
             let speedInMetersPerSec = settings.simulator.speed / 2.23694 // converting mph to m/s
             let distanceTraveled = Float(speedInMetersPerSec * interval)
-            let windPush:Double = windInfluence * interval / feetPerLatitude // for now wind is always from the south
+            let windPush:Double = (Double(distanceTraveled) * windPercent) / metersPerLatitude// for now wind is always from the south
+            print("windPush \(windPush)")
             // uses heading and wind to calculate the new location
             let newCoord = getNewTargetCoordinate(
                 position: CLLocationCoordinate2D(latitude: prevCoord.latitude + windPush, longitude: prevCoord.longitude),
                 userBearing: Float(heading),
                 distance: distanceTraveled)
             let newCourse = getBearingBetweenTwoPoints1(point1: prevCoord, point2: newCoord)
-            let newLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: newCourse, speed: speedInMetersPerSec, timestamp: Date.now)
-            return newLocation
+            location = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: newCourse, speed: speedInMetersPerSec, timestamp: Date.now)
+            return location
         }
         return nil
     }

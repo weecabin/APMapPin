@@ -40,6 +40,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var simPin:MapPin?
     var simInitialized:Bool = false
     var simStartLocation:CLLocationCoordinate2D?
+    var simulatedLocation:SimulatedLocation?
     
     var droppingCrumbs:Bool = false
     var breadCrumbTimer:Timer?
@@ -259,8 +260,9 @@ extension MapViewModel{ // Navigation Functions
         }
         if settings.simulator.enabled{
             setSimPin()
-            simInitialized = false
-            UpdateSimulatedLocation()
+            simStartLocation = CLLocationCoordinate2D(latitude: simPin!.latitude, longitude: simPin!.longitude)
+            navigate.locationUpdate(location: simPin!.Location)
+            simulatedLocation = SimulatedLocation(location: simPin!.Location, heading: 0, windPercent: 1)
             if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 simPin = nil
@@ -301,6 +303,7 @@ extension MapViewModel{ // Navigation Functions
             let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
 //            print("desired course Error \(courseError)")
             heading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+            simulatedLocation!.heading = heading
             simPin!.course = heading // this really won't simulate what happens
         }else{
             if let lastLoc = lastLocation{
@@ -319,21 +322,10 @@ extension MapViewModel{ // Navigation Functions
 
     func UpdateSimulatedLocation(){
         if let pin = simPin{
-            if !simInitialized{
-                simStartLocation = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-                simInitialized = true
-            }
-            let speedInMetersPerSec = settings.simulator.speed / 2.23694
-            let distanceTraveled = Float(speedInMetersPerSec)
-            let newCoord = getNewTargetCoordinate(
-                position: CLLocationCoordinate2D(latitude: pin.latitude + 0.000002747 * 0, longitude: pin.longitude),
-                userBearing: Float(pin.course),
-                distance: distanceTraveled)
-            pin.latitude = newCoord.latitude
-            pin.longitude = newCoord.longitude
-            //print("simPin lat: \(pin.latitude) lon: \(pin.longitude)")
-            
-            lastLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: pin.course, speed: speedInMetersPerSec, timestamp: Date.now)
+            lastLocation = simulatedLocation?.getNewPosition()
+//            print(lastLocation)
+            pin.latitude = lastLocation!.coordinate.latitude
+            pin.longitude = lastLocation!.coordinate.longitude
             UpdateMapCenter()
             //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
             navigate.locationUpdate(location: lastLocation!)
@@ -341,8 +333,8 @@ extension MapViewModel{ // Navigation Functions
             speed = (speed >= 0) ? speed * 2.23694 : 0
             lastLocationSpeed =  String(format: "%.1f",speed)
             
-            let heading = lastLocation!.course
-            if heading >= 0 {lastLocationCourse = String(format: "%.1f",heading)}
+            let course = lastLocation!.course
+            if course >= 0 {lastLocationCourse = String(format: "%.1f",course)}
             else{lastLocationCourse = "?"}
         }
     }
