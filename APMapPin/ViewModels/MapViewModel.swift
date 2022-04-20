@@ -56,8 +56,6 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
         UpdateView()
     }
     
-    
-    
     func CalibrateAP(){
         if settings.navigation.enableSimulation{
             gvm?.apIsCalibrated = true

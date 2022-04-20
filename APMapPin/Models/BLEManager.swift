@@ -38,7 +38,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     var myCentral: CBCentralManager!
     @Published var isSwitchedOn = false
     @Published var peripherals = [Peripheral]()
-    @Published var connected = false
+    @Published var connectedToAp = false
     @Published var scanning: Bool = false;
     @Published var rcvMessage: String = ""
     @Published var found:Bool = false
@@ -73,7 +73,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         if !vewIsReady{
             startScanning(stopOn: peripheralName)
             Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { Timer in
-                if !self.connected{
+                if !self.connectedToAp{
                     self.stopScanning()
                 }
             }
@@ -111,12 +111,12 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
         peripheral.delegate = self
         peripheral.discoverServices(nil)
         print("Connected to " + peripheral.name!)
-        connected = true
+        connectedToAp = true
     }
         
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print(peripheral.name! + " Disconnected")
-        connected = false
+        connectedToAp = false
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -296,10 +296,12 @@ extension BLEManager : WCSessionDelegate{
         switch message.keys.first{
         case "APMessage":
             if let msgStr = message["APMessage"] as? String{
-                if connected {
-                    if gvm!.navType != NavType.none{
-                        gvm!.stopNavigation()
+                if gvm!.navType != NavType.none{
+                    DispatchQueue.main.async {
+                        self.gvm!.stopNavigation()
                     }
+                }
+                if connectedToAp{
                     sendMessageToAP(data: msgStr)
                 }
             }

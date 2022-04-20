@@ -45,9 +45,9 @@ extension BLEView{
                 })
                     .frame(height: 0)
                     .padding()
-                    .background((!bleManager.connected ? Color.green : Color.gray) .cornerRadius(10))
+                    .background((!bleManager.connectedToAp ? Color.green : Color.gray) .cornerRadius(10))
                     .foregroundColor(bleManager.found ? .black : .white)
-                    .disabled(bleManager.connected)
+                    .disabled(bleManager.connectedToAp)
                 
                 if bleManager.scanning {StopScanning()}
             }
@@ -66,10 +66,10 @@ extension BLEView{
                 })
                     .frame(height: 0)
                     .padding()
-                    .background((bleManager.found && !bleManager.connected ? Color.green : Color.gray) .cornerRadius(10))
+                    .background((bleManager.found && !bleManager.connectedToAp ? Color.green : Color.gray) .cornerRadius(10))
                     .foregroundColor(bleManager.found ? .black : .white)
-                    .disabled(bleManager.connected || !bleManager.found)
-                if bleManager.connected{DisConnect()}
+                    .disabled(bleManager.connectedToAp || !bleManager.found)
+                if bleManager.connectedToAp{DisConnect()}
             }
         }
     }
@@ -82,7 +82,7 @@ extension BLEView{
             bleManager.isSwitchedOn ? Text("Yes"):Text("No")
             Spacer()
             Text("Connected: ")
-            bleManager.connected ? Text("Yes"):Text("No")
+            bleManager.connectedToAp ? Text("Yes"):Text("No")
         }
         .padding()
         .onChange(of: bleManager.isSwitchedOn) { newValue in
@@ -90,7 +90,7 @@ extension BLEView{
                 bleManager.startScanning(stopOn: bleManager.peripheralName)
             }
         }
-        .onChange(of: bleManager.connected) { newValue in
+        .onChange(of: bleManager.connectedToAp) { newValue in
             if newValue {GoToAPView = true}
         }
     }

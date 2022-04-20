@@ -74,9 +74,9 @@ extension APConfigView{
                 Text("Update State")
             })
                 .frame(width: 150, height: 40, alignment: .center)
-                .background((ble.connected ? Color.green : Color.gray) .cornerRadius(10))
-                .foregroundColor(ble.connected ? .black : .white)
-                .disabled(ble.connected ? false : true)
+                .background((ble.connectedToAp ? Color.green : Color.gray) .cornerRadius(10))
+                .foregroundColor(ble.connectedToAp ? .black : .white)
+                .disabled(ble.connectedToAp ? false : true)
             List(apvm.configItems) { item in
                 HStack{
                     Text(item.prompt)
@@ -206,9 +206,9 @@ extension APConfigView{
         }
         .frame(width: width, height: height)
         .padding(10)
-        .background((ble.connected && gvm.navType == .none && apvm.actuatorEnabled ? Color.green : Color.gray) .cornerRadius(height/2))
-        .foregroundColor(ble.connected && gvm.navType == .none ? .black : .white)
-        .disabled((ble.connected && gvm.navType == .none && apvm.actuatorEnabled) ? false : true)
+        .background((ble.connectedToAp && gvm.navType == .none && apvm.actuatorEnabled ? Color.green : Color.gray) .cornerRadius(height/2))
+        .foregroundColor(ble.connectedToAp && gvm.navType == .none ? .black : .white)
+        .disabled((ble.connectedToAp && gvm.navType == .none && apvm.actuatorEnabled) ? false : true)
     }
 }
 
