@@ -108,6 +108,8 @@ struct MapSettings{
 struct Simulator{
     let defaults = UserDefaults.standard
     let defaultSimSpeed:Double = 10
+    let defaultWindPercent:Double = 0
+    let defaultMaxCorrection:Double = 45
     
     var enabled:Bool{
         get{
@@ -122,8 +124,26 @@ struct Simulator{
         get{
             defaults.object(forKey:"SimSpeed") as? Double ?? defaultSimSpeed
         }
-        set(multiple){
-            defaults.set(multiple, forKey:"SimSpeed")
+        set(newValue){
+            defaults.set(newValue, forKey:"SimSpeed")
+        }
+    }
+    
+    var windPercent:Double{
+        get{
+            defaults.object(forKey:"WindPercent") as? Double ?? defaultWindPercent
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"WindPercent")
+        }
+    }
+    
+    var maxCorrectionDeg:Double{
+        get{
+            defaults.object(forKey:"MaxCorrection") as? Double ?? defaultMaxCorrection
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"MaxCorrection")
         }
     }
 }

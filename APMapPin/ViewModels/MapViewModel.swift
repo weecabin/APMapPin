@@ -262,7 +262,7 @@ extension MapViewModel{ // Navigation Functions
             setSimPin()
             simStartLocation = CLLocationCoordinate2D(latitude: simPin!.latitude, longitude: simPin!.longitude)
             navigate.locationUpdate(location: simPin!.Location)
-            simulatedLocation = SimulatedLocation(location: simPin!.Location, heading: 0, windPercent: 1)
+            simulatedLocation = SimulatedLocation(location: simPin!.Location, heading: 0)
             if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 simPin = nil
@@ -300,9 +300,13 @@ extension MapViewModel{ // Navigation Functions
             let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
-            let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
+            
+//            let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
 //            print("desired course Error \(courseError)")
-            heading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+//            var courseCorrection = settings.navigation.proportionalTerm * courseError
+//            if courseCorrection > 30 {courseCorrection = 30}
+//            else if courseCorrection < -30 {courseCorrection = -30}
+            heading = newHeading(courseToTarget: newCourseToTarget)
             simulatedLocation!.heading = heading
             simPin!.course = heading // this really won't simulate what happens
         }else{
@@ -311,8 +315,8 @@ extension MapViewModel{ // Navigation Functions
                 let headingError = HeadingError(target: navigate.bearingToTarget!, actual: lastLocCourse)
                 //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
-                let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
-                heading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+                
+                heading = newHeading(courseToTarget: newCourseToTarget)
                 print("Sending AP: ht\(heading)")
                 ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",heading))")
             }
@@ -320,6 +324,16 @@ extension MapViewModel{ // Navigation Functions
         headingString = String(format: "%.1f",heading)
     }
 
+    func newHeading(courseToTarget:Double)->Double{
+        let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: courseToTarget)
+        var courseCorrection = settings.navigation.proportionalTerm * courseError
+        let maxCorrection = settings.simulator.maxCorrectionDeg
+        if courseCorrection > maxCorrection {courseCorrection = maxCorrection}
+        else if courseCorrection < -maxCorrection {courseCorrection = -maxCorrection}
+        let heading = FixHeading(heading: (courseToTarget + courseCorrection))
+        return heading
+    }
+    
     func UpdateSimulatedLocation(){
         if let pin = simPin{
             lastLocation = simulatedLocation?.getNewPosition()

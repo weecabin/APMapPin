@@ -23,6 +23,8 @@ struct SettingsView: View {
     
     @State var simSpeed:String = ""
     @State var simEnabled:String = "false"
+    @State var simWindPercent:String = ""
+    @State var simMaxCorrection:String = ""
     
     @State var mapTrackLocation:String = "false"
     
@@ -87,7 +89,11 @@ struct SettingsView: View {
                     VStack(alignment:.trailing){
                         Text("Simulate:")
                             .frame(height: 20)
-                        Text("SimSpeed(mph):")
+                        Text("Speed(mph):")
+                            .frame(height: 20)
+                        Text("WindPercent:")
+                            .frame(height: 20)
+                        Text("MaxCorrection:")
                             .frame(height: 20)
                     }
                     .frame(width:180)
@@ -95,7 +101,11 @@ struct SettingsView: View {
                     VStack(alignment: .leading){
                         enableSimView
                             .frame(height: 20)
-                        TextField("NavSimSpeed", text: $simSpeed)
+                        TextField("Speed", text: $simSpeed)
+                            .frame(height: 20)
+                        TextField("WindPercent", text: $simWindPercent)
+                            .frame(height: 20)
+                        TextField("maxCorrection", text: $simMaxCorrection)
                             .frame(height: 20)
                     }
                 }
@@ -197,6 +207,8 @@ struct SettingsView: View {
         
         simSpeed = String(settings.simulator.speed)
         simEnabled = settings.simulator.enabled ? "true" : "false"
+        simWindPercent = String(settings.simulator.windPercent)
+        simMaxCorrection = String(settings.simulator.maxCorrectionDeg)
         
         mapTrackLocation = settings.map.trackLocation ? "true" : "false"
     }
@@ -208,13 +220,17 @@ struct SettingsView: View {
         settings.navigation.arrivalZoneFeet = Double(navArrivalZone) ?? settings.navigation.defaultArrivalZone
         settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
+        settings.navigation.timerMode = navTimerMode == "true"
+        
         settings.simulator.speed = Double(simSpeed) ?? settings.simulator.defaultSimSpeed
         let prevSimMode = settings.simulator.enabled
         settings.simulator.enabled = simEnabled == "true"
         if prevSimMode == true && settings.simulator.enabled == false{
             gvm.apIsCalibrated = false
         }
-        settings.navigation.timerMode = navTimerMode == "true"
+        settings.simulator.windPercent = Double(simWindPercent) ?? settings.simulator.defaultWindPercent
+        settings.simulator.maxCorrectionDeg = Double(simMaxCorrection) ?? settings.simulator.defaultMaxCorrection
+        
         presentationMode.wrappedValue.dismiss()
         
         settings.map.trackLocation = mapTrackLocation == "true"

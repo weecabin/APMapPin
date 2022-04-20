@@ -163,16 +163,14 @@ class SimulatedLocation{
     var prevLocation:CLLocation?
     var location:CLLocation?
     var heading:Double
-    var windPercent:Double
-    let feetPerLatitude:Double = 364000
-    let metersPerFoot:Double = 0.3048
-    let metersPerLatitude:Double = 11094.72
+//    let feetPerLatitude:Double = 364000
+//    let metersPerFoot:Double = 0.3048
+    let metersPerLatitude:Double = 111111.111
     var initialized:Bool = false
     
-    init(location:CLLocation, heading:Double, windPercent:Double = 0){
+    init(location:CLLocation, heading:Double){
         self.location = location
         self.prevLocation = location
-        self.windPercent = windPercent * 0.01
         self.heading = heading
     }
     
@@ -183,8 +181,8 @@ class SimulatedLocation{
             let interval:Double = now.timeIntervalSince(prevLocation!.timestamp)
             let speedInMetersPerSec = settings.simulator.speed / 2.23694 // converting mph to m/s
             let distanceTraveled = Float(speedInMetersPerSec * interval)
-            let windPush:Double = (Double(distanceTraveled) * windPercent) / metersPerLatitude// for now wind is always from the south
-            print("windPush \(windPush)")
+            let windPush:Double = (Double(distanceTraveled) * settings.simulator.windPercent * 0.01) / metersPerLatitude// for now wind is always from the south
+//            print("distance: \(distanceTraveled) windPush: \(windPush)")
             // uses heading and wind to calculate the new location
             let newCoord = getNewTargetCoordinate(
                 position: CLLocationCoordinate2D(latitude: prevCoord.latitude + windPush, longitude: prevCoord.longitude),
