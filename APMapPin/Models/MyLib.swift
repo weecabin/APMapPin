@@ -114,6 +114,12 @@ func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 
 
 func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
 
+func getBearingBetweenTwoPoints1(point1 : CLLocationCoordinate2D, point2 : CLLocationCoordinate2D) -> Double{
+    return getBearingBetweenTwoPoints1(
+        point1: CLLocation(latitude: point1.latitude, longitude: point1.longitude),
+        point2: CLLocation(latitude: point2.latitude, longitude: point2.longitude))
+}
+
 func getBearingBetweenTwoPoints1(point1 : CLLocation, point2 : CLLocation) -> Double {
 
     let lat1 = degreesToRadians(degrees: point1.coordinate.latitude)
@@ -133,4 +139,57 @@ func getBearingBetweenTwoPoints1(point1 : CLLocation, point2 : CLLocation) -> Do
         bearingInDegrees = bearingInDegrees + 360
     }
     return bearingInDegrees
+}
+
+func getNewTargetCoordinate(position: CLLocationCoordinate2D, userBearing: Float, distance: Float)-> CLLocationCoordinate2D{
+
+    let r = 6378140.0
+    let latitude1 = position.latitude * (Double.pi/180) // change to radiant
+    let longitude1 = position.longitude * (Double.pi/180)
+    let brng = Double(userBearing) * (Double.pi/180)
+
+    var latitude2 = asin(sin(latitude1)*cos(Double(distance)/r) + cos(latitude1)*sin(Double(distance)/r)*cos(brng));
+    var longitude2 = longitude1 + atan2(sin(brng)*sin(Double(distance)/r)*cos(latitude1),cos(Double(distance)/r)-sin(latitude1)*sin(latitude2));
+
+    latitude2 = latitude2 * (180/Double.pi)// change back to degree
+    longitude2 = longitude2 * (180/Double.pi)
+
+    // return target location
+    return CLLocationCoordinate2DMake(latitude2, longitude2)
+}
+
+class SimulatePosition{
+    var settings:Settings = Settings()
+    var prevLocation:CLLocation?
+    var location:CLLocation?
+    var heading:Double
+    var windInfluence:Double
+    let feetPerLatitude:Double = 364000
+    
+    init(location:CLLocation, heading:Double, windPercent:Double = 0){
+        self.location = location
+        self.prevLocation = location
+        windInfluence = windPercent
+        self.heading = heading
+    }
+    
+    func getNewPosition()->CLLocation?{
+        prevLocation = location
+        if let prevCoord = prevLocation?.coordinate{
+            let now = Date.now
+            let interval = now.timeIntervalSince(prevLocation!.timestamp)
+            let speedInMetersPerSec = settings.simulator.speed / 2.23694 // converting mph to m/s
+            let distanceTraveled = Float(speedInMetersPerSec * interval)
+            let windPush:Double = windInfluence * interval / feetPerLatitude // for now wind is always from the south
+            // uses heading and wind to calculate the new location
+            let newCoord = getNewTargetCoordinate(
+                position: CLLocationCoordinate2D(latitude: prevCoord.latitude + windPush, longitude: prevCoord.longitude),
+                userBearing: Float(heading),
+                distance: distanceTraveled)
+            let newCourse = getBearingBetweenTwoPoints1(point1: prevCoord, point2: newCoord)
+            let newLocation = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: newCourse, speed: speedInMetersPerSec, timestamp: Date.now)
+            return newLocation
+        }
+        return nil
+    }
 }

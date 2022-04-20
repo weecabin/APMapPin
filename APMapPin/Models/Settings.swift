@@ -43,7 +43,7 @@ struct Navigation{
     let defaultArrivalZone:Double = 30
     let defaultInterval:Double = 10
     let defaultProportionalTerm:Double = 2
-    let defaultSimulatedSpeed:Double = 10
+    
     
     var timerMode:Bool{
         get{
@@ -54,23 +54,7 @@ struct Navigation{
         }
     }
     
-    var enableSimulation:Bool{
-        get{
-            defaults.object(forKey:"NavEnableSimulation") as? Bool ?? false
-        }
-        set(enable){
-            defaults.set(enable, forKey:"NavEnableSimulation")
-        }
-    }
     
-    var simulatedSpeed:Double{
-        get{
-            defaults.object(forKey:"NavSimulatedSpeed") as? Double ?? defaultSimulatedSpeed
-        }
-        set(multiple){
-            defaults.set(multiple, forKey:"NavSimulatedSpeed")
-        }
-    }
     
     var proportionalTerm:Double{
         get{
@@ -121,11 +105,32 @@ struct MapSettings{
     }
 }
 
-//struct Simulator{
-//    let defaults = UserDefaults.standard
-//}
+struct Simulator{
+    let defaults = UserDefaults.standard
+    let defaultSimSpeed:Double = 10
+    
+    var enabled:Bool{
+        get{
+            defaults.object(forKey:"SimEnabled") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"SimEnabled")
+        }
+    }
+    
+    var speed:Double{
+        get{
+            defaults.object(forKey:"SimSpeed") as? Double ?? defaultSimSpeed
+        }
+        set(multiple){
+            defaults.set(multiple, forKey:"SimSpeed")
+        }
+    }
+}
+
 struct Settings{
     var breadCrumbs:BreadCrumbs = BreadCrumbs()
     var navigation:Navigation = Navigation()
+    var simulator:Simulator = Simulator()
     var map:MapSettings = MapSettings()
 }

@@ -19,99 +19,124 @@ struct SettingsView: View {
     
     @State var navInterval:String = ""
     @State var navProportional:String = ""
-    @State var navSimulatedSpeed:String = ""
-    @State var navEnableSimulation:String = "false"
     @State var navTimerMode:String = "false"
+    
+    @State var simSpeed:String = ""
+    @State var simEnabled:String = "false"
     
     @State var mapTrackLocation:String = "false"
     
     var body: some View {
-        VStack(alignment: .leading){
-            Text("BreadCrumbs")
-            HStack{
-                VStack(alignment: .trailing){
-                    Text("Interval(s):")
-                        .frame(height: 20)
-                    Text("Min Distance(ft):")
-                        .frame(height: 20)
-                }
-                .padding(0)
-                .frame(width: 180)
-                
-                VStack(alignment: .leading){
-                    TextField("interval", text: $crumbInterval)
-                        .frame(height: 20)
-                    TextField("distance", text: $crumbDistance)
-                        .frame(height: 20)
-                }
-                .padding(0)
-            }
-
-            Divider()
-            Text("Navigation")
-            HStack{
-                VStack(alignment: .trailing){
-                    Text("TimerMode:")
-                        .frame(height: 20)
-                    Text("interval(s):")
-                        .frame(height: 20)
-                    Text("ArrivalZone(ft):")
-                        .frame(height: 20)
-                    Text("PID-kp:")
-                        .frame(height: 20)
-                    Text("Simulate:")
-                        .frame(height: 20)
-                    Text("SimSpeed(mph):")
-                        .frame(height: 20)
-                }
-                .frame(width: 180)
-                
-                VStack(alignment: .leading){
-                    timerModeView
-                        .frame(height: 20)
-                    TextField("interval", text: $navInterval)
-                        .frame(height: 20)
-                    TextField("arrivalZone", text: $navArrivalZone)
-                        .frame(height: 20)
-                    TextField("PID-kp", text: $navProportional)
-                        .frame(height: 20)
-                    enableSimView
-                        .frame(height: 20)
-                    TextField("NavSimSpeed", text: $navSimulatedSpeed)
-                        .frame(height: 20)
+        VStack{
+            VStack(alignment:.leading){
+                Text("Bread Crumbs")
+                HStack{
+                    VStack(alignment: .trailing){
+                        Text("Interval(s):")
+                            .frame(height: 20)
+                        Text("Min Distance(ft):")
+                            .frame(height: 20)
+                    }
+                    .padding(0)
+                    .frame(width: 180)
+                    
+                    VStack(alignment: .leading){
+                        TextField("interval", text: $crumbInterval)
+                            .frame(height: 20)
+                        TextField("distance", text: $crumbDistance)
+                            .frame(height: 20)
+                    }
+                    .padding(0)
                 }
             }
-            Divider()
-            Text("Map Settings")
-            HStack{
-                VStack(alignment: .trailing){
-                    Text("TrackLocation:")
-                        .frame(height: 20)
-                }
-                VStack(alignment: .leading){
-                    trackLocationView
-                        .frame(height: 20)
-                }
-            }
-            .frame(width: 180)
             
-            Divider()
-            HStack{
-                Spacer()
-                Button("OK"){saveSettings()}
-                    .frame(width: 80, height: 30)
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                Spacer()
-                Button("Cancel"){presentationMode.wrappedValue.dismiss()}
-                    .frame(width: 80, height: 30)
-                    .background(.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                Spacer()
+            VStack(alignment:.leading){
+                Divider()
+                Text("Navigation")
+                HStack{
+                    VStack(alignment: .trailing){
+                        Text("TimerMode:")
+                            .frame(height: 20)
+                        Text("interval(s):")
+                            .frame(height: 20)
+                        Text("ArrivalZone(ft):")
+                            .frame(height: 20)
+                        Text("PID-kp:")
+                            .frame(height: 20)
+                        
+                    }
+                    .frame(width: 180)
+                    
+                    VStack(alignment: .leading){
+                        timerModeView
+                            .frame(height: 20)
+                        TextField("interval", text: $navInterval)
+                            .frame(height: 20)
+                        TextField("arrivalZone", text: $navArrivalZone)
+                            .frame(height: 20)
+                        TextField("PID-kp", text: $navProportional)
+                            .frame(height: 20)
+                    }
+                }
             }
-            .padding(.top, 20)
+            
+            VStack(alignment:.leading){
+                Divider()
+                Text("Simulator")
+                HStack{
+                    VStack(alignment:.trailing){
+                        Text("Simulate:")
+                            .frame(height: 20)
+                        Text("SimSpeed(mph):")
+                            .frame(height: 20)
+                    }
+                    .frame(width:180)
+                    
+                    VStack(alignment: .leading){
+                        enableSimView
+                            .frame(height: 20)
+                        TextField("NavSimSpeed", text: $simSpeed)
+                            .frame(height: 20)
+                    }
+                }
+            }
+            
+            VStack(alignment:.leading){
+                Divider()
+                Text("Map Settings")
+                HStack{
+                    VStack(alignment:.trailing){
+                        Text("TrackLocation:")
+                            .frame(height: 20)
+                    }
+                    .frame(width:180)
+                    
+                    VStack(alignment: .leading){
+                        trackLocationView
+                            .frame(height: 20)
+                    }
+                }
+            }
+            
+            VStack{
+                Divider()
+                HStack{
+                    Spacer()
+                    Button("OK"){saveSettings()}
+                        .frame(width: 80, height: 30)
+                        .background(.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    Spacer()
+                    Button("Cancel"){presentationMode.wrappedValue.dismiss()}
+                        .frame(width: 80, height: 30)
+                        .background(.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    Spacer()
+                }
+                .padding(.top, 20)
+            }
         }
         .padding()
         .onAppear {
@@ -150,13 +175,13 @@ struct SettingsView: View {
     var enableSimView:some View{
         HStack{
             Button {
-                if navEnableSimulation=="false"{
-                    navEnableSimulation = "true"
+                if simEnabled=="false"{
+                    simEnabled = "true"
                 }else{
-                    navEnableSimulation = "false"
+                    simEnabled = "false"
                 }
             } label: {
-                Text(navEnableSimulation)
+                Text(simEnabled)
             }
         }
     }
@@ -168,9 +193,10 @@ struct SettingsView: View {
         navInterval = String(settings.navigation.intervalSeconds)
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
-        navSimulatedSpeed = String(settings.navigation.simulatedSpeed)
-        navEnableSimulation = settings.navigation.enableSimulation ? "true" : "false"
         navTimerMode = settings.navigation.timerMode ? "true" : "false"
+        
+        simSpeed = String(settings.simulator.speed)
+        simEnabled = settings.simulator.enabled ? "true" : "false"
         
         mapTrackLocation = settings.map.trackLocation ? "true" : "false"
     }
@@ -182,10 +208,10 @@ struct SettingsView: View {
         settings.navigation.arrivalZoneFeet = Double(navArrivalZone) ?? settings.navigation.defaultArrivalZone
         settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
-        settings.navigation.simulatedSpeed = Double(navSimulatedSpeed) ?? settings.navigation.defaultSimulatedSpeed
-        let prevSimMode = settings.navigation.enableSimulation
-        settings.navigation.enableSimulation = navEnableSimulation == "true"
-        if prevSimMode == true && settings.navigation.enableSimulation == false{
+        settings.simulator.speed = Double(simSpeed) ?? settings.simulator.defaultSimSpeed
+        let prevSimMode = settings.simulator.enabled
+        settings.simulator.enabled = simEnabled == "true"
+        if prevSimMode == true && settings.simulator.enabled == false{
             gvm.apIsCalibrated = false
         }
         settings.navigation.timerMode = navTimerMode == "true"

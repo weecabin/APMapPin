@@ -224,7 +224,20 @@ extension MapView{
         VStack{
             Spacer()
             HStack{
-                Text("> spd:\(mvm.lastLocationSpeed) crs:\(mvm.lastLocationCourse)")
+                Text("> spd:\(mvm.lastLocationSpeed) crs:\(mvm.lastLocationCourse) hdg:\(mvm.headingString)")
+                Spacer()
+            }
+            .background(.gray)
+
+            HStack{
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) crs:\(mvm.navigate.bearingToTargetString) tgt:\(mvm.navigate.desiredBearingToTargetString)") :
+                Text("Nav:")
+                Spacer()
+            }
+            .background(.gray)
+            HStack{
+                mvm.navigate.running ? Text("ETE: \(mvm.navigate.timeToTargetPin) \(mvm.navigate.timeToEnd)") :
+                Text("ETE:")
                 Spacer()
             }
             .background(.gray)
@@ -234,19 +247,6 @@ extension MapView{
                 singlePin ? Text("Pin >") : Text("Loc >")
                 Text("X ")
                 singlePin ? Text("\(mvm.selectedPinToX())") : Text("\(mvm.locationToX())")
-                Spacer()
-            }
-            .background(.gray)
-
-            HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) \(mvm.navigate.bearingToTargetString)>\(mvm.navigate.desiredBearingToTargetString)") :
-                Text("Nav:")
-                Spacer()
-            }
-            .background(.gray)
-            HStack{
-                mvm.navigate.running ? Text("ETE: \(mvm.navigate.timeToTargetPin) \(mvm.navigate.timeToEnd)") :
-                Text("ETE:")
                 Spacer()
             }
             .background(.gray)

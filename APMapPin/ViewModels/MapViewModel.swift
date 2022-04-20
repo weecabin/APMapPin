@@ -33,6 +33,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     @Published var lastLocationCourse:String = ""
     
     @Published var routePinColor:Color = .red
+    @Published var headingString:String = "?"
+    
     var blinkPinTimer:Timer?
     
     var simPin:MapPin?
@@ -57,7 +59,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     }
     
     func CalibrateAP(){
-        if settings.navigation.enableSimulation{
+        if settings.simulator.enabled{
             gvm?.apIsCalibrated = true
             return
         }else{
@@ -255,7 +257,7 @@ extension MapViewModel{ // Navigation Functions
         if let selectedIndex = route.routePointsArray.firstIndex(where: {$0.selected}){
             startFromIndex = selectedIndex
         }
-        if settings.navigation.enableSimulation{
+        if settings.simulator.enabled{
             setSimPin()
             simInitialized = false
             UpdateSimulatedLocation()
@@ -283,6 +285,7 @@ extension MapViewModel{ // Navigation Functions
     
     func StopNavigation(){
         navigate.CancelNavigation()
+        headingString = "?"
     }
     
     func navUpdateReady() {
@@ -290,13 +293,15 @@ extension MapViewModel{ // Navigation Functions
             StopNavigation()
             return
         }
+        var heading:Double = 0
         if let pin = simPin{
             let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
             //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
             let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
 //            print("desired course Error \(courseError)")
-            simPin!.course = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+            heading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+            simPin!.course = heading // this really won't simulate what happens
         }else{
             if let lastLoc = lastLocation{
                 let lastLocCourse = lastLoc.course
@@ -304,11 +309,12 @@ extension MapViewModel{ // Navigation Functions
                 //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
                 let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
-                let newHeading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
-                print("Sending AP: ht\(newHeading)")
-                ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",newHeading))")
+                heading = FixHeading(heading: (newCourseToTarget + settings.navigation.proportionalTerm * courseError))
+                print("Sending AP: ht\(heading)")
+                ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",heading))")
             }
         }
+        headingString = String(format: "%.1f",heading)
     }
 
     func UpdateSimulatedLocation(){
@@ -317,10 +323,10 @@ extension MapViewModel{ // Navigation Functions
                 simStartLocation = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
                 simInitialized = true
             }
-            let speedInMetersPerSec = settings.navigation.simulatedSpeed / 2.23694
+            let speedInMetersPerSec = settings.simulator.speed / 2.23694
             let distanceTraveled = Float(speedInMetersPerSec)
             let newCoord = getNewTargetCoordinate(
-                position: CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude),
+                position: CLLocationCoordinate2D(latitude: pin.latitude + 0.000002747 * 0, longitude: pin.longitude),
                 userBearing: Float(pin.course),
                 distance: distanceTraveled)
             pin.latitude = newCoord.latitude
@@ -413,22 +419,7 @@ extension MapViewModel{ // Navigation Functions
         UpdateView()
     }
     
-    func getNewTargetCoordinate(position: CLLocationCoordinate2D, userBearing: Float, distance: Float)-> CLLocationCoordinate2D{
-
-        let r = 6378140.0
-        let latitude1 = position.latitude * (Double.pi/180) // change to radiant
-        let longitude1 = position.longitude * (Double.pi/180)
-        let brng = Double(userBearing) * (Double.pi/180)
-
-        var latitude2 = asin(sin(latitude1)*cos(Double(distance)/r) + cos(latitude1)*sin(Double(distance)/r)*cos(brng));
-        var longitude2 = longitude1 + atan2(sin(brng)*sin(Double(distance)/r)*cos(latitude1),cos(Double(distance)/r)-sin(latitude1)*sin(latitude2));
-
-        latitude2 = latitude2 * (180/Double.pi)// change back to degree
-        longitude2 = longitude2 * (180/Double.pi)
-
-        // return target location
-        return CLLocationCoordinate2DMake(latitude2, longitude2)
-    }
+    
 }
 
 extension MapViewModel{ // Location calls
@@ -476,7 +467,7 @@ extension MapViewModel{ // Location calls
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 //        print("in locationManager - didUpdateLocations")
         guard let location = locations.last else {return}
-        if settings.navigation.enableSimulation {return}
+        if settings.simulator.enabled {return}
         lastLocation = location
         UpdateMapCenter()
 //        print("calling navigate.locationUpdate")
