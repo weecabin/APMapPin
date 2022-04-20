@@ -327,7 +327,7 @@ extension MapViewModel{ // Navigation Functions
     func newHeading(courseToTarget:Double)->Double{
         let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: courseToTarget)
         var courseCorrection = settings.navigation.proportionalTerm * courseError
-        let maxCorrection = settings.simulator.maxCorrectionDeg
+        let maxCorrection = settings.navigation.maxCorrectionDeg
         if courseCorrection > maxCorrection {courseCorrection = maxCorrection}
         else if courseCorrection < -maxCorrection {courseCorrection = -maxCorrection}
         let heading = FixHeading(heading: (courseToTarget + courseCorrection))

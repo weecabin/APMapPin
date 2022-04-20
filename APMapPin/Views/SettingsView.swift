@@ -20,11 +20,11 @@ struct SettingsView: View {
     @State var navInterval:String = ""
     @State var navProportional:String = ""
     @State var navTimerMode:String = "false"
+    @State var navMaxCorrection:String = ""
     
     @State var simSpeed:String = ""
     @State var simEnabled:String = "false"
     @State var simWindPercent:String = ""
-    @State var simMaxCorrection:String = ""
     
     @State var mapTrackLocation:String = "false"
     
@@ -65,7 +65,8 @@ struct SettingsView: View {
                             .frame(height: 20)
                         Text("PID-kp:")
                             .frame(height: 20)
-                        
+                        Text("MaxCorrection:")
+                            .frame(height: 20)
                     }
                     .frame(width: 180)
                     
@@ -77,6 +78,8 @@ struct SettingsView: View {
                         TextField("arrivalZone", text: $navArrivalZone)
                             .frame(height: 20)
                         TextField("PID-kp", text: $navProportional)
+                            .frame(height: 20)
+                        TextField("maxCorrection", text: $navMaxCorrection)
                             .frame(height: 20)
                     }
                 }
@@ -93,8 +96,6 @@ struct SettingsView: View {
                             .frame(height: 20)
                         Text("WindPercent:")
                             .frame(height: 20)
-                        Text("MaxCorrection:")
-                            .frame(height: 20)
                     }
                     .frame(width:180)
                     
@@ -104,8 +105,6 @@ struct SettingsView: View {
                         TextField("Speed", text: $simSpeed)
                             .frame(height: 20)
                         TextField("WindPercent", text: $simWindPercent)
-                            .frame(height: 20)
-                        TextField("maxCorrection", text: $simMaxCorrection)
                             .frame(height: 20)
                     }
                 }
@@ -204,11 +203,11 @@ struct SettingsView: View {
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
         navTimerMode = settings.navigation.timerMode ? "true" : "false"
+        navMaxCorrection = String(settings.navigation.maxCorrectionDeg)
         
         simSpeed = String(settings.simulator.speed)
         simEnabled = settings.simulator.enabled ? "true" : "false"
         simWindPercent = String(settings.simulator.windPercent)
-        simMaxCorrection = String(settings.simulator.maxCorrectionDeg)
         
         mapTrackLocation = settings.map.trackLocation ? "true" : "false"
     }
@@ -221,6 +220,7 @@ struct SettingsView: View {
         settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
         settings.navigation.timerMode = navTimerMode == "true"
+        settings.navigation.maxCorrectionDeg = Double(navMaxCorrection) ?? settings.navigation.defaultMaxCorrection
         
         settings.simulator.speed = Double(simSpeed) ?? settings.simulator.defaultSimSpeed
         let prevSimMode = settings.simulator.enabled
@@ -229,7 +229,7 @@ struct SettingsView: View {
             gvm.apIsCalibrated = false
         }
         settings.simulator.windPercent = Double(simWindPercent) ?? settings.simulator.defaultWindPercent
-        settings.simulator.maxCorrectionDeg = Double(simMaxCorrection) ?? settings.simulator.defaultMaxCorrection
+        
         
         presentationMode.wrappedValue.dismiss()
         

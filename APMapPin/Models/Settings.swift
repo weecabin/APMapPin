@@ -43,7 +43,7 @@ struct Navigation{
     let defaultArrivalZone:Double = 30
     let defaultInterval:Double = 10
     let defaultProportionalTerm:Double = 2
-    
+    let defaultMaxCorrection:Double = 45
     
     var timerMode:Bool{
         get{
@@ -53,8 +53,6 @@ struct Navigation{
             defaults.set(enable, forKey:"NavTimerMode")
         }
     }
-    
-    
     
     var proportionalTerm:Double{
         get{
@@ -91,6 +89,15 @@ struct Navigation{
             defaults.set(seconds, forKey:"NavInterval")
         }
     }
+    
+    var maxCorrectionDeg:Double{
+        get{
+            defaults.object(forKey:"MaxCorrection") as? Double ?? defaultMaxCorrection
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"MaxCorrection")
+        }
+    }
 }
 
 struct MapSettings{
@@ -109,7 +116,7 @@ struct Simulator{
     let defaults = UserDefaults.standard
     let defaultSimSpeed:Double = 10
     let defaultWindPercent:Double = 0
-    let defaultMaxCorrection:Double = 45
+    
     
     var enabled:Bool{
         get{
@@ -138,14 +145,7 @@ struct Simulator{
         }
     }
     
-    var maxCorrectionDeg:Double{
-        get{
-            defaults.object(forKey:"MaxCorrection") as? Double ?? defaultMaxCorrection
-        }
-        set(newValue){
-            defaults.set(newValue, forKey:"MaxCorrection")
-        }
-    }
+    
 }
 
 struct Settings{
