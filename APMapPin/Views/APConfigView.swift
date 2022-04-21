@@ -131,6 +131,7 @@ extension APConfigView{
                 .cornerRadius(10)
                 .foregroundColor(Color.black)
                 Spacer()
+                
                 Button {
                     apvm.editItemId = nil
                 } label: {
