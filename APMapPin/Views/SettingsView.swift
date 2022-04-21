@@ -30,131 +30,98 @@ struct SettingsView: View {
     
     var body: some View {
         VStack{
-            VStack(alignment:.leading){
-                Text("Bread Crumbs")
-                HStack{
-                    VStack(alignment: .trailing){
-                        Text("Interval(s):")
-                            .frame(height: 20)
-                        Text("Min Distance(ft):")
-                            .frame(height: 20)
-                    }
-                    .padding(0)
-                    .frame(width: 180)
-                    
-                    VStack(alignment: .leading){
-                        TextField("interval", text: $crumbInterval)
-                            .frame(height: 20)
-                        TextField("distance", text: $crumbDistance)
-                            .frame(height: 20)
-                    }
-                    .padding(0)
-                }
+            ScrollView{
+                dividerView
+                mapView
+                dividerView
+                navigationView
+                dividerView
+                breadCrumbView
+                dividerView
+                simulatorView
+                dividerView
             }
-            
-            VStack(alignment:.leading){
-                Divider()
-                Text("Navigation")
-                HStack{
-                    VStack(alignment: .trailing){
-                        Text("TimerMode:")
-                            .frame(height: 20)
-                        Text("interval(s):")
-                            .frame(height: 20)
-                        Text("ArrivalZone(ft):")
-                            .frame(height: 20)
-                        Text("PID-kp:")
-                            .frame(height: 20)
-                        Text("MaxCorrection:")
-                            .frame(height: 20)
-                    }
-                    .frame(width: 180)
-                    
-                    VStack(alignment: .leading){
-                        timerModeView
-                            .frame(height: 20)
-                        TextField("interval", text: $navInterval)
-                            .frame(height: 20)
-                        TextField("arrivalZone", text: $navArrivalZone)
-                            .frame(height: 20)
-                        TextField("PID-kp", text: $navProportional)
-                            .frame(height: 20)
-                        TextField("maxCorrection", text: $navMaxCorrection)
-                            .frame(height: 20)
-                    }
-                }
-            }
-            
-            VStack(alignment:.leading){
-                Divider()
-                Text("Simulator")
-                HStack{
-                    VStack(alignment:.trailing){
-                        Text("Simulate:")
-                            .frame(height: 20)
-                        Text("Speed(mph):")
-                            .frame(height: 20)
-                        Text("WindPercent:")
-                            .frame(height: 20)
-                    }
-                    .frame(width:180)
-                    
-                    VStack(alignment: .leading){
-                        enableSimView
-                            .frame(height: 20)
-                        TextField("Speed", text: $simSpeed)
-                            .frame(height: 20)
-                        TextField("WindPercent", text: $simWindPercent)
-                            .frame(height: 20)
-                    }
-                }
-            }
-            
-            VStack(alignment:.leading){
-                Divider()
-                Text("Map Settings")
-                HStack{
-                    VStack(alignment:.trailing){
-                        Text("TrackLocation:")
-                            .frame(height: 20)
-                    }
-                    .frame(width:180)
-                    
-                    VStack(alignment: .leading){
-                        trackLocationView
-                            .frame(height: 20)
-                    }
-                }
-            }
-            
-            VStack{
-                Divider()
-                HStack{
-                    Spacer()
-                    Button("OK"){saveSettings()}
-                        .frame(width: 80, height: 30)
-                        .background(.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    Spacer()
-                    Button("Cancel"){presentationMode.wrappedValue.dismiss()}
-                        .frame(width: 80, height: 30)
-                        .background(.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    Spacer()
-                }
-                .padding(.top, 20)
-            }
+            actionView
         }
         .padding()
         .onAppear {
             initView()
         }
     }
+
+    var dividerView:some View{
+        Rectangle()
+            .fill(Color.black)
+            .frame(height: 5)
+            .edgesIgnoringSafeArea(.horizontal)
+    }
+    
+    var navigationView:some View{
+        VStack(alignment:.leading){
+            HStack{
+                Spacer()
+                Text("Navigation")
+                    .font(.title2)
+                Spacer()
+            }
+            HStack{
+                VStack(alignment: .trailing){
+                    Text("Timer Mode:")
+                        .frame(height: 20)
+                    Text("interval(s):")
+                        .frame(height: 20)
+                    Text("Arrival Zone(ft):")
+                        .frame(height: 20)
+                    Text("PID-kp:")
+                        .frame(height: 20)
+                    Text("Max Correction:")
+                        .frame(height: 20)
+                }
+                .frame(width: 180)
+                
+                VStack(alignment: .leading){
+                    timerModeView
+                        .frame(height: 20)
+                    TextField("interval", text: $navInterval)
+                        .frame(height: 20)
+                    TextField("arrivalZone", text: $navArrivalZone)
+                        .frame(height: 20)
+                    TextField("PID-kp", text: $navProportional)
+                        .frame(height: 20)
+                    TextField("maxCorrection", text: $navMaxCorrection)
+                        .frame(height: 20)
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    var mapView:some View{
+        VStack(alignment: .leading){
+            HStack{
+                Spacer()
+                Text("Map")
+                    .font(.title2)
+                Spacer()
+            }
+            HStack{
+                VStack(alignment:.trailing){
+                    Text("Track Location:")
+                        .frame(height: 20)
+                }
+                .padding(0)
+                .frame(width:180)
+                
+                VStack(alignment: .leading){
+                    trackLocationView
+                        .frame(height: 20)
+                }
+                Spacer()
+            }
+        }
+    }
     
     var trackLocationView:some View{
-        HStack{
             Button {
                 if mapTrackLocation=="false"{
                     mapTrackLocation = "true"
@@ -164,6 +131,88 @@ struct SettingsView: View {
             } label: {
                 Text(mapTrackLocation)
             }
+    }
+    
+    var simulatorView:some View{
+        VStack(alignment:.leading){
+            HStack{
+                Spacer()
+                Text("Enabled")
+                    .font(.title2)
+                Spacer()
+            }
+            HStack{
+                VStack(alignment:.trailing){
+                    Text("Simulate:")
+                        .frame(height: 20)
+                    Text("Speed(mph):")
+                        .frame(height: 20)
+                    Text("Wind Percent:")
+                        .frame(height: 20)
+                }
+                .frame(width:180)
+                
+                VStack(alignment: .leading){
+                    enableSimView
+                        .frame(height: 20)
+                    TextField("Speed", text: $simSpeed)
+                        .frame(height: 20)
+                    TextField("Wind Percent", text: $simWindPercent)
+                        .frame(height: 20)
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    var breadCrumbView:some View{
+        VStack(alignment:.leading){
+            HStack{
+                Spacer()
+                Text("Bread Crumbs")
+                    .font(.title2)
+                Spacer()
+            }
+            HStack{
+                VStack(alignment: .trailing){
+                    Text("Interval(s):")
+                        .frame(height: 20)
+                    Text("Min Distance(ft):")
+                        .frame(height: 20)
+                }
+                .padding(0)
+                .frame(width: 180)
+                
+                VStack(alignment: .leading){
+                    TextField("interval", text: $crumbInterval)
+                        .frame(height: 20)
+                    TextField("distance", text: $crumbDistance)
+                        .frame(height: 20)
+                }
+                Spacer()
+            }
+        }
+    }
+    
+    var actionView:some View{
+        VStack{
+            Divider()
+            HStack{
+                Spacer()
+                Button("OK"){saveSettings()}
+                    .frame(width: 80, height: 30)
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                Spacer()
+                Button("Cancel"){presentationMode.wrappedValue.dismiss()}
+                    .frame(width: 80, height: 30)
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                Spacer()
+            }
+            .padding(.top, 20)
         }
     }
     
