@@ -13,6 +13,11 @@ enum NavType{
     case route
 }
 
+enum CalHeadingUsing{
+    case currentCourse
+    case deviceOrientation
+}
+
 func FixHeading(heading:Double) -> Double{
     var newheading = heading
     while(newheading<0){newheading = newheading + 360}
@@ -92,6 +97,10 @@ func distanceString(meters:Double) -> String{
         return "\(String(format: "%.0f",ft))ft"
     }
     return "\(String(format: "%.1f",miles))mi"
+}
+
+func HeadingString(heading:Double) -> String{
+    return "\(String(format: "%.1f",heading))true"
 }
 
 func bearingString(bearing:Double) -> String{

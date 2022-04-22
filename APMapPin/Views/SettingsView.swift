@@ -137,13 +137,13 @@ struct SettingsView: View {
         VStack(alignment:.leading){
             HStack{
                 Spacer()
-                Text("Enabled")
+                Text("Simulator")
                     .font(.title2)
                 Spacer()
             }
             HStack{
                 VStack(alignment:.trailing){
-                    Text("Simulate:")
+                    Text("Enabled:")
                         .frame(height: 20)
                     Text("Speed(mph):")
                         .frame(height: 20)

@@ -31,16 +31,11 @@ struct MapView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
-                    Button {showCalAlert = true} label: {Text("Cal")}
+                    calibrateSheetView
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())
                     Button("Pins"){setSelectedPinForPinEdit()}
                 }
-                // this alert has to be here or it prevents the other alert from firing
-                .alert(isPresented: $showCalAlert) {
-                    Alert(title: Text("Press OK while maintaining a constant course"),
-                          primaryButton: .default(Text("OK"), action: {mvm.CalibrateAP()}),
-                          secondaryButton: .cancel())}
             }
         }
     }
@@ -66,6 +61,21 @@ extension MapView{
             }
         }
             .ignoresSafeArea()
+    }
+    
+    var calibrateSheetView : some View{
+        Button("Cal") {
+            showCalAlert = true
+        }
+        .confirmationDialog("Calibrate AP using...", isPresented: $showCalAlert, titleVisibility: .visible) {
+            Button("Device Orientation") {
+                mvm.CalibrateAP(calWith: .deviceOrientation)
+            }
+
+            Button("Current Course") {
+                mvm.CalibrateAP(calWith: .currentCourse)
+            }
+        }
     }
     
     var topButtonView : some View{

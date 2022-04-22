@@ -29,6 +29,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var mapInitialized:Bool = false
     
     var lastLocation:CLLocation?
+    var lastDeviceHeading:CLHeading?
+    
     @Published var lastLocationSpeed:String = ""
     @Published var lastLocationCourse:String = ""
     
@@ -57,17 +59,6 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             gvm.stopNavigationDelegate = self
         }
         UpdateView()
-    }
-    
-    func CalibrateAP(){
-        if settings.simulator.enabled{
-            gvm?.apIsCalibrated = true
-            return
-        }else{
-            if lastLocationCourse == "?"{gvm?.apIsCalibrated = false;return}
-        }
-        ble?.sendMessageToAP(data: "hc\(lastLocationCourse)")
-        gvm?.apIsCalibrated = true
     }
 }
 
@@ -222,6 +213,31 @@ extension MapViewModel{ // BreadCrumb Functions
 }
 
 extension MapViewModel{ // Navigation Functions
+    
+    func CalibrateAP(calWith:CalHeadingUsing){
+        if settings.simulator.enabled{
+            gvm?.apIsCalibrated = true
+            return
+        }
+        var heading = "?"
+        if calWith == .currentCourse{
+            if lastLocationCourse != "?"{
+                heading = lastLocationCourse
+            }
+        }
+        else if let hdg = lastDeviceHeading{
+            if hdg.trueHeading >= 0{
+                print("heading: \(hdg.trueHeading)")
+                heading = String(format: "%.1f",hdg.trueHeading)
+            }
+        }
+        if heading != "?"{
+            ble?.sendMessageToAP(data: "hc\(heading)")
+            gvm?.apIsCalibrated = true
+        }else{
+            gvm?.apIsCalibrated = false
+        }
+    }
     
     func selectedPinToX()->String{
         if cd.selectedRoutePoints.count > 0{
@@ -457,10 +473,11 @@ extension MapViewModel{ // Location calls
             if let location = locationManager.location {
                 region = MKCoordinateRegion(center: mapInitialized ? region.center : location.coordinate,
                                             span: region.span)
-            mapInitialized = true
-            locationManager.startUpdatingLocation()
-            locationManager.allowsBackgroundLocationUpdates = true
-        }
+                mapInitialized = true
+                locationManager.startUpdatingLocation()
+                locationManager.startUpdatingHeading()
+                locationManager.allowsBackgroundLocationUpdates = true
+            }
         @unknown default:
             break
         }
@@ -485,5 +502,10 @@ extension MapViewModel{ // Location calls
         let heading = lastLocation!.course
         if heading >= 0 {lastLocationCourse = String(format: "%.1f",heading)}
         else{lastLocationCourse = "?"}
+    }
+    
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateHeading newHeading: CLHeading){
+        lastDeviceHeading = newHeading
     }
 }
