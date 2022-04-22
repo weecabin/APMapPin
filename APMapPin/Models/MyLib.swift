@@ -128,8 +128,8 @@ class PID{
     var ki:Double
     var kd:Double
     var size:Int
-    var targetValue:Double?
-    private var values:[Double] = []
+    private var targetValue:Double?
+    private var errorValues:[Double] = []
     
     init(kp:Double, ki:Double, kd:Double, size:Int){
         self.kp = kp
@@ -140,32 +140,45 @@ class PID{
     
     func SetTargetValue(target:Double){
         targetValue = target
-        values = []
+        errorValues = []
     }
     
     func NewValue(value:Double){
-        values.append(value)
-        if values.count > size{
-            values.remove(at: 0)
+        if let target = targetValue{
+            errorValues.append(value - target)
+            if errorValues.count > size{
+                errorValues.remove(at: 0)
+            }
+        }
+        
+    }
+    
+    func NewError(error:Double){
+        targetValue = 0 // this satisfies the test for a valid target in Correction()
+        errorValues.append(error)
+        print(errorValues)
+        if errorValues.count > size{
+            errorValues.remove(at: 0)
         }
     }
     
     func Correction()->Double?{
-        guard (values.count>0 && targetValue != nil) else {return nil}
-        var retValue = values.last! - targetValue!
+        guard (errorValues.count>0 && targetValue != nil) else {return nil}
+        var retValue = errorValues.last!
         if ki != 0{
             var integralValue:Double = 0
-            for v in values{
-                integralValue = integralValue + (v - targetValue!)*ki
+            for value in errorValues{
+                integralValue = integralValue + value * ki
             }
             retValue = retValue + integralValue
         }
         if kd != 0{
-            if values.count > 1{
-                let lastIndex = values.count - 1
-                retValue = retValue + (values[lastIndex] - values[lastIndex-1])*kd
+            if errorValues.count > 1{
+                let lastIndex = errorValues.count - 1
+                retValue = retValue + (errorValues[lastIndex] - errorValues[lastIndex-1])*kd
             }
         }
+        print("Correction: \(retValue)")
         return retValue
     }
 }

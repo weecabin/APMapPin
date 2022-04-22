@@ -30,6 +30,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     
     var lastLocation:CLLocation?
     var lastDeviceHeading:CLHeading?
+    var pidController:PID = PID(kp: 1, ki: 1, kd: 0, size: 5)
     
     @Published var lastLocationSpeed:String = ""
     @Published var lastLocationCourse:String = ""
@@ -306,7 +307,10 @@ extension MapViewModel{ // Navigation Functions
         headingString = "?"
     }
     
-    func navUpdateReady() {
+    func navUpdateReady(newTarget:Bool) {
+        if newTarget{
+            pidController = PID(kp: settings.navigation.proportionalTerm, ki: 2, kd: 0, size: 4)
+        }
         if gvm!.navType == .none{
             StopNavigation()
             return
@@ -314,25 +318,18 @@ extension MapViewModel{ // Navigation Functions
         var heading:Double = 0
         if let pin = simPin{
             let headingError = HeadingError(target: navigate.bearingToTarget!, actual: pin.course)
-            //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
+            heading = newNavHeading(courseToTarget: newCourseToTarget)
             
-//            let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: newCourseToTarget)
-//            print("desired course Error \(courseError)")
-//            var courseCorrection = settings.navigation.proportionalTerm * courseError
-//            if courseCorrection > 30 {courseCorrection = 30}
-//            else if courseCorrection < -30 {courseCorrection = -30}
-            heading = newHeading(courseToTarget: newCourseToTarget)
             simulatedLocation!.heading = heading
             simPin!.course = heading // this really won't simulate what happens
         }else{
             if let lastLoc = lastLocation{
                 let lastLocCourse = lastLoc.course
                 let headingError = HeadingError(target: navigate.bearingToTarget!, actual: lastLocCourse)
-                //print("bearing: \(navigate.bearingToTargetString) course: \(pin.course) error: \(courseError)")
                 let newCourseToTarget = FixHeading(heading: lastLocCourse - headingError)
+                heading = newNavHeading(courseToTarget: newCourseToTarget)
                 
-                heading = newHeading(courseToTarget: newCourseToTarget)
                 print("Sending AP: ht\(heading)")
                 ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",heading))")
             }
@@ -340,13 +337,17 @@ extension MapViewModel{ // Navigation Functions
         headingString = String(format: "%.1f",heading)
     }
 
-    func newHeading(courseToTarget:Double)->Double{
+    // computes a new heading given the current course to target and the desired course to target
+    func newNavHeading(courseToTarget:Double)->Double{
         let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: courseToTarget)
-        var courseCorrection = settings.navigation.proportionalTerm * courseError
+        pidController.NewError(error: courseError)
+        var courseCorrection = pidController.Correction()
+//        var courseCorrection = settings.navigation.proportionalTerm * courseError
+        
         let maxCorrection = settings.navigation.maxCorrectionDeg
-        if courseCorrection > maxCorrection {courseCorrection = maxCorrection}
-        else if courseCorrection < -maxCorrection {courseCorrection = -maxCorrection}
-        let heading = FixHeading(heading: (courseToTarget + courseCorrection))
+        if courseCorrection! > maxCorrection {courseCorrection = maxCorrection}
+        else if courseCorrection! < -maxCorrection {courseCorrection = -maxCorrection}
+        let heading = FixHeading(heading: (courseToTarget + courseCorrection!))
         return heading
     }
     
@@ -401,6 +402,9 @@ extension MapViewModel{ // Navigation Functions
         guard let route = activeRoute() else {return}
         simPin = route.routePointsArray[0].pointPin
         simPin!.type = "sim"
+        simPin?.course = getBearingBetweenTwoPoints1(
+            point1: CLLocation(latitude: simPin!.latitude, longitude: simPin!.longitude),
+            point2: CLLocation(latitude: route.routePointsArray[1].pointPin!.latitude, longitude: route.routePointsArray[1].pointPin!.longitude))
     }
     
     func activeRoute() -> Route?{

@@ -18,5 +18,5 @@ protocol MapMessageDelegate{
 }
 
 protocol NavUpdateReadyDelegate{
-    func navUpdateReady()
+    func navUpdateReady(newTarget:Bool)
 }

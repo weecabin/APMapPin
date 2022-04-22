@@ -35,10 +35,12 @@ class NavigateRoute : ObservableObject{
     private let epsilon:Double = 0.0000001
     private var timerCounter:Double = 0
     private var timerCounterLimit:Double = 1
+    private var newTargetCourse:Bool = true
     
     init(){
     }
     func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
+        newTargetCourse = true
         timerCounter = 0
         closeToTarget = false
         self.route = route
@@ -83,14 +85,14 @@ class NavigateRoute : ObservableObject{
         }
         //print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")
         if distToTarget! < settings.navigation.arrivalZoneMeters{
-            print("close to target")
+            print("inside arrival zone")
             if routeIndex == route!.routePointsArray.count - 1{
                 route!.routePointsArray.last!.target = false
                 CancelNavigation()
                 return
             }
             // setup for the next point
-
+            newTargetCourse = true
             route!.routePointsArray[routeIndex].target = false
             routeIndex = routeIndex + 1
             route!.routePointsArray[routeIndex].target = true
@@ -106,7 +108,8 @@ class NavigateRoute : ObservableObject{
             startNavTimer(interval: settings.navigation.intervalSeconds)
         }
         if let navupdate = navUpdateReadyDelegate{
-            navupdate.navUpdateReady()
+            navupdate.navUpdateReady(newTarget: newTargetCourse)
+            newTargetCourse = false
         }
     }
     
