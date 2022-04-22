@@ -16,24 +16,24 @@ struct BreadCrumbs{
         get{
             defaults.object(forKey:"CrumbSeconds") as? Double ?? defaultInterval
         }
-        set(seconds){
-            defaults.set(seconds, forKey:"CrumbSeconds")
+        set(newValue){
+            defaults.set(newValue, forKey:"CrumbSeconds")
         }
     }
     var minSeparationMeters:Double{
         get{
             defaults.object(forKey:"CrumbDistance") as? Double ?? defaultSeparation
         }
-        set(dist){
-            defaults.set(dist, forKey:"CrumbDistance")
+        set(newValue){
+            defaults.set(newValue, forKey:"CrumbDistance")
         }
     }
     var minSeparationFeet:Double{
         get{
             return minSeparationMeters * 3.28084
         }
-        set(dist){
-            minSeparationMeters = dist / 3.28084
+        set(newValue){
+            minSeparationMeters = newValue / 3.28084
         }
     }
 }
@@ -43,6 +43,9 @@ struct Navigation{
     let defaultArrivalZone:Double = 30
     let defaultInterval:Double = 10
     let defaultProportionalTerm:Double = 2
+    let defaultIntegralTerm:Double = 0
+    let defaultDiffernetialTerm:Double = 0
+    let defaultPidLength:Int = 4
     let defaultMaxCorrection:Double = 45
     
     var timerMode:Bool{
@@ -58,8 +61,35 @@ struct Navigation{
         get{
             defaults.object(forKey:"NavProportionalTerm") as? Double ?? defaultProportionalTerm
         }
-        set(multiple){
-            defaults.set(multiple, forKey:"NavProportionalTerm")
+        set(newValue){
+            defaults.set(newValue, forKey:"NavProportionalTerm")
+        }
+    }
+    
+    var integralTerm:Double{
+        get{
+            defaults.object(forKey:"NavIntegralTerm") as? Double ?? defaultIntegralTerm
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"NavIntegralTerm")
+        }
+    }
+    
+    var differentialTerm:Double{
+        get{
+            defaults.object(forKey:"NavDifferentialTerm") as? Double ?? defaultDiffernetialTerm
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"NavDifferentialTerm")
+        }
+    }
+    
+    var pidLength:Int{
+        get{
+            defaults.object(forKey:"NavPidLength") as? Int ?? defaultPidLength
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"NavPidLength")
         }
     }
     
@@ -67,8 +97,8 @@ struct Navigation{
         get{
             defaults.object(forKey:"NavArrivalZone") as? Double ?? defaultArrivalZone
         }
-        set(meters){
-            defaults.set(meters, forKey:"NavArrivalZone")
+        set(newValue){
+            defaults.set(newValue, forKey:"NavArrivalZone")
         }
     }
     
@@ -76,8 +106,8 @@ struct Navigation{
         get{
             arrivalZoneMeters * 3.28084
         }
-        set(dist){
-            arrivalZoneMeters = dist / 3.28084
+        set(newValue){
+            arrivalZoneMeters = newValue / 3.28084
         }
     }
     
@@ -85,8 +115,8 @@ struct Navigation{
         get{
             defaults.object(forKey:"NavInterval") as? Double ?? defaultInterval
         }
-        set(seconds){
-            defaults.set(seconds, forKey:"NavInterval")
+        set(newValue){
+            defaults.set(newValue, forKey:"NavInterval")
         }
     }
     

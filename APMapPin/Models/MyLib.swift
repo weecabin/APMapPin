@@ -156,10 +156,10 @@ class PID{
     func NewError(error:Double){
         targetValue = 0 // this satisfies the test for a valid target in Correction()
         errorValues.append(error)
-        print(errorValues)
         if errorValues.count > size{
             errorValues.remove(at: 0)
         }
+//        print(errorValues)
     }
     
     func Correction()->Double?{
@@ -178,7 +178,7 @@ class PID{
                 retValue = retValue + (errorValues[lastIndex] - errorValues[lastIndex-1])*kd
             }
         }
-        print("Correction: \(retValue)")
+//        print("Correction: \(retValue)")
         return retValue
     }
 }

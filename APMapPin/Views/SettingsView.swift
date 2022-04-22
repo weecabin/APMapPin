@@ -19,6 +19,9 @@ struct SettingsView: View {
     
     @State var navInterval:String = ""
     @State var navProportional:String = ""
+    @State var navIntegral:String = ""
+    @State var navDifferential:String = ""
+    @State var navPidLength:String = ""
     @State var navTimerMode:String = "false"
     @State var navMaxCorrection:String = ""
     
@@ -27,6 +30,8 @@ struct SettingsView: View {
     @State var simWindPercent:String = ""
     
     @State var mapTrackLocation:String = "false"
+    
+    let elementNameWidth:CGFloat = 200
     
     var body: some View {
         VStack{
@@ -74,10 +79,16 @@ struct SettingsView: View {
                         .frame(height: 20)
                     Text("PID-kp:")
                         .frame(height: 20)
-                    Text("Max Correction(deg):")
+                    Text("PID-ki:")
+                        .frame(height: 20)
+                    Text("PID-kd:")
+                        .frame(height: 20)
+                    Text("PID Length:")
+                        .frame(height: 20)
+                    Text("Max Err(deg):")
                         .frame(height: 20)
                 }
-                .frame(width: 180)
+                .frame(width: elementNameWidth)
                 
                 VStack(alignment: .leading){
                     timerModeView
@@ -88,12 +99,19 @@ struct SettingsView: View {
                         .frame(height: 20)
                     TextField("PID-kp", text: $navProportional)
                         .frame(height: 20)
+                    TextField("PID-kp", text: $navIntegral)
+                        .frame(height: 20)
+                    TextField("PID-kp", text: $navDifferential)
+                        .frame(height: 20)
+                    TextField("PID Length", text: $navPidLength)
+                        .frame(height: 20)
                     TextField("maxCorrection", text: $navMaxCorrection)
                         .frame(height: 20)
                 }
                 Spacer()
             }
         }
+        .padding(0)
     }
     
     var mapView:some View{
@@ -104,12 +122,13 @@ struct SettingsView: View {
                     .font(.title2)
                 Spacer()
             }
+            .frame(width: elementNameWidth)
+            
             HStack{
                 VStack(alignment:.trailing){
                     Text("Track Location:")
                         .frame(height: 20)
                 }
-                .padding(0)
                 .frame(width:180)
                 
                 VStack(alignment: .leading){
@@ -150,7 +169,7 @@ struct SettingsView: View {
                     Text("Wind Percent:")
                         .frame(height: 20)
                 }
-                .frame(width:180)
+                .frame(width: elementNameWidth)
                 
                 VStack(alignment: .leading){
                     enableSimView
@@ -180,8 +199,7 @@ struct SettingsView: View {
                     Text("Min Distance(ft):")
                         .frame(height: 20)
                 }
-                .padding(0)
-                .frame(width: 180)
+                .frame(width: elementNameWidth)
                 
                 VStack(alignment: .leading){
                     TextField("interval", text: $crumbInterval)
@@ -251,6 +269,9 @@ struct SettingsView: View {
         navInterval = String(settings.navigation.intervalSeconds)
         navArrivalZone = String(settings.navigation.arrivalZoneFeet)
         navProportional = String(settings.navigation.proportionalTerm)
+        navIntegral = String(settings.navigation.integralTerm)
+        navDifferential = String(settings.navigation.differentialTerm)
+        navPidLength = String(settings.navigation.pidLength)
         navTimerMode = settings.navigation.timerMode ? "true" : "false"
         navMaxCorrection = String(settings.navigation.maxCorrectionDeg)
         
@@ -268,6 +289,9 @@ struct SettingsView: View {
         settings.navigation.arrivalZoneFeet = Double(navArrivalZone) ?? settings.navigation.defaultArrivalZone
         settings.navigation.intervalSeconds = Double(navInterval) ?? settings.navigation.defaultInterval
         settings.navigation.proportionalTerm = Double(navProportional) ?? settings.navigation.defaultProportionalTerm
+        settings.navigation.integralTerm = Double(navIntegral) ?? settings.navigation.defaultIntegralTerm
+        settings.navigation.differentialTerm = Double(navDifferential) ?? settings.navigation.defaultDiffernetialTerm
+        settings.navigation.pidLength = Int(navPidLength) ?? settings.navigation.defaultPidLength
         settings.navigation.timerMode = navTimerMode == "true"
         settings.navigation.maxCorrectionDeg = Double(navMaxCorrection) ?? settings.navigation.defaultMaxCorrection
         
@@ -289,5 +313,6 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
+            .environmentObject(GlobalViewModel())
     }
 }
