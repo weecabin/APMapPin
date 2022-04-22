@@ -74,7 +74,7 @@ struct SettingsView: View {
                         .frame(height: 20)
                     Text("PID-kp:")
                         .frame(height: 20)
-                    Text("Max Correction:")
+                    Text("Max Correction(deg):")
                         .frame(height: 20)
                 }
                 .frame(width: 180)
