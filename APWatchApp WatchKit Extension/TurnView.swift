@@ -66,6 +66,7 @@ struct TurnView: View {
                         Text(turn.name).tag(turn.value)
                     }
                 }
+                .pickerStyle(.wheel)
                 .frame(width: 40, height:50)
                 Button {
                     vm.Right(delta: turnAngle)
