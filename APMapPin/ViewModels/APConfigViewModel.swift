@@ -7,6 +7,11 @@
 
 import Foundation
 import WatchConnectivity
+struct TurnAngle: Identifiable{
+    let id:UUID = UUID()
+    let name:String
+    let value:Int
+}
 
 class ApConfigViewModel : ObservableObject{
     
@@ -15,6 +20,8 @@ class ApConfigViewModel : ObservableObject{
     @Published var editItemId:UUID?
     @Published var editValue:String?
     @Published var actuatorEnabled:Bool = true
+    @Published var turnAngles:[TurnAngle] = []
+    @Published var turnAngle:Int = 5
     var initialized:Bool = false
     var ble:BLEManager?
     //@Published var apHeading:Float = 0
@@ -30,6 +37,7 @@ class ApConfigViewModel : ObservableObject{
         print("in apvm.onAppear")
         if !initialized{
             self.ble = ble
+            loadPicker()
             initialized = true
         }
     }
@@ -128,6 +136,15 @@ class ApConfigViewModel : ObservableObject{
             return command
         }
         return ""
+    }
+    
+    func loadPicker(){
+        var i:Int = 5
+        turnAngles = []
+        while i<95 {
+            turnAngles.append(TurnAngle(name: "\(i)", value: i))
+            i = i + 5
+        }
     }
     
     func editItemValue() -> String?{

@@ -10,14 +10,14 @@ import SwiftUI
 
 struct DropPinView: View {
     @EnvironmentObject var vm:ViewModel
-    let bh:CGFloat = 30
+    let bh:CGFloat = 50
     let bw:CGFloat = 80
     var body: some View {
         VStack{
             Button {
                 vm.SendMessage(msgType: .MapMsg, msg: "FishOn")
             } label: {
-                Text("Fish On")
+                Text("Fish")
                     .frame(width: bw, height: bh)
                     .background(Color.blue)
                     .cornerRadius(10)

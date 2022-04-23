@@ -16,6 +16,9 @@ struct APConfigView: View{
     @EnvironmentObject var gvm:GlobalViewModel
     
     @State var editValue:String = ""
+    let buttonHeight:CGFloat = 30
+    let buttonWidth:CGFloat = 60
+    
     
     var body: some View {
         ZStack{
@@ -154,18 +157,33 @@ extension APConfigView{
     
     private var headingButtons: some View{
         Group{
+            HStack{
+                HeadingButton(title: "Lock", command:"!B507", height: buttonHeight, width:buttonWidth)
+            }
             HStack
             {
-                HeadingButton(title: "Left 10", command:"h-10")
-                HeadingButton(title: "Lock", command:"!B507", height: 30, width:60)
-                HeadingButton(title: "Right 10", command:"h10")
+                HeadingButton(title: "Left", command:"", width: buttonWidth)
+                
+                Picker("Angle", selection: $apvm.turnAngle) {
+                    ForEach(apvm.turnAngles){turn in
+                        Text(turn.name)
+                            .tag(turn.value)
+                    }
+                }
+                .frame(width: buttonHeight, height: buttonHeight)
+                .padding(10)
+                .background(.thickMaterial)
+                .cornerRadius(buttonHeight/2)
+                .disabled((ble.connectedToAp && gvm.navType == .none && apvm.actuatorEnabled) ? false : true)
+                
+                HeadingButton(title: "Right", command:"", width: buttonWidth)
             }
             .padding(5)
             
             HStack
             {
-                HeadingButton(title: "Left 90", command:"h-90")
-                HeadingButton(title: "Right 90", command:"h90")
+                HeadingButton(title: "Left 45", command:"h-45")
+                HeadingButton(title: "Right 45", command:"h45")
             }
             .padding(5)
             HStack
@@ -182,16 +200,16 @@ extension APConfigView{
         return Button(title) {
             var cmd = ""
             switch title{
-            case "Left 10":
-                cmd = "hi-10"
+            case "Left":
+                cmd = "hi-\(apvm.turnAngle)"
                 break
-            case "Right 10":
-                cmd = "hi10"
+            case "Right":
+                cmd = "hi\(apvm.turnAngle)"
                 break
-            case "Left 90":
+            case "Left 45":
                 cmd = "hi-90"
                 break
-            case "Right 90":
+            case "Right 45":
                 cmd = "hi90"
                 break
             case "Lock","Circle L","Circle R":
