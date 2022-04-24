@@ -279,7 +279,7 @@ extension MapViewModel{ // Navigation Functions
             setSimPin()
             simStartLocation = CLLocationCoordinate2D(latitude: simPin!.latitude, longitude: simPin!.longitude)
             navigate.locationUpdate(location: simPin!.Location)
-            simulatedLocation = SimulatedLocation(location: simPin!.Location, heading: 0)
+            simulatedLocation = SimulatedLocation(location: simPin!.Location, headingTarget: 0)
             if !navigate.StartNavigation(route: route, fromIndex: startFromIndex){
                 print("Failed to start navigation")
                 simPin = nil
@@ -326,8 +326,8 @@ extension MapViewModel{ // Navigation Functions
             let newCourseToTarget = FixHeading(heading: simPin!.course - headingError)
             heading = newNavHeading(courseToTarget: newCourseToTarget)
             
-            simulatedLocation!.heading = heading
-            simPin!.course = heading // this really won't simulate what happens
+            simulatedLocation!.headingTarget = heading
+            simPin!.course = simulatedLocation!.heading // this really won't simulate what happens
         }else{
             if let lastLoc = lastLocation{
                 let lastLocCourse = lastLoc.course
@@ -358,7 +358,9 @@ extension MapViewModel{ // Navigation Functions
     
     func UpdateSimulatedLocation(){
         if let pin = simPin{
+            simulatedLocation?.update()
             lastLocation = simulatedLocation?.getNewPosition()
+            pin.course = simulatedLocation!.heading
 //            print(lastLocation)
             pin.latitude = lastLocation!.coordinate.latitude
             pin.longitude = lastLocation!.coordinate.longitude
@@ -370,7 +372,9 @@ extension MapViewModel{ // Navigation Functions
             lastLocationSpeed =  String(format: "%.1f",speed)
             
             let course = lastLocation!.course
-            if course >= 0 {lastLocationCourse = String(format: "%.1f",course)}
+            if course >= 0 {
+                lastLocationCourse = String(format: "%.1f",course)
+            }
             else{lastLocationCourse = "?"}
         }
     }

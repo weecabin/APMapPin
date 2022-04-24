@@ -28,6 +28,7 @@ struct SettingsView: View {
     @State var simSpeed:String = ""
     @State var simEnabled:String = "false"
     @State var simWindPercent:String = ""
+    @State var simTurnRate:String = ""
     
     @State var mapTrackLocation:String = "false"
     
@@ -164,6 +165,8 @@ struct SettingsView: View {
                 VStack(alignment:.trailing){
                     Text("Enabled:")
                         .frame(height: 20)
+                    Text("TurnRate:")
+                        .frame(height: 20)
                     Text("Speed(mph):")
                         .frame(height: 20)
                     Text("Wind Percent:")
@@ -173,6 +176,8 @@ struct SettingsView: View {
                 
                 VStack(alignment: .leading){
                     enableSimView
+                        .frame(height: 20)
+                    TextField("TurnRate", text: $simTurnRate)
                         .frame(height: 20)
                     TextField("Speed", text: $simSpeed)
                         .frame(height: 20)
@@ -278,6 +283,7 @@ struct SettingsView: View {
         simSpeed = String(settings.simulator.speed)
         simEnabled = settings.simulator.enabled ? "true" : "false"
         simWindPercent = String(settings.simulator.windPercent)
+        simTurnRate = String(settings.simulator.turnRate)
         
         mapTrackLocation = settings.map.trackLocation ? "true" : "false"
     }
@@ -302,6 +308,7 @@ struct SettingsView: View {
             gvm.apIsCalibrated = false
         }
         settings.simulator.windPercent = Double(simWindPercent) ?? settings.simulator.defaultWindPercent
+        settings.simulator.turnRate = Double(simTurnRate) ?? settings.simulator.defaultTurnRate
         
         
         presentationMode.wrappedValue.dismiss()

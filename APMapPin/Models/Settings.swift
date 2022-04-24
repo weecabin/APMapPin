@@ -146,7 +146,7 @@ struct Simulator{
     let defaults = UserDefaults.standard
     let defaultSimSpeed:Double = 10
     let defaultWindPercent:Double = 0
-    
+    let defaultTurnRate:Double = 5
     
     var enabled:Bool{
         get{
@@ -175,6 +175,14 @@ struct Simulator{
         }
     }
     
+    var turnRate:Double{
+        get{
+            defaults.object(forKey:"TurnRate") as? Double ?? defaultTurnRate
+        }
+        set(newValue){
+            defaults.set(newValue, forKey:"TurnRate")
+        }
+    }
     
 }
 

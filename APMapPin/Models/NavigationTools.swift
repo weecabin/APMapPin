@@ -56,15 +56,40 @@ class SimulatedLocation{
     var settings:Settings = Settings()
     var prevLocation:CLLocation?
     var location:CLLocation?
-    var heading:Double
+    private var currentHeading:Double = 0
+    var headingTarget:Double
 
     let metersPerLatitude:Double = 111111.111
     var initialized:Bool = false
+    var heading:Double{
+        get{
+            currentHeading
+        }
+        set(value){
+            headingTarget = value
+        }
+    }
     
-    init(location:CLLocation, heading:Double){
+    init(location:CLLocation, headingTarget:Double){
         self.location = location
         self.prevLocation = location
-        self.heading = heading
+        self.headingTarget = headingTarget
+        self.currentHeading = headingTarget
+    }
+    
+    func newHeading(newHeading:Double){
+        headingTarget = newHeading
+    }
+    
+    func update(){
+        let turnRate = settings.simulator.turnRate
+        let headingDelta = HeadingError(target: headingTarget, actual: currentHeading)
+        if abs(headingDelta) > turnRate{
+            currentHeading = FixHeading(heading: headingDelta>0 ? currentHeading - turnRate : currentHeading + turnRate)
+        }else{
+            currentHeading = headingTarget
+        }
+//        print(currentHeading)
     }
     
     func getNewPosition()->CLLocation?{
@@ -79,7 +104,7 @@ class SimulatedLocation{
             // uses heading and wind to calculate the new location
             let newCoord = getNewTargetCoordinate(
                 position: CLLocationCoordinate2D(latitude: prevCoord.latitude + windPush, longitude: prevCoord.longitude),
-                userBearing: Float(heading),
+                userBearing: Float(currentHeading),
                 distance: distanceTraveled)
             let newCourse = getBearingBetweenTwoPoints1(point1: prevCoord, point2: newCoord)
             location = CLLocation(coordinate: newCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: newCourse, speed: speedInMetersPerSec, timestamp: Date.now)
