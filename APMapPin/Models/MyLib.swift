@@ -164,7 +164,7 @@ class PID{
     
     func Correction()->Double?{
         guard (errorValues.count>0 && targetValue != nil) else {return nil}
-        var retValue = errorValues.last!
+        var retValue = errorValues.last! * kp
         if ki != 0{
             var integralValue:Double = 0
             for value in errorValues{

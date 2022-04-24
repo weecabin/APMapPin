@@ -309,6 +309,7 @@ extension MapViewModel{ // Navigation Functions
     
     func navUpdateReady(newTarget:Bool) {
         if newTarget{
+            print("new Target")
             pidController = PID(
                 kp: settings.navigation.proportionalTerm,
                 ki: settings.navigation.integralTerm,
