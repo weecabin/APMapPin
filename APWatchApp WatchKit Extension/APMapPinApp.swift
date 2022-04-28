@@ -16,6 +16,7 @@ struct APMapPinApp: App {
                 TurnView()
                 CircleView()
                 DropPinView()
+                SetHeadingView()
             }
             .environmentObject(vm)
         }

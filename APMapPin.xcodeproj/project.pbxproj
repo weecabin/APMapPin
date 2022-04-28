@@ -27,6 +27,7 @@
 		91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEC27EDC3D000A20C36 /* MapViewModel.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
 		918805D82812391600281F34 /* NavigationTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918805D72812391600281F34 /* NavigationTools.swift */; };
+		9195EE42281AD2820087AA44 /* SetHeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9195EE41281AD2820087AA44 /* SetHeadingView.swift */; };
 		91B1908B28032C9B0097CF29 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1908A28032C9B0097CF29 /* Settings.swift */; };
 		91B1908D280348E20097CF29 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1908C280348E20097CF29 /* SettingsView.swift */; };
 		91B40B162805F88A004B5955 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B40B152805F88A004B5955 /* BLEManager.swift */; };
@@ -119,6 +120,7 @@
 		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		918805D72812391600281F34 /* NavigationTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTools.swift; sourceTree = "<group>"; };
+		9195EE41281AD2820087AA44 /* SetHeadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetHeadingView.swift; sourceTree = "<group>"; };
 		91B1908A28032C9B0097CF29 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		91B1908C280348E20097CF29 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		91B40B152805F88A004B5955 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				91F67BCD28062DA800829E63 /* APMapPinApp.swift */,
+				9195EE41281AD2820087AA44 /* SetHeadingView.swift */,
 				91F67BE928062E6500829E63 /* TurnView.swift */,
 				91F67BED28062F0F00829E63 /* CircleView.swift */,
 				91F67BEF28062F4500829E63 /* DropPinView.swift */,
@@ -466,6 +469,7 @@
 				91F67BF028062F4500829E63 /* DropPinView.swift in Sources */,
 				91F67BCE28062DA800829E63 /* APMapPinApp.swift in Sources */,
 				91F67BD428062DA800829E63 /* NotificationView.swift in Sources */,
+				9195EE42281AD2820087AA44 /* SetHeadingView.swift in Sources */,
 				91F67BEE28062F0F00829E63 /* CircleView.swift in Sources */,
 				91F67BEC28062E9300829E63 /* ViewModel.swift in Sources */,
 			);
@@ -733,8 +737,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = APWatchApp_WatchKit_Extension.ComplicationController;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -764,8 +770,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = APWatchApp_WatchKit_Extension.ComplicationController;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

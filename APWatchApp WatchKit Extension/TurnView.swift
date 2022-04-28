@@ -15,8 +15,6 @@ struct TurnAngle: Identifiable{
 
 struct TurnView: View {
     @EnvironmentObject var vm:ViewModel
-    let bh:CGFloat = 30
-    let bw:CGFloat = 50
     @State var turnAngles:[TurnAngle] = []
     @State var turnAngle:Int = 5
     var body: some View {
@@ -25,7 +23,7 @@ struct TurnView: View {
                 vm.Lock()
             } label: {
                 Text("Lock")
-                    .frame(width: bw, height: bh)
+                    .frame(width: vm.bw, height: vm.bh)
                     .background(Color.blue)
                     .cornerRadius(10)
                     .foregroundColor(.white)
@@ -36,7 +34,7 @@ struct TurnView: View {
                     vm.Left(delta: 10)
                 } label: {
                     Text("L10")
-                        .frame(width: bw, height: bh)
+                        .frame(width: vm.bw, height: vm.bh)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .foregroundColor(.white)
@@ -45,7 +43,7 @@ struct TurnView: View {
                     vm.Right(delta: 10)
                 } label: {
                     Text("R10")
-                        .frame(width: bw, height: bh)
+                        .frame(width: vm.bw, height: vm.bh)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .foregroundColor(.white)
@@ -56,7 +54,7 @@ struct TurnView: View {
                     vm.Left(delta: turnAngle)
                 } label: {
                     Text("L")
-                        .frame(width: bw, height: bh)
+                        .frame(width: vm.bw, height: vm.bh)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .foregroundColor(.white)
@@ -72,7 +70,7 @@ struct TurnView: View {
                     vm.Right(delta: turnAngle)
                 } label: {
                     Text("R")
-                        .frame(width: bw, height: bh)
+                        .frame(width: vm.bw, height: vm.bh)
                         .background(Color.blue)
                         .cornerRadius(10)
                         .foregroundColor(.white)

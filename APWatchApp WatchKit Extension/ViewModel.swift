@@ -5,8 +5,9 @@
 //  Created by Gary Hamann on 4/12/22.
 //
 
-import Foundation
+import SwiftUI
 import WatchConnectivity
+import CoreLocation
 
 enum MsgType{
     case ApMsg
@@ -15,8 +16,16 @@ enum MsgType{
 
 class ViewModel : NSObject, ObservableObject{
     @Published var rcvMsg:String = "?"
+    let locationManager = CLLocationManager()
+    var lastDeviceHeading:CLHeading?
+    var headingAvailableDelegate:HeadingAvailableDelegate?
     var initialized:Bool = false
-    
+    let bh:CGFloat = 30
+    let bw:CGFloat = 50
+    override init(){
+        super.init()
+        setupCoreLocation()
+    }
     func Left(delta:Int){
         SendMessage(msg: "hi-\(delta)")
     }
@@ -25,6 +34,23 @@ class ViewModel : NSObject, ObservableObject{
     }
     func Lock(){
         SendMessage(msg: "!B507")
+    }
+}
+extension ViewModel : CLLocationManagerDelegate{
+    func locationManager(_ manager: CLLocationManager,
+                         didUpdateHeading newHeading: CLHeading){
+        lastDeviceHeading = newHeading
+        if let headingDelegate = headingAvailableDelegate{
+            headingDelegate.newHeading(heading: newHeading)
+        }
+    }
+    
+    func setupCoreLocation() {
+        guard CLLocationManager.headingAvailable() else { return }
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        // additional setup available if needed
+        locationManager.startUpdatingHeading()
     }
 }
 
