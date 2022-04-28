@@ -112,7 +112,7 @@ struct EditPinView: View {
                         }
                         .id(pin.id)
                         .padding(10)
-                        .background(pin==mapPin ? .orange : .teal)
+                        .background(pin==mapPin ? .orange : cd.countInRoutes(mapPin: pin)==0 ? .red : .teal)
                         .cornerRadius(10)
                         .onTapGesture {
                             pinTapped(pin: pin)

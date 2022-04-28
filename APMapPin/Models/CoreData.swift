@@ -87,6 +87,7 @@ extension CoreData{
     }
     
     func deleteRoutePoint(routePoint: RoutePoint){
+        // remove the point from the route
         if let count = routePoint.pointRoute?.routePointsArray.count{
             print("points = \(count)")
             let deletedIndex = routePoint.index
@@ -97,14 +98,17 @@ extension CoreData{
             }
             saveRouteData()
         }
+        // remove the pin if it
+        if routePoint.pointPin?.pinPoints?.count==1{
+            container.viewContext.delete(routePoint.pointPin!)
+            savePinData()
+        }
         container.viewContext.delete(routePoint)
         saveRoutePointData()
     }
     
     func moveRoutePoint(route:Route, from:Int, to:Int){
         let routeArray = route.routePointsArray
-//        print(routeArray)
-//        print("moving \(from) to \(to)")
         let movedRoute = routeArray.first(where: {$0.index == from})
         if from > to{
             for point in routeArray{
