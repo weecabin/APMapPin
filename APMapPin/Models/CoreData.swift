@@ -167,10 +167,19 @@ extension CoreData{
     }
     
     func countInRoutes(mapPin: MapPin) -> Int{
+        var count = 0
         if let pinPoints = mapPin.pinPoints{
-            return pinPoints.count
+            for point in pinPoints{
+                if let route = (point as AnyObject).pointRoute{
+                    if route != nil{
+                        if savedRoutes.contains(route!){
+                            count += 1
+                        }
+                    }
+                }
+            }
         }
-        return 0
+        return count
     }
     
     func deleteAllMapPins(){
@@ -394,19 +403,19 @@ extension CoreData{
         }
     }
     
-    func routeNamed(name:String, createIfNotFound:Bool = false) -> Route?{
+    func getRouteNamed(name:String, createIfNotFound:Bool = false) -> Route?{
         for route in savedRoutes{
             if route.Name == name{return route}
         }
         if createIfNotFound{
             addRoute(name: name)
-            return routeNamed(name: name)
+            return getRouteNamed(name: name)
         }
         return nil
     }
     
     func namedRouteArray(name:String) -> [RoutePoint]{
-        if let route = routeNamed(name: name){
+        if let route = getRouteNamed(name: name){
             return route.routePointsArray
         }
         return []
@@ -419,7 +428,7 @@ extension CoreData{
     }
     
     func addPinToRoute(routeName:String, pin: MapPin, atIndex:Int = -1){
-        addPinToRoute(route: routeNamed(name: routeName, createIfNotFound: true)!, pin: pin, atIndex: atIndex)
+        addPinToRoute(route: getRouteNamed(name: routeName, createIfNotFound: true)!, pin: pin, atIndex: atIndex)
     }
     
     func addPinToRoute(route: Route, pin: MapPin, atIndex:Int = -1){

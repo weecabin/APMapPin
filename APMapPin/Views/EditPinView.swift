@@ -103,7 +103,7 @@ struct EditPinView: View {
                         HStack{
                             Text(pin.Name)
                             Text("(\(pin.unwrappedType))")
-                            Text("In(\(pin.pinPoints!.count))")
+                            Text("In(\(cd.countInRoutes(mapPin: pin)))")
                             Spacer()
                             Button(
                                 action: {deletePin(pin: pin)},

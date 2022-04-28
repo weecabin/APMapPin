@@ -127,7 +127,7 @@ extension MapViewModel{ // Map Functions
     
     func mapMessage(msg: String) {
 //        print("Watch msg: \(msg)")
-        if let route = cd.routeNamed(name: "Dropped", createIfNotFound: true){
+        if let route = cd.getRouteNamed(name: "Dropped", createIfNotFound: true){
             route.visible = true
 //            print("Updating \(route.Name)")
             switch (msg){
@@ -166,7 +166,7 @@ extension MapViewModel{ // Map Functions
 extension MapViewModel{ // BreadCrumb Functions
     func StartStopBreadCrumbs(){
         if !droppingCrumbs{
-            if let route = cd.routeNamed(name: "Track", createIfNotFound: true){
+            if let route = cd.getRouteNamed(name: "Track", createIfNotFound: true){
                 trackRoute = route
                 breadCrumbTimer = Timer.scheduledTimer(withTimeInterval: settings.breadCrumbs.intervalSeconds, repeats: true) { Timer in
                     self.DropACrumbTask()
