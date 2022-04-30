@@ -14,13 +14,22 @@ struct SetHeadingView: View{
     
     
     @EnvironmentObject var vm:ViewModel
-    @State var magHeading:String = "?"
+    @State var trueHeading:String = "?"
     var body: some View {
         VStack{
-            Text(magHeading)
+            Button {
+                vm.SendMessage(msg: "hc\(trueHeading)")
+            } label: {
+                Text("Cal heading")
+                    .frame(width: 120, height: 50)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+                    .foregroundColor(.white)
+            }
+            Text(trueHeading)
                 .font(.largeTitle)
             Button {
-                vm.SendMessage(msg: "ht\(magHeading)")
+                vm.SendMessage(msg: "ht\(trueHeading)")
             } label: {
                 Text("Set heading")
                     .frame(width: 120, height: 50)
@@ -28,6 +37,7 @@ struct SetHeadingView: View{
                     .cornerRadius(10)
                     .foregroundColor(.white)
             }
+            
         }
         .onAppear {
             vm.locationManager.startUpdatingHeading()
@@ -43,7 +53,7 @@ struct SetHeadingView: View{
 
 extension SetHeadingView: HeadingAvailableDelegate{
     func newHeading(heading: CLHeading) {
-        magHeading = String(format: "%.1f", heading.trueHeading)
+        trueHeading = String(format: "%.1f", heading.trueHeading)
     }
 }
 
