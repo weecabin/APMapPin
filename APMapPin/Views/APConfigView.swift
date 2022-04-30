@@ -16,6 +16,7 @@ struct APConfigView: View{
     @EnvironmentObject var gvm:GlobalViewModel
     
     @State var editValue:String = ""
+    @State var writeEE:Bool = false
     let buttonHeight:CGFloat = 30
     let buttonWidth:CGFloat = 60
     
@@ -30,7 +31,6 @@ struct APConfigView: View{
                     Text(apvm.actuatorEnabled ? "Disable Actuator" : "Enable Actuator")
                         .foregroundColor(apvm.actuatorEnabled ? .red : .green)
                 }
-
                 headingButtons
                 Text(phtext)
                 stateView
@@ -70,16 +70,34 @@ extension APConfigView{
     
     private var stateView: some View{
         VStack{
-            Button(action: {
-                ble.messageReceivedFromAPDelegate = self
-                ble.sendMessageToAP(data: "?c")
-            }, label: {
-                Text("Update State")
-            })
+            HStack{
+                Button(action: {
+                    ble.messageReceivedFromAPDelegate = self
+                    ble.sendMessageToAP(data: "?c")
+                }, label: {
+                    Text("Update State")
+                })
+                    .frame(width: 150, height: 40, alignment: .center)
+                    .background((ble.connectedToAp ? Color.green : Color.gray) .cornerRadius(10))
+                    .foregroundColor(ble.connectedToAp ? .black : .white)
+                    .disabled(ble.connectedToAp ? false : true)
+                
+                Button {
+                    writeEE = true;
+                } label: {
+                    Text("Write EEProm")
+                }
                 .frame(width: 150, height: 40, alignment: .center)
                 .background((ble.connectedToAp ? Color.green : Color.gray) .cornerRadius(10))
                 .foregroundColor(ble.connectedToAp ? .black : .white)
                 .disabled(ble.connectedToAp ? false : true)
+                .alert(isPresented: $writeEE) {
+                    Alert(title: Text("Write EEProm?"),
+                          primaryButton:.default(Text("OK"),action: {ble.sendMessageToAP(data: "w")}),
+                          secondaryButton:.cancel())}
+            }
+
+            
             List(apvm.configItems) { item in
                 HStack{
                     Text(item.prompt)
@@ -121,6 +139,8 @@ extension APConfigView{
                     let command = apvm.configCommand(newValue: editValue)
                     print(command)
                     ble.sendMessageToAP(data: command)
+                    ble.messageReceivedFromAPDelegate = self
+                    ble.sendMessageToAP(data: "?c")
                     if apvm.editItemPrompt() == "Heading"{
                         gvm.apIsCalibrated = true
                     }
