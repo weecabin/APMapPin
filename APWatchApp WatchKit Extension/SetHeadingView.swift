@@ -43,7 +43,7 @@ struct SetHeadingView: View{
 
 extension SetHeadingView: HeadingAvailableDelegate{
     func newHeading(heading: CLHeading) {
-        magHeading = String(format: "%.1f", heading.magneticHeading)
+        magHeading = String(format: "%.1f", heading.trueHeading)
     }
 }
 

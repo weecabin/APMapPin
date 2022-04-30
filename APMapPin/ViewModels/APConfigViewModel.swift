@@ -46,11 +46,11 @@ class ApConfigViewModel : ObservableObject{
         print("in toggleActuatorEnabled")
         actuatorEnabled.toggle()
         if actuatorEnabled{
-            ble!.sendMessageToAP(data: "r")
+            ble!.sendMessageToAP(data: "sr")
             ble!.sendMessageToAP(data: "!B507")
         }else{
-            ble!.sendMessageToAP(data: "s")
-            ble!.sendMessageToAP(data: "m3")
+            ble!.sendMessageToAP(data: "ss")
+            //ble!.sendMessageToAP(data: "m3")
         }
     }
     

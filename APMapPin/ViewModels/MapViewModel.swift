@@ -228,7 +228,7 @@ extension MapViewModel{ // Navigation Functions
         }
         else if let hdg = lastDeviceHeading{
             if hdg.trueHeading >= 0{
-                print("heading: \(hdg.trueHeading)")
+                print("Cal heading: \(hdg.trueHeading)")
                 heading = String(format: "%.1f",hdg.trueHeading)
             }
         }
