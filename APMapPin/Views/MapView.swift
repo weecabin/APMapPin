@@ -240,7 +240,7 @@ extension MapView{
             .background(.gray)
 
             HStack{
-                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) crs:\(mvm.navigate.bearingToTargetString) tgt:\(mvm.navigate.desiredBearingToTargetString)") :
+                mvm.navigate.running ? Text("Nav: \(mvm.navigate.distToTargetString) crsTo:\(mvm.navigate.bearingToTargetString) tgt:\(mvm.navigate.desiredBearingToTargetString)") :
                 Text("Nav:")
                 Spacer()
             }
