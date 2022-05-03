@@ -79,7 +79,7 @@ struct TurnView: View {
         }
         .onAppear {
             loadPicker()
-            vm.onAppear()
+            vm.onTurnViewAppear()
         }
     }
     

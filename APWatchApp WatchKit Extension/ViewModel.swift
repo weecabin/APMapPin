@@ -82,7 +82,7 @@ extension ViewModel : WCSessionDelegate{
         }
     }
     
-    func onAppear(){
+    func onTurnViewAppear(){
         if !initialized {
             print("initializing WCSession")
             if WCSession.isSupported(){

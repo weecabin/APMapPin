@@ -679,6 +679,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28CH6K34FW;
@@ -705,6 +706,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28CH6K34FW;
@@ -731,13 +733,13 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"APWatchApp WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "APWatchApp\\ WatchKit\\ Extension/Assets.xcassets APMapPin/Assets.xcassets";
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = APWatchApp_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
@@ -764,13 +766,13 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"APWatchApp WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "APWatchApp\\ WatchKit\\ Extension/Assets.xcassets APMapPin/Assets.xcassets";
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = APWatchApp_WatchKit_Extension.ComplicationController;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
