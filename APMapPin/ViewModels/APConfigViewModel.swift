@@ -192,6 +192,7 @@ class ApConfigViewModel : ObservableObject{
         configItems=[]
         // Keep CompassCorrection as the first item
         configItems.append(PV(prompt: "CompassCorrection:", value: String(Float(MySubString(src: configString, sub: "CompassCorrection=", returnLen: 7, offset: 18)) ?? 0),editable:true))
+        configItems.append(PV(prompt: "SensorCal(GAM):", value: String(Float(MySubString(src: configString, sub: "Cal=", returnLen: 5, offset: 4)) ?? 0),editable:false))
         configItems.append(PV(prompt: "Offset:", value: String(Float(MySubString(src: configString, sub: "Offset=", returnLen: 6, offset: 7)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Target:", value: String(Float(MySubString(src: configString, sub: "Target=", returnLen: 6, offset: 7)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Heading:", value: String(Float(MySubString(src: configString, sub: "Heading=", returnLen: 6, offset: 8)) ?? 0),editable:false))
