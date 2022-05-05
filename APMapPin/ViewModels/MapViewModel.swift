@@ -505,6 +505,9 @@ extension MapViewModel{ // Location calls
         guard let location = locations.last else {return}
         if settings.simulator.enabled {return}
         lastLocation = location
+        if gvm!.compassCalLocationDelegate != nil{
+            gvm!.compassCalLocationDelegate!.compassCalLocation(location: location)
+        }
         UpdateMapCenter()
 //        print("calling navigate.locationUpdate")
         navigate.locationUpdate(location: lastLocation!)
@@ -519,6 +522,10 @@ extension MapViewModel{ // Location calls
     
     func locationManager(_ manager: CLLocationManager,
                          didUpdateHeading newHeading: CLHeading){
+//        print("newHeading: \(newHeading.trueHeading)")
         lastDeviceHeading = newHeading
+        if gvm!.compassCalHeadingDelegate != nil{
+            gvm!.compassCalHeadingDelegate!.compassCalHeading(heading: newHeading)
+        }
     }
 }

@@ -157,13 +157,13 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
          scanning = true;
          self.stopOn = stopOn
          peripherals = []
-         print("startScanning")
+//         print("startScanning")
          myCentral.scanForPeripherals(withServices: nil, options: nil)
      }
     
     func stopScanning() {
         scanning = false;
-        print("stopScanning")
+//        print("stopScanning")
         myCentral.stopScan()
     }
     
@@ -172,7 +172,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
 extension BLEManager{
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?){
-        print("*******************************************************")
+//        print("*******************************************************")
 
         if ((error) != nil) {
             print("Error discovering services: \(error!.localizedDescription)")
@@ -185,7 +185,7 @@ extension BLEManager{
         for service in services {
             peripheral.discoverCharacteristics(nil, for: service)
         }
-        print("Discovered Services: \(services)")
+//        print("Discovered Services: \(services)")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -199,20 +199,20 @@ extension BLEManager{
           for characteristic in characteristics {
 
             if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
-              print("Setting rxCharacteristic")
+//              print("Setting rxCharacteristic")
               rxCharacteristic = characteristic
 
               peripheral.setNotifyValue(true, for: rxCharacteristic!)
               peripheral.readValue(for: characteristic)
 
-              print("RX Characteristic: \(rxCharacteristic.uuid)")
+//              print("RX Characteristic: \(rxCharacteristic.uuid)")
             }
 
             if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Tx){
-              print("Setting txCharacteristic")
+//              print("Setting txCharacteristic")
               txCharacteristic = characteristic
               
-              print("TX Characteristic: \(txCharacteristic.uuid)")
+//              print("TX Characteristic: \(txCharacteristic.uuid)")
             }
           }
     }
@@ -249,10 +249,16 @@ extension BLEManager{
           rcvString += "\((characteristicASCIIValue as String))"
           if rcvString.contains("<EOM>"){
               rcvMessage=rcvString + "\n\n"
-              rcvString = ""
-              messageReceivedFromAPDelegate.messageIn(message: rcvMessage)
+              rcvString = "" // clear it out for the next command
+              if messageReceivedFromAPDelegate != nil{
+                  messageReceivedFromAPDelegate.messageIn(message: rcvMessage)
+              }
+              if gvm!.compassCalAPMessageDelegate != nil{
+//                  print("rcvMessge:\"\(rcvMessage)\"")
+                  gvm!.compassCalAPMessageDelegate!.compassCalAPMessage(message: rcvMessage)
+              }
         }
-          print("Value Recieved: \((characteristicASCIIValue as String))")
+//          print("Value Recieved: \((characteristicASCIIValue as String))")
     }
     
     func sendMessageToAP(data: String){
@@ -260,7 +266,7 @@ extension BLEManager{
         
         if let foundPeripheral = foundPeripheral {
           if let txCharacteristic = txCharacteristic {
-              print("Writing: \(data)")
+              //print("Writing: \(data)")
               foundPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
               return
               }

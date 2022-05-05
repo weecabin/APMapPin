@@ -31,7 +31,7 @@ struct MapView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
-                    calibrateSheetView
+                    NavigationLink("Cal", destination: CompassCalView())
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())
                     Button("Pins"){setSelectedPinForPinEdit()}
@@ -61,21 +61,6 @@ extension MapView{
             }
         }
             .ignoresSafeArea()
-    }
-    
-    var calibrateSheetView : some View{
-        Button("Cal") {
-            showCalAlert = true
-        }
-        .confirmationDialog("Calibrate AP using...", isPresented: $showCalAlert, titleVisibility: .visible) {
-            Button("Device Orientation") {
-                mvm.CalibrateAP(calWith: .deviceOrientation)
-            }
-
-            Button("Current Course") {
-                mvm.CalibrateAP(calWith: .currentCourse)
-            }
-        }
     }
     
     var topButtonView : some View{

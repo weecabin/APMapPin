@@ -46,6 +46,9 @@ struct APConfigView: View{
         .onAppear(perform: {
             apvm.onAppear(ble: ble)
         })
+        .onDisappear(perform: {
+            
+        })
         .navigationTitle("AP")
         .navigationBarItems(trailing:NavigationLink("Map",destination: MapView()))
     }

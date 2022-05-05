@@ -210,6 +210,7 @@ class ApConfigViewModel : ObservableObject{
         for item in configItems{
             print("\(item)")
         }
+        ble!.messageReceivedFromAPDelegate = nil
     }
 }
 

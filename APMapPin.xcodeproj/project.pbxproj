@@ -26,6 +26,7 @@
 		91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEA27EDC37F00A20C36 /* MapView.swift */; };
 		91298EED27EDC3D000A20C36 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91298EEC27EDC3D000A20C36 /* MapViewModel.swift */; };
 		9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9136D33227EA7FBD00D06F7F /* RouteView.swift */; };
+		915A3B3F28246FA100260EFC /* CompassCalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915A3B3E28246FA100260EFC /* CompassCalView.swift */; };
 		918805D82812391600281F34 /* NavigationTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918805D72812391600281F34 /* NavigationTools.swift */; };
 		9195EE42281AD2820087AA44 /* SetHeadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9195EE41281AD2820087AA44 /* SetHeadingView.swift */; };
 		91B1908B28032C9B0097CF29 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B1908A28032C9B0097CF29 /* Settings.swift */; };
@@ -119,6 +120,7 @@
 		91298EEA27EDC37F00A20C36 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		91298EEC27EDC3D000A20C36 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		9136D33227EA7FBD00D06F7F /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
+		915A3B3E28246FA100260EFC /* CompassCalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompassCalView.swift; sourceTree = "<group>"; };
 		918805D72812391600281F34 /* NavigationTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTools.swift; sourceTree = "<group>"; };
 		9195EE41281AD2820087AA44 /* SetHeadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetHeadingView.swift; sourceTree = "<group>"; };
 		91B1908A28032C9B0097CF29 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				91B1908C280348E20097CF29 /* SettingsView.swift */,
 				91B40B192805FA75004B5955 /* APConfigView.swift */,
 				91B40B1D2805FF26004B5955 /* BLEView.swift */,
+				915A3B3E28246FA100260EFC /* CompassCalView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				91264D2227F7820F00D216EE /* EditPinView.swift in Sources */,
 				91B1908D280348E20097CF29 /* SettingsView.swift in Sources */,
 				91298EE927EDC2F000A20C36 /* MapAnnotationView.swift in Sources */,
+				915A3B3F28246FA100260EFC /* CompassCalView.swift in Sources */,
 				91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */,
 				91298EEB27EDC37F00A20C36 /* MapView.swift in Sources */,
 				9136D33327EA7FBD00D06F7F /* RouteView.swift in Sources */,
