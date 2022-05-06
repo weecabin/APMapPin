@@ -33,6 +33,7 @@ struct CompassCalView: View{
     @State var lastHeading:CLHeading?
     @State var getHeadingTimer:Timer?
     @State var invalidCourse:Bool = true
+    @State var msgCount:Int = 0;
     
     var body: some View {
         VStack{
@@ -47,6 +48,7 @@ struct CompassCalView: View{
                     Text("AP Target: \(apTarget)")
                     Text("AP Heading: \(apHeading)")
                     Text("AP CalState(SGAM): \(apCalState)")
+                    Text("Msg Count: \(msgCount)")
                 }
                 Spacer()
             }
@@ -97,6 +99,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         if temp.count > 0{
             apHeading = temp
             ble.sendMessageToAP(data: "gt")
+            msgCount += 1
             return
         }
         
@@ -129,7 +132,8 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         gvm.compassCalLocationDelegate = self
         gvm.compassCalHeadingDelegate = self
         gvm.compassCalAPMessageDelegate = self
-        getHeadingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { Timer in
+        msgCount = 0;
+        getHeadingTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { Timer in
             self.GetHeadingFromAP()
         }
     }
