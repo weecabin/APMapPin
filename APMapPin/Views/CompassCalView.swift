@@ -24,6 +24,7 @@ struct CompassCalView: View{
     @State var headingString = ""
     @State var lastCalHeading = ""
     @State var locationString = ""
+    @State var speedString = ""
     @State var courseString = ""
     @State var apTarget = ""
     @State var apHeading = ""
@@ -31,12 +32,14 @@ struct CompassCalView: View{
     @State var lastLocation:CLLocation?
     @State var lastHeading:CLHeading?
     @State var getHeadingTimer:Timer?
+    @State var invalidCourse:Bool = true
     
     var body: some View {
         VStack{
             HStack{
                 VStack(alignment: .leading){
                     Text("Lat-Lon: \(locationString)")
+                    Text("Speed: \(speedString)")
                     Text("Course: \(courseString)")
                     Text("Device Heading: \(headingString)")
                     Text("Last Cal Heading: \(lastCalHeading)")
@@ -49,17 +52,13 @@ struct CompassCalView: View{
             }
             Spacer()
             Text("Cal with...")
-            Button {SendHeadingToAP()} label: {Text("Device Heading")}
-                .frame(width: 150, height: 30)
-                .background(.blue)
-                .cornerRadius(10)
-                .foregroundColor(.white)
-            Text("")
-            Button {SendCourseToAP()} label: {Text("Course")}
-                .frame(width: 150, height: 30)
-                .background(.blue)
-                .cornerRadius(10)
-                .foregroundColor(.white)
+            HStack{
+                Button {SendHeadingToAP()} label: {Text("Device Heading")}
+                    .buttonStyle(width: 150)
+                Text("")
+                Button {SendCourseToAP()} label: {Text("Course")}
+                    .buttonStyle(width: 80, enable: !invalidCourse)
+            }
             Spacer()
         }
         .padding()
@@ -72,7 +71,27 @@ struct CompassCalView: View{
     }
 }
 
+struct ButtonModifier: ViewModifier {
+    var width:CGFloat
+    var enable:Bool
+    func body(content: Content) -> some View {
+        content
+            .frame(width: width, height: 30)
+            .background(enable ? .blue : .gray)
+            .cornerRadius(10)
+            .foregroundColor(.white)
+            .disabled(!enable)
+    }
+}
+
+extension View{
+    func buttonStyle(width:CGFloat, enable:Bool = true) -> some View{
+        modifier(ButtonModifier(width: width, enable: enable))
+    }
+}
+
 extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate, CompassCalAPMessageDelegate{
+    
     func compassCalAPMessage(message: String) {
         var temp = MySubString(src: message, sub: "Heading=", returnLen: 6, offset: 8)
         if temp.count > 0{
@@ -96,6 +115,8 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         lastLocation = location
         let coord = location.coordinate
         locationString = "\(String(format:"%.4f",coord.latitude)),\(String(format:"%.4f",coord.longitude))"
+        speedString = "\(String(format: "%.2f", lastLocation!.speed))"
+        invalidCourse=location.course == -1
         courseString = "\(String(format: "%.2f", location.course))"
     }
     

@@ -230,10 +230,10 @@ extension APConfigView{
                 cmd = "hi\(apvm.turnAngle)"
                 break
             case "Left 45":
-                cmd = "hi-90"
+                cmd = "hi-45"
                 break
             case "Right 45":
-                cmd = "hi90"
+                cmd = "hi45"
                 break
             case "Lock","Circle L","Circle R":
                 cmd = command
