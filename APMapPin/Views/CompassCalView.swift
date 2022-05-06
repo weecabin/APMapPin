@@ -46,7 +46,7 @@ struct CompassCalView: View{
                     Text("")
                     Text("AP Target: \(apTarget)")
                     Text("AP Heading: \(apHeading)")
-                    Text("AP CalState: \(apCalState)")
+                    Text("AP CalState(SGAM): \(apCalState)")
                 }
                 Spacer()
             }
