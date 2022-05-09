@@ -33,7 +33,12 @@ struct CompassCalView: View{
     @State var lastHeading:CLHeading?
     @State var getHeadingTimer:Timer?
     @State var invalidCourse:Bool = true
-    @State var msgCount:Int = 0;
+    @State var msgCount:Int = 0
+    @State var accel:String = ""
+    @State var gyro:String = ""
+    @State var mag:String = ""
+    @State var accelRadius:String = ""
+    @State var magRadius:String = ""
     
     var body: some View {
         VStack{
@@ -60,8 +65,24 @@ struct CompassCalView: View{
                 Text("")
                 Button {SendCourseToAP()} label: {Text("Course")}
                     .buttonStyle(width: 80, enable: !invalidCourse)
+                
             }
             Spacer()
+            HStack{
+                
+                VStack(alignment: .leading){
+                    Button {ble.sendMessageToAP(data: "gb")} label: {Text("Get BNO Cal")}
+                        .buttonStyle(width: 150)
+                    Text("")
+                    Text("Accel: \(accel)")
+                    Text("Gyro: \(gyro)")
+                    Text("Mag: \(mag)")
+                    Text("AccelRadius: \(accelRadius)")
+                    Text("MagRadius: \(magRadius)")
+                }
+                Spacer()
+            }
+            .padding()
         }
         .padding()
         .onAppear {
@@ -112,6 +133,19 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         
         temp = MySubString(src: message, sub: "Cal=", returnLen: 6, offset: 4)
         if temp.count > 0{apCalState = temp}
+        
+        if message.contains("A: "){
+            temp = MySubString(src: message, sub: "A: ", returnLen: 15, offset: 3)
+            accel = temp
+            temp = MySubString(src: message, sub: "G: ", returnLen: 15, offset: 3)
+            gyro = temp
+            temp = MySubString(src: message, sub: "M: ", returnLen: 15, offset: 3)
+            mag = temp
+            temp = MySubString(src: message, sub: "AR: ", returnLen: 15, offset: 4)
+            accelRadius = temp
+            temp = MySubString(src: message, sub: "MR: ", returnLen: 15, offset: 4)
+            magRadius = temp
+        }
     }
     
     func compassCalLocation(location: CLLocation) {
