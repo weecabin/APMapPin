@@ -39,6 +39,7 @@ struct CompassCalView: View{
     @State var mag:String = ""
     @State var accelRadius:String = ""
     @State var magRadius:String = ""
+    @State var getCal:Bool = false
     
     var body: some View {
         VStack{
@@ -72,7 +73,7 @@ struct CompassCalView: View{
                 
                 VStack(alignment: .leading){
                     HStack{
-                        Button {ble.sendMessageToAP(data: "gb")} label: {Text("Get BNO Cal")}
+                        Button {getCal = true} label: {Text("Get BNO Cal")}
                             .buttonStyle(width: 150)
                         Button {ble.sendMessageToAP(data: "sb")} label: {Text("Use this Cal")}
                             .buttonStyle(width: 150)
@@ -136,7 +137,14 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         }
         
         temp = MySubString(src: message, sub: "Cal=", returnLen: 6, offset: 4)
-        if temp.count > 0{apCalState = temp}
+        if temp.count > 0{
+            apCalState = temp
+            if (getCal){
+                ble.sendMessageToAP(data: "gb")
+                getCal = false;
+            }
+            return;
+        }
         
         if message.contains("A: "){
             temp = MySubString(src: message, sub: "A: ", returnLen: 15, offset: 3)
