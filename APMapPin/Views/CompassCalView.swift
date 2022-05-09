@@ -71,8 +71,12 @@ struct CompassCalView: View{
             HStack{
                 
                 VStack(alignment: .leading){
-                    Button {ble.sendMessageToAP(data: "gb")} label: {Text("Get BNO Cal")}
-                        .buttonStyle(width: 150)
+                    HStack{
+                        Button {ble.sendMessageToAP(data: "gb")} label: {Text("Get BNO Cal")}
+                            .buttonStyle(width: 150)
+                        Button {ble.sendMessageToAP(data: "sb")} label: {Text("Use this Cal")}
+                            .buttonStyle(width: 150)
+                    }
                     Text("")
                     Text("Accel: \(accel)")
                     Text("Gyro: \(gyro)")

@@ -137,8 +137,8 @@ class ApConfigViewModel : ObservableObject{
                 command = "ip\(newValue)"
                 break
                 
-            case "MoveInterval:":
-                command = "im\(newValue)"
+            case "RecalWait:":
+                command = "ir\(newValue)"
                 break
                 
             default:
@@ -212,7 +212,7 @@ class ApConfigViewModel : ObservableObject{
         configItems.append(PV(prompt: "CirclingSeconds:", value: String(Int(MySubString(src: configString, sub: "CirclingSeconds=", returnLen: 5, offset: 16)) ?? 0),editable:true))
         configItems.append(PV(prompt: "CirclingSegments:", value: String(Int(MySubString(src: configString, sub: "CirclingSegments=", returnLen: 5, offset: 17)) ?? 0),editable:true))
         configItems.append(PV(prompt: "PidInterval:", value: String(Int(MySubString(src: configString, sub: "PidInterval=", returnLen: 5, occurance: 1, offset: 12)) ?? 0),editable:true))
-        configItems.append(PV(prompt: "MoveInterval:", value: String(Int(MySubString(src: configString, sub: "MoveInterval=", returnLen: 5, occurance: 1, offset: 13)) ?? 0),editable:true))
+        configItems.append(PV(prompt: "RecalWait:", value: String(Int(MySubString(src: configString, sub: "RecalWait=", returnLen: 5, occurance: 1, offset: 10)) ?? 0),editable:true))
         configItems.append(PV(prompt: "CalInterval:", value: String(Int32(MySubString(src: configString, sub: "CalInterval=", returnLen: 8, occurance: 1, offset: 12)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Drive(Prop/Incr):", value: MySubString(src: configString, sub: "Drive=", returnLen: 5, occurance: 1, offset: 6),editable:true))
         configItems.append(PV(prompt: "AlwaysRunLoop:", value: MySubString(src: configString, sub: "AlwaysRunLoop=", returnLen: 3, offset: 14),editable:true))
