@@ -48,6 +48,15 @@ struct Navigation{
     let defaultPidLength:Int = 4
     let defaultMaxCorrection:Double = 45
     
+    var phoneHeadingMode:Bool{
+        get{
+            defaults.object(forKey:"PhoneHeadingMode") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"PhoneHeadingMode")
+        }
+    }
+    
     var timerMode:Bool{
         get{
             defaults.object(forKey:"NavTimerMode") as? Bool ?? false

@@ -48,6 +48,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var droppingCrumbs:Bool = false
     var breadCrumbTimer:Timer?
     var trackRoute:Route?
+    var prevPhoneMode:Bool = false;
     
     func initMap(ble:BLEManager, gvm:GlobalViewModel){
         if !mapInitialized{
@@ -524,6 +525,16 @@ extension MapViewModel{ // Location calls
                          didUpdateHeading newHeading: CLHeading){
 //        print("newHeading: \(newHeading.trueHeading)")
         lastDeviceHeading = newHeading
+        if (settings.navigation.phoneHeadingMode){
+            ble!.sendMessageToAP(data: "sp\(String(format:"%.1f",newHeading.trueHeading))")
+            if prevPhoneMode==false{
+                ble!.sendMessageToAP(data: "sc\(String(format:"%.1f",newHeading.trueHeading))")
+            }
+            prevPhoneMode = true
+        }else if prevPhoneMode==true{
+            ble!.sendMessageToAP(data: "sp-1")
+            prevPhoneMode = false;
+        }
         if gvm!.compassCalHeadingDelegate != nil{
             gvm!.compassCalHeadingDelegate!.compassCalHeading(heading: newHeading)
         }
