@@ -477,7 +477,7 @@ extension MapViewModel{ // Location calls
                     if (prevPhoneMode==false){
                         print("sending ht\(strHeading)")
                         ble!.sendMessageToAP(data: "ht\(strHeading)")
-                        //ble!.sendMessageToAP(data: "!B507")
+                        ble!.sendMessageToAP(data: "!B507")
                     }
                 }
             }

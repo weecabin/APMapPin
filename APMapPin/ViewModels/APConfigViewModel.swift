@@ -24,7 +24,6 @@ class ApConfigViewModel : ObservableObject{
     @Published var turnAngle:Int = 5
     var initialized:Bool = false
     var ble:BLEManager?
-    var keepAlive:Timer?
     //@Published var apHeading:Float = 0
     
     struct PV: Identifiable{
@@ -39,9 +38,6 @@ class ApConfigViewModel : ObservableObject{
         if !initialized{
             self.ble = ble
             loadPicker()
-            keepAlive = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { Timer in
-                self.ble!.sendMessageToAP(data: "#",needResponse: true)
-            }
             initialized = true
         }
     }

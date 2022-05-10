@@ -267,7 +267,7 @@ extension BLEManager{
         }
     }
     
-    func sendMessageToAP(data: String, needResponse:Bool = false){
+    func sendMessageToAP(data: String){
         print("send: \(data)")
         while sendState == .WaitingForAck{
             sleep(1)
@@ -279,9 +279,7 @@ extension BLEManager{
         if let foundPeripheral = foundPeripheral {
           if let txCharacteristic = txCharacteristic {
               foundPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
-              if needResponse{
-                  sendState = .WaitingForAck
-              }
+              sendState = .WaitingForAck
               return
               }
           }
