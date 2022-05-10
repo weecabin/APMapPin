@@ -124,7 +124,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         var temp = MySubString(src: message, sub: "Heading=", returnLen: 6, offset: 8)
         if temp.count > 0{
             apHeading = temp
-            ble.sendMessageToAP(data: "gt")
+            ble.sendMessageToAP(data: "gt",needResponse: true)
             msgCount += 1
             return
         }
@@ -132,7 +132,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         temp = MySubString(src: message, sub: "Target=", returnLen: 6, offset: 7)
         if temp.count > 0{
             apTarget = temp
-            ble.sendMessageToAP(data: "gc")
+            ble.sendMessageToAP(data: "gc",needResponse: true)
             return
         }
         
@@ -140,7 +140,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         if temp.count > 0{
             apCalState = temp
             if (getCal){
-                ble.sendMessageToAP(data: "gb")
+                ble.sendMessageToAP(data: "gb",needResponse: true)
                 getCal = false;
             }
             return;

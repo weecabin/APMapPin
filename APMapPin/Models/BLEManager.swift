@@ -10,6 +10,10 @@ import CoreBluetooth
 import SwiftUI
 import WatchConnectivity
 
+enum SendState{
+    case WaitingForAck
+    case ReadyToSend
+}
 struct Peripheral: Identifiable {
     let id: Int
     let name: String
@@ -52,6 +56,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     var vewIsReady = false
     var peripheralName:String = "Adafruit Bluefruit LE"
     var scanningTimer:Timer?
+    var sendState:SendState = SendState.ReadyToSend
 
     override init() {
         super.init()
@@ -248,26 +253,35 @@ extension BLEManager{
           characteristicASCIIValue = ASCIIstring
           rcvString += "\((characteristicASCIIValue as String))"
           if rcvString.contains("<EOM>"){
+              print(rcvString)
               rcvMessage=rcvString + "\n\n"
               rcvString = "" // clear it out for the next command
               if messageReceivedFromAPDelegate != nil{
                   messageReceivedFromAPDelegate.messageIn(message: rcvMessage)
               }
               if gvm!.compassCalAPMessageDelegate != nil{
-//                  print("rcvMessge:\"\(rcvMessage)\"")
                   gvm!.compassCalAPMessageDelegate!.compassCalAPMessage(message: rcvMessage)
               }
+              sendState = .ReadyToSend
+              print(sendState)
         }
-//          print("Value Recieved: \((characteristicASCIIValue as String))")
     }
     
-    func sendMessageToAP(data: String){
-        let valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+    func sendMessageToAP(data: String, needResponse:Bool = false){
+        print("send: \(data)")
+        while sendState == .WaitingForAck{
+            sleep(1)
+            sendState = .ReadyToSend
+        }
+        var valueString = (data as NSString).data(using: String.Encoding.utf8.rawValue)
+        valueString!.append(("\n" as NSString).data(using: String.Encoding.utf8.rawValue)!)
         
         if let foundPeripheral = foundPeripheral {
           if let txCharacteristic = txCharacteristic {
-              //print("Writing: \(data)")
               foundPeripheral.writeValue(valueString!, for: txCharacteristic, type: CBCharacteristicWriteType.withResponse)
+              if needResponse{
+                  sendState = .WaitingForAck
+              }
               return
               }
           }

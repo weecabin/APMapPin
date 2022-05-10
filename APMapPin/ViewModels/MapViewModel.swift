@@ -39,6 +39,8 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     @Published var headingString:String = "?"
     
     var blinkPinTimer:Timer?
+    var headingTimer:Timer?
+    var lastHeadingSent:String = "-1"
     
     var simPin:MapPin?
     var simInitialized:Bool = false
@@ -61,6 +63,11 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
             gvm.stopNavigationDelegate = self
         }
         UpdateView()
+    }
+    
+    override init(){
+        super.init()
+        StartHeadingTimer()
     }
 }
 
@@ -459,6 +466,34 @@ extension MapViewModel{ // Navigation Functions
 }
 
 extension MapViewModel{ // Location calls
+    func sendHeadingToAp(){
+        if (settings.navigation.phoneHeadingMode){
+            if let heading = lastDeviceHeading{
+                let strHeading = String(format:"%.1f",heading.trueHeading)
+                if strHeading != lastHeadingSent{
+                    lastHeadingSent = strHeading
+                    print("sending sp\(strHeading)")
+                    ble!.sendMessageToAP(data: "sp\(strHeading)")
+                    if (prevPhoneMode==false){
+                        print("sending ht\(strHeading)")
+                        ble!.sendMessageToAP(data: "ht\(strHeading)")
+                        //ble!.sendMessageToAP(data: "!B507")
+                    }
+                }
+            }
+            prevPhoneMode = true
+        }else if prevPhoneMode==true{
+            ble!.sendMessageToAP(data: "sp-1")
+            prevPhoneMode = false;
+        }
+    }
+    
+    func StartHeadingTimer(){
+        headingTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { Timer in
+            self.sendHeadingToAp()
+        }
+    }
+    
     func checkLocationServicesIsOn(){
         if CLLocationManager.locationServicesEnabled(){
             locationManager = CLLocationManager()
@@ -525,16 +560,6 @@ extension MapViewModel{ // Location calls
                          didUpdateHeading newHeading: CLHeading){
 //        print("newHeading: \(newHeading.trueHeading)")
         lastDeviceHeading = newHeading
-        if (settings.navigation.phoneHeadingMode){
-            ble!.sendMessageToAP(data: "sp\(String(format:"%.1f",newHeading.trueHeading))")
-            if prevPhoneMode==false{
-                ble!.sendMessageToAP(data: "sc\(String(format:"%.1f",newHeading.trueHeading))")
-            }
-            prevPhoneMode = true
-        }else if prevPhoneMode==true{
-            ble!.sendMessageToAP(data: "sp-1")
-            prevPhoneMode = false;
-        }
         if gvm!.compassCalHeadingDelegate != nil{
             gvm!.compassCalHeadingDelegate!.compassCalHeading(heading: newHeading)
         }
