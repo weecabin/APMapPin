@@ -21,6 +21,7 @@ protocol CompassCalAPMessageDelegate{
 struct CompassCalView: View{
     @EnvironmentObject var gvm:GlobalViewModel
     @EnvironmentObject var ble:BLEManager
+    var settings:Settings = Settings()
     @State var headingString = ""
     @State var lastCalHeading = ""
     @State var locationString = ""
@@ -138,7 +139,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         
         temp = MySubString(src: message, sub: "Target=", returnLen: 6, offset: 7)
         if temp.count > 0{
-            apTarget = temp
+            if !settings.navigation.phoneHeadingMode{apTarget = temp}
             ble.sendMessageToAP(data: "gc")
             return
         }
@@ -179,6 +180,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
     func compassCalHeading(heading: CLHeading) {
         lastHeading = heading
         headingString = "\(String(format: "%.2f",heading.trueHeading))"
+        if settings.navigation.phoneHeadingMode{apTarget = headingString}
     }
     
     func OnAppear(){
