@@ -120,6 +120,13 @@ extension View{
 
 extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate, CompassCalAPMessageDelegate{
     
+    /*
+     The getHeadingTimer periodically asks for heading every 2s
+     after receiving the heading, I ask for the following sequentially...
+     target heading
+     last cal heading
+     and if getCal is set, I ask for bno calibration offsets, but his is only once per button press
+     */
     func compassCalAPMessage(message: String) {
         var temp = MySubString(src: message, sub: "Heading=", returnLen: 6, offset: 8)
         if temp.count > 0{
