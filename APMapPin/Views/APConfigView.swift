@@ -96,7 +96,7 @@ extension APConfigView{
                 .disabled(ble.connectedToAp ? false : true)
                 .alert(isPresented: $writeEE) {
                     Alert(title: Text("Write EEProm?"),
-                          primaryButton:.default(Text("OK"),action: {ble.sendMessageToAP(data: "w")}),
+                          primaryButton:.default(Text("OK"),action: {ble.sendMessageToAP(data: "\(CMD_WRITE_CONFIG_TO_EEPROM)")}),
                           secondaryButton:.cancel())}
             }
 
@@ -181,11 +181,11 @@ extension APConfigView{
     private var headingButtons: some View{
         Group{
             HStack{
-                HeadingButton(title: "Lock", command:"!B507", height: buttonHeight, width:buttonWidth)
+                HeadingButton(title: "Lock", height: buttonHeight, width:buttonWidth)
             }
             HStack
             {
-                HeadingButton(title: "Left", command:"", width: buttonWidth)
+                HeadingButton(title: "Left", width: buttonWidth)
                 
                 Picker("Angle", selection: $apvm.turnAngle) {
                     ForEach(apvm.turnAngles){turn in
@@ -199,21 +199,21 @@ extension APConfigView{
                 .cornerRadius(buttonHeight/2)
                 .disabled((ble.connectedToAp && gvm.navType == .none && apvm.actuatorEnabled) ? false : true)
                 
-                HeadingButton(title: "Right", command:"", width: buttonWidth)
+                HeadingButton(title: "Right", width: buttonWidth)
             }
             .padding(5)
             
             HStack
             {
-                HeadingButton(title: "Left 45", command:"h-45")
-                HeadingButton(title: "Right 45", command:"h45")
+                HeadingButton(title: "Left 45")
+                HeadingButton(title: "Right 45")
             }
             .padding(5)
             HStack
             {
-                HeadingButton(title: "Circle L", command:"!B10")
+                HeadingButton(title: "Circle L")
                 //HeadingButton(title: "180")
-                HeadingButton(title: "Circle R", command:"!B20")
+                HeadingButton(title: "Circle R")
             }
             .padding(5)
         }
@@ -224,19 +224,25 @@ extension APConfigView{
             var cmd = ""
             switch title{
             case "Left":
-                cmd = "hi-\(apvm.turnAngle)"
+                cmd = "\(CMD_DELTA_LEFT)-\(apvm.turnAngle)"
                 break
             case "Right":
-                cmd = "hi\(apvm.turnAngle)"
+                cmd = "\(CMD_DELTA_RIGHT)\(apvm.turnAngle)"
                 break
             case "Left 45":
-                cmd = "hi-45"
+                cmd = "\(CMD_DELTA_LEFT)-45"
                 break
             case "Right 45":
-                cmd = "hi45"
+                cmd = "\(CMD_DELTA_RIGHT)45"
                 break
-            case "Lock","Circle L","Circle R":
-                cmd = command
+            case "Lock":
+                cmd = "\(CMD_LOCK)"
+                break
+            case "Circle L":
+                cmd = "\(CMD_CIRCLE_LEFT)"
+                break
+            case "Circle R":
+                cmd = "\(CMD_CIRCLE_RIGHT)"
                 break
             default:
                 break

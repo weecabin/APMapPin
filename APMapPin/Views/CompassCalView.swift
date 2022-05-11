@@ -76,7 +76,7 @@ struct CompassCalView: View{
                     HStack{
                         Button {getCal = true} label: {Text("Get BNO Cal")}
                             .buttonStyle(width: 150)
-                        Button {ble.sendMessageToAP(data: "sb")} label: {Text("Use this Cal")}
+                        Button {ble.sendMessageToAP(data: "\(CMD_CAL_USE_CURRENT_OFFSETS)")} label: {Text("Use this Cal")}
                             .buttonStyle(width: 150)
                     }
                     Text("")
@@ -132,7 +132,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         var temp = MySubString(src: message, sub: "Heading=", returnLen: 6, offset: 8)
         if temp.count > 0{
             apHeading = temp
-            ble.sendMessageToAP(data: "gt")
+            ble.sendMessageToAP(data: "\(CMD_GET_CURRENT_HEADING_TARGET)")
             msgCount += 1
             return
         }
@@ -140,7 +140,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         temp = MySubString(src: message, sub: "Target=", returnLen: 6, offset: 7)
         if temp.count > 0{
             if !settings.navigation.phoneHeadingMode{apTarget = temp}
-            ble.sendMessageToAP(data: "gc")
+            ble.sendMessageToAP(data: "\(CMD_GET_BNO_CAL_STATES)")
             return
         }
         
@@ -148,7 +148,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         if temp.count > 0{
             apCalState = temp
             if (getCal){
-                ble.sendMessageToAP(data: "gb")
+                ble.sendMessageToAP(data: "\(CMD_GET_BNO_OFFSETS)")
                 getCal = false;
             }
             return;
@@ -202,17 +202,17 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         }
     }
     func SendHeadingToAP(){
-        ble.sendMessageToAP(data: "hc\(headingString)")
+        ble.sendMessageToAP(data: "\(CMD_CAL_CURRENT_HEADING)\(headingString)")
         gvm.apIsCalibrated = true
         lastCalHeading = headingString
     }
     func SendCourseToAP(){
-        ble.sendMessageToAP(data: "hc\(courseString)")
+        ble.sendMessageToAP(data: "\(CMD_CAL_CURRENT_HEADING)\(courseString)")
         gvm.apIsCalibrated = true
         lastCalHeading = courseString
     }
     func GetHeadingFromAP(){
-        ble.sendMessageToAP(data: "gh")
+        ble.sendMessageToAP(data: "\(CMD_GET_CURRENT_HEADING)")
     }
 }
 struct CompassCalView_Previews: PreviewProvider {

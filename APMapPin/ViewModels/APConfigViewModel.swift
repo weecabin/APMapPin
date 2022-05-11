@@ -46,11 +46,10 @@ class ApConfigViewModel : ObservableObject{
         print("in toggleActuatorEnabled")
         actuatorEnabled.toggle()
         if actuatorEnabled{
-            ble!.sendMessageToAP(data: "sr")
-            ble!.sendMessageToAP(data: "!B507")
+            ble!.sendMessageToAP(data: "\(CMD_START_ACTUATOR)")
+            ble!.sendMessageToAP(data: "\(CMD_LOCK)")
         }else{
-            ble!.sendMessageToAP(data: "ss")
-            //ble!.sendMessageToAP(data: "m3")
+            ble!.sendMessageToAP(data: "\(CMD_STOP_ACTUATOR)")
         }
     }
     
@@ -64,9 +63,9 @@ class ApConfigViewModel : ObservableObject{
                 break
             case "Drive(Prop/Incr):":
                 if newValue == "Prop"{
-                    command = "tp"
+                    command = "\(CMD_SET_DRIVE_PROPORTIONAL)"
                 }else{
-                    command = "ti"
+                    command = "\(CMD_SET_DRIVE_INCREMENTAL)"
                 }
                 break
             case "kp:":
@@ -74,7 +73,7 @@ class ApConfigViewModel : ObservableObject{
                 let ki = configItems[index].value
                 guard let index = editItemIndex(prompt: "kd:") else {return ""}
                 let kd = configItems[index].value
-                command = "k\(newValue),\(ki),\(kd)"
+                command = "\(CMD_SET_PID_COEFFICIENTS)\(newValue),\(ki),\(kd)"
                 break
                 
             case "ki:":
@@ -82,7 +81,7 @@ class ApConfigViewModel : ObservableObject{
                 let kp = configItems[index].value
                 guard let index = editItemIndex(prompt: "kd:") else {return ""}
                 let kd = configItems[index].value
-                command = "k\(kp),\(newValue),\(kd)"
+                command = "\(CMD_SET_PID_COEFFICIENTS)\(kp),\(newValue),\(kd)"
                 break
                 
             case "kd:":
@@ -90,31 +89,31 @@ class ApConfigViewModel : ObservableObject{
                 let kp = configItems[index].value
                 guard let index = editItemIndex(prompt: "ki:") else {return ""}
                 let ki = configItems[index].value
-                command = "k\(kp),\(ki),\(newValue)"
+                command = "\(CMD_SET_PID_COEFFICIENTS)\(kp),\(ki),\(newValue)"
                 break
                 
             case "Offset:":
-                command = "so\(newValue)"
+                command = "\(CMD_SET_ACTUATOR_OFFSET)\(newValue)"
                 break
                 
             case "TargetHeading:":
-                command = "ht\(newValue)"
+                command = "\(CMD_SET_TARGET_HEADING)\(newValue)"
                 break
                 
             case "CompassCorrection:":
-                command = "hc\(newValue)"
+                command = "\(CMD_CAL_CURRENT_HEADING)\(newValue)"
                 break
                 
             case "Position:":
-                command = "m\(newValue)"
+                command = "\(CMD_SET_ACTUATOR_POSITION)\(newValue)"
                 break
                 
             case "Null Zone:":
-                command = "n\(newValue)"
+                command = "\(CMD_SET_MOVE_NULL_ZONE)\(newValue)"
                 break
                 
             case "limit Move:":
-                command = "l\(newValue)"
+                command = "\(CMD_SET_ACTUATOR_LIMIT)\(newValue)"
                 break
                 
             case "CirclingSeconds:":
@@ -130,15 +129,15 @@ class ApConfigViewModel : ObservableObject{
                 break
                 
             case "CalInterval:":
-                command = "sc\(newValue)"
+                command = "\(CMD_SET_CAL_INTERVAL)\(newValue)"
                 break
                 
             case "PidInterval:":
-                command = "ip\(newValue)"
+                command = "\(CMD_SET_PID_INTERVAL)\(newValue)"
                 break
                 
             case "RecalWait:":
-                command = "ir\(newValue)"
+                command = "\(CMD_SET_RECAL_INTERVAL)\(newValue)"
                 break
                 
             default:

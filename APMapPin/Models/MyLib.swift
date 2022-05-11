@@ -183,3 +183,34 @@ class PID{
     }
 }
 
+let CMD_DELTA_LEFT=Character(UnicodeScalar(1))
+let CMD_DELTA_RIGHT=Character(UnicodeScalar(2))
+let CMD_LOCK=Character(UnicodeScalar(3))
+let CMD_CIRCLE_LEFT=Character(UnicodeScalar(4))
+let CMD_CIRCLE_RIGHT=Character(UnicodeScalar(5))
+let CMD_CAL_CURRENT_HEADING=Character(UnicodeScalar(6))
+let CMD_SET_TARGET_HEADING=Character(UnicodeScalar(7))
+let CMD_SET_PHONE_HEADING=Character(UnicodeScalar(8))
+let CMD_STOP_ACTUATOR=Character(UnicodeScalar(9))
+let CMD_START_ACTUATOR=Character(UnicodeScalar(10))
+let CMD_CAL_USE_CURRENT_OFFSETS=Character(UnicodeScalar(11))
+let CMD_SET_ACTUATOR_OFFSET=Character(UnicodeScalar(12))  // so
+let CMD_ALWAYS_RUN_LOOP=Character(UnicodeScalar(13))  // sl
+let CMD_SET_CAL_INTERVAL=Character(UnicodeScalar(14))  // sc
+let CMD_SET_ACTUATOR_POSITION=Character(UnicodeScalar(15)) // m
+let CMD_MOVE_ACTUATOR_RELATIVE=Character(UnicodeScalar(16)) // d
+let CMD_SET_MOVE_NULL_ZONE=Character(UnicodeScalar(17)) // n
+let CMD_SET_ACTUATOR_LIMIT=Character(UnicodeScalar(18)) // l
+let CMD_SET_PID_INTERVAL=Character(UnicodeScalar(19))  // ip
+let CMD_SET_RECAL_INTERVAL=Character(UnicodeScalar(20))  // ir
+let CMD_SET_DRIVE_PROPORTIONAL=Character(UnicodeScalar(21))  // tp
+let CMD_SET_DRIVE_INCREMENTAL=Character(UnicodeScalar(22))  // ti
+
+let CMD_GET_BNO_OFFSETS=Character(UnicodeScalar(23))  // gb
+let CMD_GET_BNO_CAL_STATES=Character(UnicodeScalar(24))  // gc
+let CMD_GET_ACTUATOR_OFFSET=Character(UnicodeScalar(25))  // go
+let CMD_GET_ACTUATOR_POSITION=Character(UnicodeScalar(26))  // gp
+let CMD_GET_CURRENT_HEADING=Character(UnicodeScalar(27))  // gh
+let CMD_GET_CURRENT_HEADING_TARGET=Character(UnicodeScalar(28))  // gt
+let CMD_WRITE_CONFIG_TO_EEPROM=Character(UnicodeScalar(29))  // w
+let CMD_SET_PID_COEFFICIENTS=Character(UnicodeScalar(30))  // k

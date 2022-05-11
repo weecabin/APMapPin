@@ -241,7 +241,7 @@ extension MapViewModel{ // Navigation Functions
             }
         }
         if heading != "?"{
-            ble?.sendMessageToAP(data: "hc\(heading)")
+            ble?.sendMessageToAP(data: "\(CMD_CAL_CURRENT_HEADING)\(heading)")
             gvm?.apIsCalibrated = true
         }else{
             gvm?.apIsCalibrated = false
@@ -344,7 +344,7 @@ extension MapViewModel{ // Navigation Functions
                 heading = newNavHeading(courseToTarget: newCourseToTarget)
                 
                 print("Sending AP: ht\(heading)")
-                ble!.sendMessageToAP(data: "ht\(String(format: "%.1f",heading))")
+                ble!.sendMessageToAP(data: "\(CMD_SET_TARGET_HEADING)\(String(format: "%.1f",heading))")
             }
         }
         headingString = String(format: "%.1f",heading)
@@ -472,18 +472,16 @@ extension MapViewModel{ // Location calls
                 let strHeading = String(format:"%.1f",heading.trueHeading)
                 if strHeading != lastHeadingSent{
                     lastHeadingSent = strHeading
-                    print("sending sp\(strHeading)")
-                    ble!.sendMessageToAP(data: "sp\(strHeading)")
+                    ble!.sendMessageToAP(data: "\(CMD_SET_PHONE_HEADING)\(strHeading)")
                     if (prevPhoneMode==false){
-                        print("sending ht\(strHeading)")
-                        ble!.sendMessageToAP(data: "ht\(strHeading)")
-                        ble!.sendMessageToAP(data: "!B507")
+                        ble!.sendMessageToAP(data: "\(CMD_SET_TARGET_HEADING)\(strHeading)")
+                        ble!.sendMessageToAP(data: "\(CMD_LOCK)")
                     }
                 }
             }
             prevPhoneMode = true
         }else if prevPhoneMode==true{
-            ble!.sendMessageToAP(data: "sp-1")
+            ble!.sendMessageToAP(data: "\(CMD_SET_PHONE_HEADING)-1")
             prevPhoneMode = false;
         }
     }
