@@ -59,7 +59,7 @@ class ApConfigViewModel : ObservableObject{
             let item = configItems[index]
             switch item.prompt{
             case "AlwaysRunLoop:":
-                command = "sl\(newValue)"
+                command = "\(CMD_ALWAYS_RUN_LOOP)\(newValue)"
                 break
             case "Drive(Prop/Incr):":
                 if newValue == "Prop"{
@@ -119,13 +119,13 @@ class ApConfigViewModel : ObservableObject{
             case "CirclingSeconds:":
                 guard let index = editItemIndex(prompt:"CirclingSegments:") else {return""}
                 let segments = configItems[index].value
-                command = "c\(newValue),\(segments)"
+                command = "\(CMD_SET_CIRCLING_PARAMETERS)\(newValue),\(segments)"
                 break
                 
             case "CirclingSegments:":
                 guard let index = editItemIndex(prompt:"CirclingSeconds:") else {return""}
                 let seconds = configItems[index].value
-                command = "c\(seconds),\(newValue)"
+                command = "\(CMD_SET_CIRCLING_PARAMETERS)\(seconds),\(newValue)"
                 break
                 
             case "CalInterval:":
