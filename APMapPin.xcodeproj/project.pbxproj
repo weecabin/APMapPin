@@ -37,6 +37,7 @@
 		91B40B1C2805FAC6004B5955 /* GlobalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B40B1B2805FAC6004B5955 /* GlobalViewModel.swift */; };
 		91B40B1E2805FF26004B5955 /* BLEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B40B1D2805FF26004B5955 /* BLEView.swift */; };
 		91B40B20280600E3004B5955 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B40B1F280600E3004B5955 /* Protocols.swift */; };
+		91B6464F282C878700D16FD0 /* MyLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91BA559C27F8B9AB00B4A285 /* MyLib.swift */; };
 		91BA559D27F8B9AB00B4A285 /* MyLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91BA559C27F8B9AB00B4A285 /* MyLib.swift */; };
 		91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */; };
 		91E4197A27F671A4002E7ADF /* CustomButtonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4197927F671A4002E7ADF /* CustomButtonViews.swift */; };
@@ -468,6 +469,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91F67BD228062DA800829E63 /* NotificationController.swift in Sources */,
+				91B6464F282C878700D16FD0 /* MyLib.swift in Sources */,
 				91F67BD628062DA800829E63 /* ComplicationController.swift in Sources */,
 				91F67BEA28062E6500829E63 /* TurnView.swift in Sources */,
 				91F67BF028062F4500829E63 /* DropPinView.swift in Sources */,

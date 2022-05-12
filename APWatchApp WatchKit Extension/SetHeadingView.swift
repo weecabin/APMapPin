@@ -18,7 +18,7 @@ struct SetHeadingView: View{
     var body: some View {
         VStack{
             Button {
-                vm.SendMessage(msg: "hc\(trueHeading)")
+                vm.SendMessage(msg: "\(CMD_CAL_CURRENT_HEADING)\(trueHeading)")
             } label: {
                 Text("Cal heading")
                     .frame(width: 120, height: 50)
@@ -29,7 +29,7 @@ struct SetHeadingView: View{
             Text(trueHeading)
                 .font(.largeTitle)
             Button {
-                vm.SendMessage(msg: "ht\(trueHeading)")
+                vm.SendMessage(msg: "\(CMD_SET_TARGET_HEADING)\(trueHeading)")
             } label: {
                 Text("Set heading")
                     .frame(width: 120, height: 50)

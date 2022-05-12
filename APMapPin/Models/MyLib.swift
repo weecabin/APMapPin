@@ -214,3 +214,5 @@ let CMD_GET_CURRENT_HEADING=Character(UnicodeScalar(27))  // gh
 let CMD_GET_CURRENT_HEADING_TARGET=Character(UnicodeScalar(28))  // gt
 let CMD_WRITE_CONFIG_TO_EEPROM=Character(UnicodeScalar(29))  // w
 let CMD_SET_PID_COEFFICIENTS=Character(UnicodeScalar(30))  // k
+let CMD_SET_SOFT_STOP=Character(UnicodeScalar(31))  // o
+let CMD_SET_CIRCLING_PARAMETERS=Character(UnicodeScalar(32))  // c

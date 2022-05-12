@@ -27,13 +27,13 @@ class ViewModel : NSObject, ObservableObject{
         setupCoreLocation()
     }
     func Left(delta:Int){
-        SendMessage(msg: "hi-\(delta)")
+        SendMessage(msg: "\(CMD_DELTA_LEFT)-\(delta)")
     }
     func Right(delta:Int){
-        SendMessage(msg: "hi\(delta)")
+        SendMessage(msg: "\(CMD_DELTA_RIGHT)\(delta)")
     }
     func Lock(){
-        SendMessage(msg: "!B507")
+        SendMessage(msg: "\(CMD_LOCK)")
     }
 }
 extension ViewModel : CLLocationManagerDelegate{

@@ -18,7 +18,7 @@ struct CircleView: View {
             HStack{
                 Spacer()
                 Button {
-                    vm.SendMessage(msg: "!B10")
+                    vm.SendMessage(msg: "\(CMD_CIRCLE_LEFT)")
                 }label: {
                     Image("CircleLeft")
                         .resizable()
@@ -32,7 +32,7 @@ struct CircleView: View {
                 .buttonStyle(BorderedButtonStyle(tint: Color.blue.opacity(100)))
                 Spacer()
                 Button {
-                    vm.SendMessage(msg: "!B20")
+                    vm.SendMessage(msg: "\(CMD_CIRCLE_RIGHT)")
                 } label: {
                     Image("CircleRight")
                         .resizable()
