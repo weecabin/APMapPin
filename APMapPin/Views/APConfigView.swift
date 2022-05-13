@@ -37,17 +37,19 @@ struct APConfigView: View{
                 Spacer()
             }
             VStack{
+                Spacer()
                 if apvm.editItemId != nil {
                     editConfigItem
+                        .padding()
                 }
-                Spacer()
             }
         }
         .onAppear(perform: {
             apvm.onAppear(ble: ble)
+            ble.messageReceivedFromAPDelegate = self
         })
         .onDisappear(perform: {
-            
+            ble.messageReceivedFromAPDelegate = nil
         })
         .navigationTitle("AP")
         .navigationBarItems(trailing:NavigationLink("Map",destination: MapView()))
@@ -142,7 +144,6 @@ extension APConfigView{
                     let command = apvm.configCommand(newValue: editValue)
                     print(command)
                     ble.sendMessageToAP(data: command)
-                    ble.messageReceivedFromAPDelegate = self
                     ble.sendMessageToAP(data: "?c")
                     if apvm.editItemPrompt() == "Heading"{
                         gvm.apIsCalibrated = true
@@ -263,7 +264,9 @@ extension APConfigView{
 extension APConfigView: ReceiveApMessageDelegate{
     func messageIn(message: String) {
         print("In MessageInDelegate")
-        apvm.updateConfigItems(configString: message)
+        if message.contains("Values..."){
+            apvm.updateConfigItems(configString: message)
+        }
     }
 }
 

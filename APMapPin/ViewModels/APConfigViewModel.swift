@@ -215,10 +215,9 @@ class ApConfigViewModel : ObservableObject{
         configItems.append(PV(prompt: "CalInterval:", value: String(Int32(MySubString(src: configString, sub: "CalInterval=", returnLen: 8, occurance: 1, offset: 12)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Drive(Prop/Incr):", value: MySubString(src: configString, sub: "Drive=", returnLen: 5, occurance: 1, offset: 6),editable:true))
         configItems.append(PV(prompt: "AlwaysRunLoop:", value: MySubString(src: configString, sub: "AlwaysRunLoop=", returnLen: 3, offset: 14),editable:true))
-        for item in configItems{
-            print("\(item)")
-        }
-        ble!.messageReceivedFromAPDelegate = nil
+//        for item in configItems{
+//            print("\(item)")
+//        }
     }
 }
 
