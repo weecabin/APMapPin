@@ -31,6 +31,7 @@ struct MapView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 HStack{
+                    NavigationLink("Plot", destination: NavPlotView(data: getPlotStartData(name:"start")))
                     NavigationLink("Cal", destination: CompassCalView())
                     NavigationLink("Settings", destination: SettingsView())
                     NavigationLink("Routes",destination: RouteView())

@@ -183,6 +183,21 @@ class PID{
     }
 }
 
+//with a msg like this...
+//msg = "hd=56.5,55.5,60.5,59"
+//names is an array of strings defining each parameter
+//returns a dictionary of values
+func convert(msg:String,names:[String])->[String:Double]{
+  let vals = msg.components(separatedBy: "=")[1].components(separatedBy: ",")
+  var ret:[String:Double]=[:]
+  var i = 0
+  for val in vals{
+    ret[names[i]]=Double(val)
+    i += 1
+  }
+  return ret
+}
+
 let CMD_LOCK = Character(UnicodeScalar(1))
 let CMD_DELTA_LEFT = Character(UnicodeScalar(2))
 let CMD_DELTA_RIGHT = Character(UnicodeScalar(3))
@@ -192,26 +207,32 @@ let CMD_STOP_ACTUATOR = Character(UnicodeScalar(6))
 let CMD_START_ACTUATOR = Character(UnicodeScalar(7))
 let CMD_MOVE_ACTUATOR_RELATIVE = Character(UnicodeScalar(8))
 let CMD_ALWAYS_RUN_LOOP = Character(UnicodeScalar(9))
-let CMD_CAL_USE_CURRENT_OFFSETS = Character(UnicodeScalar(10))
-let CMD_CAL_CURRENT_HEADING = Character(UnicodeScalar(11))
-let CMD_SET_TARGET_HEADING = Character(UnicodeScalar(12))
-let CMD_SET_PHONE_HEADING = Character(UnicodeScalar(13))
-let CMD_SET_ACTUATOR_OFFSET = Character(UnicodeScalar(14))
-let CMD_SET_CAL_INTERVAL = Character(UnicodeScalar(15))
-let CMD_SET_ACTUATOR_POSITION = Character(UnicodeScalar(16))
-let CMD_SET_MOVE_NULL_ZONE = Character(UnicodeScalar(17))
-let CMD_SET_ACTUATOR_LIMIT = Character(UnicodeScalar(18))
-let CMD_SET_PID_INTERVAL = Character(UnicodeScalar(19))
-let CMD_SET_RECAL_INTERVAL = Character(UnicodeScalar(20))
-let CMD_SET_DRIVE_PROPORTIONAL = Character(UnicodeScalar(21))
-let CMD_SET_DRIVE_INCREMENTAL = Character(UnicodeScalar(22))
-let CMD_SET_PID_COEFFICIENTS = Character(UnicodeScalar(23))
-let CMD_SET_SOFT_STOP = Character(UnicodeScalar(24))
-let CMD_SET_CIRCLING_PARAMETERS = Character(UnicodeScalar(25))
-let CMD_GET_BNO_OFFSETS = Character(UnicodeScalar(26))
-let CMD_GET_BNO_CAL_STATES = Character(UnicodeScalar(27))
-let CMD_GET_ACTUATOR_OFFSET = Character(UnicodeScalar(28))
-let CMD_GET_ACTUATOR_POSITION = Character(UnicodeScalar(29))
-let CMD_GET_CURRENT_HEADING = Character(UnicodeScalar(30))
-let CMD_GET_CURRENT_HEADING_TARGET = Character(UnicodeScalar(31))
-let CMD_WRITE_CONFIG_TO_EEPROM = Character(UnicodeScalar(32))
+
+let CMD_CAL_USE_CURRENT_OFFSETS = Character(UnicodeScalar(20))
+let CMD_CAL_CURRENT_HEADING = Character(UnicodeScalar(21))
+
+let CMD_SET_TARGET_HEADING = Character(UnicodeScalar(30))
+let CMD_SET_PHONE_HEADING = Character(UnicodeScalar(31))
+let CMD_SET_ACTUATOR_OFFSET = Character(UnicodeScalar(32))
+let CMD_SET_CAL_INTERVAL = Character(UnicodeScalar(33))
+let CMD_SET_ACTUATOR_POSITION = Character(UnicodeScalar(34))
+let CMD_SET_MOVE_NULL_ZONE = Character(UnicodeScalar(35))
+let CMD_SET_ACTUATOR_LIMIT = Character(UnicodeScalar(36))
+let CMD_SET_PID_INTERVAL = Character(UnicodeScalar(37))
+let CMD_SET_RECAL_INTERVAL = Character(UnicodeScalar(38))
+let CMD_SET_DRIVE_PROPORTIONAL = Character(UnicodeScalar(39))
+let CMD_SET_DRIVE_INCREMENTAL = Character(UnicodeScalar(40))
+let CMD_SET_PID_COEFFICIENTS = Character(UnicodeScalar(41))
+let CMD_SET_SOFT_STOP = Character(UnicodeScalar(42))
+let CMD_SET_CIRCLING_PARAMETERS = Character(UnicodeScalar(43))
+
+let CMD_GET_BNO_OFFSETS = Character(UnicodeScalar(50))
+let CMD_GET_BNO_CAL_STATES = Character(UnicodeScalar(51))
+let CMD_GET_ACTUATOR_OFFSET = Character(UnicodeScalar(52))
+let CMD_GET_ACTUATOR_POSITION = Character(UnicodeScalar(53))
+let CMD_GET_CURRENT_HEADING = Character(UnicodeScalar(54))
+let CMD_GET_CURRENT_HEADING_TARGET = Character(UnicodeScalar(55))
+let CMD_GET_PLOT_DATA = Character(UnicodeScalar(56))
+
+let CMD_WRITE_CONFIG_TO_EEPROM = Character(UnicodeScalar(70))
+

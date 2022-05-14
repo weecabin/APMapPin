@@ -270,7 +270,7 @@ extension APConfigView: ReceiveApMessageDelegate{
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct APConfigView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView{

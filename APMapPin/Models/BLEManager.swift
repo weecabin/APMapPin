@@ -38,6 +38,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     
     var messageReceivedFromAPDelegate: ReceiveApMessageDelegate!
     var mapMessageDelegate: MapMessageDelegate?
+    var plotHeadingDelegate: PlotDataDelegate?
     var gvm:GlobalViewModel?
     var myCentral: CBCentralManager!
     @Published var isSwitchedOn = false
@@ -253,7 +254,7 @@ extension BLEManager{
           characteristicASCIIValue = ASCIIstring
           rcvString += "\((characteristicASCIIValue as String))"
           if rcvString.contains("<EOM>"){
-              print(rcvString)
+              //print(rcvString)
               rcvMessage=rcvString + "\n\n"
               rcvString = "" // clear it out for the next command
               if messageReceivedFromAPDelegate != nil{
@@ -262,13 +263,16 @@ extension BLEManager{
               if gvm!.compassCalAPMessageDelegate != nil{
                   gvm!.compassCalAPMessageDelegate!.compassCalAPMessage(message: rcvMessage)
               }
+              if plotHeadingDelegate != nil{
+                  plotHeadingDelegate!.plotData(message:rcvMessage)
+              }
               sendState = .ReadyToSend
-              print(sendState)
+              //print(sendState)
         }
     }
     
     func sendMessageToAP(data: String){
-        print("send: \(data)")
+        //print("send: \(data)")
         while sendState == .WaitingForAck{
             sleep(1)
             sendState = .ReadyToSend
