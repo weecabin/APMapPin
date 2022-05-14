@@ -48,6 +48,15 @@ struct Navigation{
     let defaultPidLength:Int = 4
     let defaultMaxCorrection:Double = 45
     
+    var loopRoute:Bool{
+        get{
+            defaults.object(forKey:"NavLoopRoute") as? Bool ?? false
+        }
+        set(enable){
+            defaults.set(enable, forKey:"NavLoopRoute")
+        }
+    }
+    
     var phoneHeadingMode:Bool{
         get{
             defaults.object(forKey:"PhoneHeadingMode") as? Bool ?? false

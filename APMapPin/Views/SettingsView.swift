@@ -25,6 +25,7 @@ struct SettingsView: View {
     @State var navTimerMode:String = "false"
     @State var navMaxCorrection:String = ""
     @State var navPhoneHeadingMode:String = "false"
+    @State var navLoopRoute:String = "false"
     
     @State var simSpeed:String = ""
     @State var simEnabled:String = "false"
@@ -73,6 +74,8 @@ struct SettingsView: View {
             }
             HStack{
                 VStack(alignment: .trailing){
+                    Text("Loop Route:")
+                        .frame(height: 20)
                     Text("Phone Mode:")
                         .frame(height: 20)
                     Text("Timer Mode:")
@@ -95,6 +98,7 @@ struct SettingsView: View {
                 .frame(width: elementNameWidth)
                 
                 VStack(alignment: .leading){
+                    navLoopRouteView
                     phoneHeadingModeView
                     timerModeView
                         .frame(height: 20)
@@ -242,6 +246,19 @@ struct SettingsView: View {
             .padding(.top, 20)
         }
     }
+    var navLoopRouteView:some View{
+        HStack{
+            Button {
+                if navLoopRoute=="false"{
+                    navLoopRoute = "true"
+                }else{
+                    navLoopRoute = "false"
+                }
+            } label: {
+                Text(navLoopRoute)
+            }
+        }
+    }
     
     var phoneHeadingModeView:some View{
         HStack{
@@ -298,6 +315,7 @@ struct SettingsView: View {
         navTimerMode = settings.navigation.timerMode ? "true" : "false"
         navMaxCorrection = String(settings.navigation.maxCorrectionDeg)
         navPhoneHeadingMode = settings.navigation.phoneHeadingMode ? "true" : "false"
+        navLoopRoute = settings.navigation.loopRoute ? "true" : "false"
         
         simSpeed = String(settings.simulator.speed)
         simEnabled = settings.simulator.enabled ? "true" : "false"
@@ -320,6 +338,7 @@ struct SettingsView: View {
         settings.navigation.timerMode = navTimerMode == "true"
         settings.navigation.maxCorrectionDeg = Double(navMaxCorrection) ?? settings.navigation.defaultMaxCorrection
         settings.navigation.phoneHeadingMode = navPhoneHeadingMode == "true"
+        settings.navigation.loopRoute = navLoopRoute == "true"
         
         settings.simulator.speed = Double(simSpeed) ?? settings.simulator.defaultSimSpeed
         let prevSimMode = settings.simulator.enabled

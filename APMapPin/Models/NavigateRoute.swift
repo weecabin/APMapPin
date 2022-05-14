@@ -88,14 +88,20 @@ class NavigateRoute : ObservableObject{
         if distToTarget! < settings.navigation.arrivalZoneMeters{
             print("inside arrival zone")
             if routeIndex == route!.routePointsArray.count - 1{
-                route!.routePointsArray.last!.target = false
-                CancelNavigation()
-                return
+                if !settings.navigation.loopRoute{
+                    route!.routePointsArray.last!.target = false
+                    CancelNavigation()
+                    return
+                }
             }
             // setup for the next point
             newTargetCourse = true
             route!.routePointsArray[routeIndex].target = false
-            routeIndex = routeIndex + 1
+            if routeIndex == route!.routePointsArray.count - 1{
+                routeIndex = 1
+            }else{
+                routeIndex = routeIndex + 1
+            }
             route!.routePointsArray[routeIndex].target = true
             let fromPinLoc = targetPinLocation // save it to compute the desired heading
             targetPin = route!.routePointsArray[routeIndex].pointPin
