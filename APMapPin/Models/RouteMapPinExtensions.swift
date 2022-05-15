@@ -73,7 +73,7 @@ extension RoutePoint : Comparable{
     }
     
     public var suffix:String{
-        if pointPin!.type == "fix"{
+        if pointPin!.type == "fix" && pointRoute!.active{
             return "-\(index)"
         }else{
             return ""

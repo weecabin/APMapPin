@@ -393,7 +393,6 @@ extension MapViewModel{ // Navigation Functions
         if simPin != nil{
             simPin!.latitude = simStartLocation!.latitude
             simPin!.longitude = simStartLocation!.longitude
-            simPin!.type = "fix"
 //            print("nulling simPin")
             simPin = nil
         }
@@ -416,12 +415,22 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func setSimPin(){
-        guard let route = activeRoute() else {return}
-        simPin = route.routePointsArray[0].pointPin
-        simPin!.type = "sim"
-        simPin?.course = getBearingBetweenTwoPoints1(
+        let route = cd.getRouteNamed(name: "Sim", createIfNotFound: true)
+        route?.visible = true
+        if route?.routePointsArray.count == 0{
+            simPin = cd.addMapPin(name: "fix", latitude: region.center.latitude, longitude: region.center.longitude, type: "sim")
+            cd.addPinToRoute(routeName: "Sim", pin: simPin!)
+        }else{
+            simPin = route?.routePointsArray[0].pointPin
+            simPin!.latitude = region.center.latitude
+            simPin!.longitude = region.center.longitude
+            simPin!.type = "sim"
+        }
+        simPin!.name = "sim"
+        let destPinLocation = cd.getActiveRoute()?.routePointsArray[0].pointPin?.Location
+        simPin!.course = getBearingBetweenTwoPoints1(
             point1: CLLocation(latitude: simPin!.latitude, longitude: simPin!.longitude),
-            point2: CLLocation(latitude: route.routePointsArray[1].pointPin!.latitude, longitude: route.routePointsArray[1].pointPin!.longitude))
+            point2: destPinLocation!)
     }
     
     func activeRoute() -> Route?{

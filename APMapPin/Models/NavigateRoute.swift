@@ -97,8 +97,10 @@ class NavigateRoute : ObservableObject{
             // setup for the next point
             newTargetCourse = true
             route!.routePointsArray[routeIndex].target = false
+            // If we're at the end of the route, we're looping,
+            // so set the destination to the beginning of the route
             if routeIndex == route!.routePointsArray.count - 1{
-                routeIndex = 1
+                routeIndex = 0
             }else{
                 routeIndex = routeIndex + 1
             }
