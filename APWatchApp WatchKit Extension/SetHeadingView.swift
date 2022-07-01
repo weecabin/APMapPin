@@ -39,6 +39,8 @@ struct SetHeadingView: View{
             }
             
         }
+        .background(vm.backColor)
+        .cornerRadius(10)
         .onAppear {
             vm.locationManager.startUpdatingHeading()
             vm.headingAvailableDelegate = self

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CircleView: View {
     @EnvironmentObject var vm:ViewModel
+    @State var circleMinutes:[Int] = [3,4,5,6,7,8,9,10]
+    @State var circleTimeInMinutes:Int = 6
     let bh:CGFloat = 30
     let bw:CGFloat = 50
     var body: some View {
@@ -19,6 +21,7 @@ struct CircleView: View {
                 Spacer()
                 Button {
                     vm.SendMessage(msg: "\(CMD_CIRCLE_LEFT)")
+                    circleTimeInMinutes = 6
                 }label: {
                     Image("CircleLeft")
                         .resizable()
@@ -45,7 +48,32 @@ struct CircleView: View {
                 .buttonStyle(BorderedButtonStyle(tint: Color.blue.opacity(100)))
                 Spacer()
             }
+            HStack(alignment:.center){
+                Spacer()
+                Picker("mins", selection: $circleTimeInMinutes) {
+                    ForEach(circleMinutes, id: \.self){
+                        Text("\($0)")
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(width: 40, height:50)
+                VStack{
+                    Text("")
+                    Button {
+                        vm.SendMessage(msg: "\(CMD_SET_CIRCLING_PARAMETERS)\(circleTimeInMinutes*60),36")
+                    } label: {
+                        Text("Set")
+                            .frame(width: vm.bw, height: vm.bh)
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                            .foregroundColor(.white)
+                    }
+                }
+
+            }.padding()
         }
+        .background(vm.backColor)
+        .cornerRadius(10)
     }
 }
 

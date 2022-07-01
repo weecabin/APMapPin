@@ -33,6 +33,8 @@ struct DropPinView: View {
                     .foregroundColor(.white)
             }
         }
+        .background(vm.backColor)
+        .cornerRadius(10)
     }
 }
 

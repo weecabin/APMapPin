@@ -29,7 +29,6 @@ struct CompassCalView: View{
     @State var courseString = ""
     @State var apTarget = ""
     @State var apHeading = ""
-    @State var apCalState = ""
     @State var lastLocation:CLLocation?
     @State var lastHeading:CLHeading?
     @State var getHeadingTimer:Timer?
@@ -40,7 +39,6 @@ struct CompassCalView: View{
     @State var mag:String = ""
     @State var accelRadius:String = ""
     @State var magRadius:String = ""
-    @State var getCal:Bool = false
     
     var body: some View {
         VStack{
@@ -54,7 +52,6 @@ struct CompassCalView: View{
                     Text("")
                     Text("AP Target: \(apTarget)")
                     Text("AP Heading: \(apHeading)")
-                    Text("AP CalState(SGAM): \(apCalState)")
                     Text("Msg Count: \(msgCount)")
                 }
                 Spacer()
@@ -70,25 +67,7 @@ struct CompassCalView: View{
                 
             }
             Spacer()
-            HStack{
-                
-                VStack(alignment: .leading){
-                    HStack{
-                        Button {getCal = true} label: {Text("Get BNO Cal")}
-                            .buttonStyle(width: 150)
-                        Button {ble.sendMessageToAP(data: "\(CMD_CAL_USE_CURRENT_OFFSETS)")} label: {Text("Use this Cal")}
-                            .buttonStyle(width: 150)
-                    }
-                    Text("")
-                    Text("Accel: \(accel)")
-                    Text("Gyro: \(gyro)")
-                    Text("Mag: \(mag)")
-                    Text("AccelRadius: \(accelRadius)")
-                    Text("MagRadius: \(magRadius)")
-                }
-                Spacer()
-            }
-            .padding()
+
         }
         .padding()
         .onAppear {
@@ -126,7 +105,6 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
      after receiving the heading, I ask for the following sequentially...
      target heading
      last cal heading
-     and if getCal is set, I ask for bno calibration offsets, but his is only once per button press
      */
     func compassCalAPMessage(message: String) {
         var temp = MySubString(src: message, sub: "Heading=", returnLen: 6, offset: 8)
@@ -140,31 +118,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         temp = MySubString(src: message, sub: "Target=", returnLen: 6, offset: 7)
         if temp.count > 0{
             if !settings.navigation.phoneHeadingMode{apTarget = temp}
-            ble.sendMessageToAP(data: "\(CMD_GET_BNO_CAL_STATES)")
             return
-        }
-        
-        temp = MySubString(src: message, sub: "Cal=", returnLen: 6, offset: 4)
-        if temp.count > 0{
-            apCalState = temp
-            if (getCal){
-                ble.sendMessageToAP(data: "\(CMD_GET_BNO_OFFSETS)")
-                getCal = false;
-            }
-            return;
-        }
-        
-        if message.contains("A: "){
-            temp = MySubString(src: message, sub: "A: ", returnLen: 15, offset: 3)
-            accel = temp
-            temp = MySubString(src: message, sub: "G: ", returnLen: 15, offset: 3)
-            gyro = temp
-            temp = MySubString(src: message, sub: "M: ", returnLen: 15, offset: 3)
-            mag = temp
-            temp = MySubString(src: message, sub: "AR: ", returnLen: 15, offset: 4)
-            accelRadius = temp
-            temp = MySubString(src: message, sub: "MR: ", returnLen: 15, offset: 4)
-            magRadius = temp
         }
     }
     

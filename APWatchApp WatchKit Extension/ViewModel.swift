@@ -16,6 +16,7 @@ enum MsgType{
 
 class ViewModel : NSObject, ObservableObject{
     @Published var rcvMsg:String = "?"
+    @Published var backColor:Color = .black;
     let locationManager = CLLocationManager()
     var lastDeviceHeading:CLHeading?
     var headingAvailableDelegate:HeadingAvailableDelegate?
@@ -28,12 +29,22 @@ class ViewModel : NSObject, ObservableObject{
     }
     func Left(delta:Int){
         SendMessage(msg: "\(CMD_DELTA_LEFT)-\(delta)")
+        blinkBackground(color: .yellow)
     }
     func Right(delta:Int){
         SendMessage(msg: "\(CMD_DELTA_RIGHT)\(delta)")
+        blinkBackground(color: .yellow)
     }
     func Lock(){
         SendMessage(msg: "\(CMD_LOCK)")
+        blinkBackground(color: .yellow)
+    }
+    func blinkBackground(color: Color){
+        backColor = color;
+        _ = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: false) { timer in
+            self.backColor = .black
+            timer.invalidate();
+        }
     }
 }
 extension ViewModel : CLLocationManagerDelegate{
@@ -72,6 +83,7 @@ extension ViewModel : WCSessionDelegate{
             WCSession.default.sendMessage(["MapMessage" : msg], replyHandler: nil)
             break
         }
+        blinkBackground(color: .yellow)
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
