@@ -189,9 +189,8 @@ extension APConfigView{
                 HeadingButton(title: "Left", width: buttonWidth)
                 
                 Picker("Angle", selection: $apvm.turnAngle) {
-                    ForEach(apvm.turnAngles){turn in
-                        Text(turn.name)
-                            .tag(turn.value)
+                    ForEach(apvm.turnAngles, id: \.self){
+                        Text("\($0)")
                     }
                 }
                 .frame(width: buttonHeight, height: buttonHeight)
