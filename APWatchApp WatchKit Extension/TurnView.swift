@@ -7,15 +7,10 @@
 
 import SwiftUI
 import WatchConnectivity
-struct TurnAngle: Identifiable{
-    let id:UUID = UUID()
-    let name:String
-    let value:Int
-}
 
 struct TurnView: View {
     @EnvironmentObject var vm:ViewModel
-    @State var turnAngles:[TurnAngle] = []
+    @State var turnAngles:[Int] = [5,10,15,20,30,40,50,60,70,80,90]
     @State var turnAngle:Int = 5
     var body: some View {
         VStack(spacing: 0){
@@ -60,8 +55,8 @@ struct TurnView: View {
                         .foregroundColor(.white)
                 }
                 Picker("Angle", selection: $turnAngle) {
-                    ForEach(turnAngles){turn in
-                        Text(turn.name).tag(turn.value)
+                    ForEach(turnAngles, id: \.self){
+                        Text("\($0)")
                     }
                 }
                 .pickerStyle(.wheel)
@@ -77,8 +72,9 @@ struct TurnView: View {
                 }
             }
         }
+        .background(vm.backColor)
+        .cornerRadius(10)
         .onAppear {
-            loadPicker()
             vm.onTurnViewAppear()
         }
     }
@@ -92,14 +88,3 @@ struct ContentView_Previews: PreviewProvider {
             .environmentObject(ViewModel())
     }
 }
-
-extension TurnView{
-    func loadPicker(){
-        var i:Int = 5
-        while i<95 {
-            turnAngles.append(TurnAngle(name: "\(i)", value: i))
-            i = i + 5
-        }
-    }
-}
-
