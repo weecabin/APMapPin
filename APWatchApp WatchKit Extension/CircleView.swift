@@ -48,6 +48,7 @@ struct CircleView: View {
                 .buttonStyle(BorderedButtonStyle(tint: Color.blue.opacity(100)))
                 Spacer()
             }
+            
             HStack(alignment:.center){
                 Spacer()
                 Picker("mins", selection: $circleTimeInMinutes) {

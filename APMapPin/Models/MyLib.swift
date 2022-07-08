@@ -207,7 +207,6 @@ let CMD_STOP_ACTUATOR = Character(UnicodeScalar(6))
 let CMD_START_ACTUATOR = Character(UnicodeScalar(7))
 let CMD_MOVE_ACTUATOR_RELATIVE = Character(UnicodeScalar(8))
 
-let CMD_CAL_USE_CURRENT_OFFSETS = Character(UnicodeScalar(20))
 let CMD_CAL_CURRENT_HEADING = Character(UnicodeScalar(21))
 
 let CMD_SET_TARGET_HEADING = Character(UnicodeScalar(30))

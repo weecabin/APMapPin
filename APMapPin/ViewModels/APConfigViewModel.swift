@@ -137,6 +137,15 @@ class ApConfigViewModel : ObservableObject{
                 command = "\(CMD_SET_RECAL_INTERVAL)\(newValue)"
                 break
                 
+            case "ManualMode:":
+                if newValue=="1"{
+                    command = "\(CMD_SET_ACTUATOR_POSITION)3.0"
+                }
+                else{
+                    command = "\(CMD_LOCK)"
+                }
+                break;
+                
             default:
                 command = ""
             }
@@ -144,15 +153,6 @@ class ApConfigViewModel : ObservableObject{
         }
         return ""
     }
-    
-//    func loadPicker(){
-//        var i:Int = 5
-//        turnAngles = []
-//        while i<95 {
-//            turnAngles.append(TurnAngle(name: "\(i)", value: i))
-//            i = i + 5
-//        }
-//    }
     
     func editItemValue() -> String?{
         guard let index = editItemIndex() else{return nil}
@@ -195,6 +195,7 @@ class ApConfigViewModel : ObservableObject{
         configItems=[]
         // Keep CompassCorrection as the first item
         configItems.append(PV(prompt: "CompassCorrection:", value: String(Float(MySubString(src: configString, sub: "CompassCorrection=", returnLen: 7, offset: 18)) ?? 0),editable:true))
+        configItems.append(PV(prompt: "ManualMode:", value: MySubString(src: configString, sub: "ManualMode=", returnLen: 6, offset: 11),editable:true))
         configItems.append(PV(prompt: "Offset:", value: String(Float(MySubString(src: configString, sub: "Offset=", returnLen: 6, offset: 7)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Target:", value: String(Float(MySubString(src: configString, sub: "Target=", returnLen: 6, offset: 7)) ?? 0),editable:true))
         configItems.append(PV(prompt: "Heading:", value: String(Float(MySubString(src: configString, sub: "Heading=", returnLen: 6, offset: 8)) ?? 0),editable:false))
