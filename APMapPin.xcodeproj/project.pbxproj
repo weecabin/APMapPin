@@ -45,7 +45,6 @@
 		91DCABF127F6302F00FBD5A0 /* NavigateRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91DCABF027F6302F00FBD5A0 /* NavigateRoute.swift */; };
 		91E4197A27F671A4002E7ADF /* CustomButtonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E4197927F671A4002E7ADF /* CustomButtonViews.swift */; };
 		91F67BC328062DA800829E63 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91F67BC228062DA800829E63 /* Assets.xcassets */; };
-		91F67BC928062DA800829E63 /* APWatchApp WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 91F67BC828062DA800829E63 /* APWatchApp WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		91F67BCE28062DA800829E63 /* APMapPinApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F67BCD28062DA800829E63 /* APMapPinApp.swift */; };
 		91F67BD228062DA800829E63 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F67BD128062DA800829E63 /* NotificationController.swift */; };
 		91F67BD428062DA800829E63 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91F67BD328062DA800829E63 /* NotificationView.swift */; };
@@ -60,13 +59,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		91F67BCA28062DA800829E63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 91047EAE27EA2855004B6070 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 91F67BC728062DA800829E63;
-			remoteInfo = "APWatchApp WatchKit Extension";
-		};
 		91F67BDE28062DA800829E63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 91047EAE27EA2855004B6070 /* Project object */;
@@ -86,17 +78,6 @@
 				91F67BE028062DA800829E63 /* APWatchApp.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91F67BE428062DA800829E63 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				91F67BC928062DA800829E63 /* APWatchApp WatchKit Extension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -145,7 +126,6 @@
 		91E4197927F671A4002E7ADF /* CustomButtonViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtonViews.swift; sourceTree = "<group>"; };
 		91F67BC028062DA700829E63 /* APWatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = APWatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91F67BC228062DA800829E63 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		91F67BC828062DA800829E63 /* APWatchApp WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "APWatchApp WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91F67BCD28062DA800829E63 /* APMapPinApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APMapPinApp.swift; sourceTree = "<group>"; };
 		91F67BD128062DA800829E63 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		91F67BD328062DA800829E63 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
@@ -199,7 +179,6 @@
 			children = (
 				91047EB627EA2855004B6070 /* APMapPin.app */,
 				91F67BC028062DA700829E63 /* APWatchApp.app */,
-				91F67BC828062DA800829E63 /* APWatchApp WatchKit Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -336,34 +315,17 @@
 			buildConfigurationList = 91F67BE828062DA800829E63 /* Build configuration list for PBXNativeTarget "APWatchApp" */;
 			buildPhases = (
 				91F67BBE28062DA700829E63 /* Resources */,
-				91F67BE428062DA800829E63 /* Embed App Extensions */,
+				91F67BC428062DA800829E63 /* Sources */,
+				91F67BC528062DA800829E63 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				91F67BCB28062DA800829E63 /* PBXTargetDependency */,
 			);
 			name = APWatchApp;
 			productName = APWatchApp;
 			productReference = 91F67BC028062DA700829E63 /* APWatchApp.app */;
-			productType = "com.apple.product-type.application.watchapp2";
-		};
-		91F67BC728062DA800829E63 /* APWatchApp WatchKit Extension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 91F67BE728062DA800829E63 /* Build configuration list for PBXNativeTarget "APWatchApp WatchKit Extension" */;
-			buildPhases = (
-				91F67BC428062DA800829E63 /* Sources */,
-				91F67BC528062DA800829E63 /* Frameworks */,
-				91F67BC628062DA800829E63 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "APWatchApp WatchKit Extension";
-			productName = "APWatchApp WatchKit Extension";
-			productReference = 91F67BC828062DA800829E63 /* APWatchApp WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit2-extension";
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -373,15 +335,12 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					91047EB527EA2855004B6070 = {
 						CreatedOnToolsVersion = 13.3;
 					};
 					91F67BBF28062DA700829E63 = {
-						CreatedOnToolsVersion = 13.3;
-					};
-					91F67BC728062DA800829E63 = {
 						CreatedOnToolsVersion = 13.3;
 					};
 				};
@@ -401,7 +360,6 @@
 			targets = (
 				91047EB527EA2855004B6070 /* APMapPin */,
 				91F67BBF28062DA700829E63 /* APWatchApp */,
-				91F67BC728062DA800829E63 /* APWatchApp WatchKit Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -420,16 +378,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91F67BC328062DA800829E63 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91F67BC628062DA800829E63 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 				91F67BDB28062DA800829E63 /* Preview Assets.xcassets in Resources */,
 				91F67BD828062DA800829E63 /* Assets.xcassets in Resources */,
+				91F67BC328062DA800829E63 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,11 +447,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		91F67BCB28062DA800829E63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 91F67BC728062DA800829E63 /* APWatchApp WatchKit Extension */;
-			targetProxy = 91F67BCA28062DA800829E63 /* PBXContainerItemProxy */;
-		};
 		91F67BDF28062DA800829E63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 91F67BBF28062DA700829E63 /* APWatchApp */;
@@ -644,6 +590,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -678,6 +625,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -696,16 +644,24 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = APWatchApp_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = APWatchApp;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = weecabin.APMapPin;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = weecabin.APMapPin.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -723,85 +679,27 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 28CH6K34FW;
 				GENERATE_INFOPLIST_FILE = YES;
-				IBSC_MODULE = APWatchApp_WatchKit_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = APWatchApp;
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = weecabin.APMapPin;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = weecabin.APMapPin.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.4;
-			};
-			name = Release;
-		};
-		91F67BE528062DA800829E63 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "APWatchApp\\ WatchKit\\ Extension/Assets.xcassets APMapPin/Assets.xcassets";
-				DEVELOPMENT_TEAM = 28CH6K34FW;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = weecabin.APMapPin.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 8.4;
-			};
-			name = Debug;
-		};
-		91F67BE628062DA800829E63 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "APWatchApp\\ WatchKit\\ Extension/Assets.xcassets APMapPin/Assets.xcassets";
-				DEVELOPMENT_TEAM = 28CH6K34FW;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "APWatchApp WatchKit Extension/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "APWatchApp WatchKit Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "needs location for heading information";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "needs location for heading information";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = weecabin.APMapPin.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -828,15 +726,6 @@
 			buildConfigurations = (
 				91047EC527EA2856004B6070 /* Debug */,
 				91047EC627EA2856004B6070 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		91F67BE728062DA800829E63 /* Build configuration list for PBXNativeTarget "APWatchApp WatchKit Extension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				91F67BE528062DA800829E63 /* Debug */,
-				91F67BE628062DA800829E63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

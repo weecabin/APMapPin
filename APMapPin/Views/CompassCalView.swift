@@ -133,7 +133,7 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
     
     func compassCalHeading(heading: CLHeading) {
         lastHeading = heading
-        headingString = "\(String(format: "%.2f",heading.trueHeading))"
+        headingString = "\(String(format: "%.2f",heading.magneticHeading))"
         if settings.navigation.phoneHeadingMode{apTarget = headingString}
     }
     

@@ -193,7 +193,7 @@ extension APConfigView{
                         Text("\($0)")
                     }
                 }
-                .frame(width: buttonHeight, height: buttonHeight)
+                .frame(width: buttonHeight + 40, height: buttonHeight)
                 .padding(10)
                 .background(.thickMaterial)
                 .cornerRadius(buttonHeight/2)

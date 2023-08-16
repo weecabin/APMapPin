@@ -21,7 +21,7 @@ class ApConfigViewModel : ObservableObject{
     @Published var editValue:String?
     @Published var actuatorEnabled:Bool = true
     @Published var turnAngles:[Int] = [5,10,15,20,30,40,50,60,70,80,90]
-    @Published var turnAngle:Int = 5
+    @Published var turnAngle:Int = 10
     var initialized:Bool = false
     var ble:BLEManager?
     //@Published var apHeading:Float = 0
