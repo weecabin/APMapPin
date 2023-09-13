@@ -48,14 +48,17 @@ extension BLEView{
                 let gpxStr = try String(contentsOf: sceneDelegate.url!, encoding: .utf8)
                 print(gpxStr)
                 let gpxRoute = getLatLon(gpxStr:gpxStr)
-                bleManager.cd.addRoute(name: gpxRoute.Name)
-                for ll in gpxRoute.latLon{
-                    let pin = bleManager.cd.addMapPin(name: "fix", latitude: ll.lat, longitude: ll.lon, type: "fix")
-                    let route = bleManager.cd.getRouteNamed(name: gpxRoute.Name)!
-                    route.visible = true
-                    bleManager.cd.addPinToRoute(route: route, pin:pin )
-                }
-                return String("Loaded: ") + gpxRoute.Name
+                if (bleManager.cd.getRouteNamed(name: gpxRoute.Name) == nil)
+                {
+                    bleManager.cd.addRoute(name: gpxRoute.Name)
+                    for ll in gpxRoute.latLon{
+                        let pin = bleManager.cd.addMapPin(name: "fix", latitude: ll.lat, longitude: ll.lon, type: "fix")
+                        let route = bleManager.cd.getRouteNamed(name: gpxRoute.Name)!
+                        route.visible = true
+                        bleManager.cd.addPinToRoute(route: route, pin:pin )
+                    }
+                    return String("Loaded: ") + gpxRoute.Name
+                }    
             }
             catch {return "GPX Load Error"}
         }
