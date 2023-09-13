@@ -198,6 +198,74 @@ func convert(msg:String,names:[String])->[String:Double]{
   return ret
 }
 
+extension StringProtocol  {
+    func substring<S: StringProtocol>(from start: S, options: String.CompareOptions = []) -> SubSequence? {
+        guard let lower = range(of: start, options: options)?.upperBound
+        else { return nil }
+        return self[lower...]
+    }
+    func substring<S: StringProtocol>(through end: S, options: String.CompareOptions = []) -> SubSequence? {
+        guard let upper = range(of: end, options: options)?.upperBound
+        else { return nil }
+        return self[..<upper]
+    }
+    func substring<S: StringProtocol>(upTo end: S, options: String.CompareOptions = []) -> SubSequence? {
+        guard let upper = range(of: end, options: options)?.lowerBound
+        else { return nil }
+        return self[..<upper]
+    }
+    func substring<S: StringProtocol, T: StringProtocol>(from start: S, upTo end: T, options: String.CompareOptions = []) -> SubSequence? {
+        guard let lower = range(of: start, options: options)?.upperBound,
+            let upper = self[lower...].range(of: end, options: options)?.lowerBound
+        else { return nil }
+        return self[lower..<upper]
+    }
+    func substring<S: StringProtocol, T: StringProtocol>(from start: S, through end: T, options: String.CompareOptions = []) -> SubSequence? {
+        guard let lower = range(of: start, options: options)?.upperBound,
+            let upper = self[lower...].range(of: end, options: options)?.upperBound
+        else { return nil }
+        return self[lower..<upper]
+    }
+}
+
+struct LatLon{
+    var lat:Double
+    var lon:Double
+}
+struct GpxRoute{
+    var Name:String = ""
+    var latLon:[LatLon] = []
+    func print(){
+        Swift.print(Name)
+        for ll in latLon{
+            Swift.print(ll)
+        }
+    }
+}
+
+func getLatLon(gpxStr:String)->GpxRoute
+{
+    var rr:GpxRoute = GpxRoute()
+    
+    let name = gpxStr.substring(from: "<rte><name>",upTo:"</name>")
+    rr.Name = String(name ?? "error")
+    
+    var latlon = gpxStr.substring(from: "</time>")
+    while let ll = latlon?.substring(from: "<rtept"){
+        let lat = ll.substring(from: " lat=\"", upTo: "\"")
+        let lon = ll.substring(from: "lon=\"", upTo: "\"")
+        if (lat != nil && lon != nil)
+        {
+            rr.latLon.append( LatLon(lat:Double(lat!)!,lon:Double(lon!)!))
+        }
+        else
+        {
+            break
+        }
+        latlon = ll
+    }
+    return rr
+}
 let CMD_LOCK = Character(UnicodeScalar(1))
 let CMD_DELTA_LEFT = Character(UnicodeScalar(2))
 let CMD_DELTA_RIGHT = Character(UnicodeScalar(3))

@@ -14,14 +14,14 @@ struct BLEView: View {
     @State var GoToAPView:Bool = false
     @EnvironmentObject var bleManager: BLEManager
     @EnvironmentObject var gvm:GlobalViewModel
-    
+
     @EnvironmentObject var sceneDelegate : FSSceneDelegate
     
     @State var UrlString = ""
     var body: some View {
         
         VStack {
-            Text(testUrlString() ?? "None")
+            Text(LoadGpxRoute() ?? "None")
             //Text(sceneDelegate.urlString!)
             BLEState
             scanList
@@ -41,15 +41,23 @@ struct BLEView: View {
 
 
 extension BLEView{
-    func testUrlString()->String?
+    func LoadGpxRoute()->String?
     {
         if sceneDelegate.initialized{
             do {
-                let text2 = try String(contentsOf: sceneDelegate.url!, encoding: .utf8)
-                print(text2)
-                return text2
+                let gpxStr = try String(contentsOf: sceneDelegate.url!, encoding: .utf8)
+                print(gpxStr)
+                let gpxRoute = getLatLon(gpxStr:gpxStr)
+                bleManager.cd.addRoute(name: gpxRoute.Name)
+                for ll in gpxRoute.latLon{
+                    let pin = bleManager.cd.addMapPin(name: "fix", latitude: ll.lat, longitude: ll.lon, type: "fix")
+                    let route = bleManager.cd.getRouteNamed(name: gpxRoute.Name)!
+                    route.visible = true
+                    bleManager.cd.addPinToRoute(route: route, pin:pin )
+                }
+                return String("Loaded: ") + gpxRoute.Name
             }
-            catch {return "Error"}
+            catch {return "GPX Load Error"}
         }
         return ""
     }
