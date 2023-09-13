@@ -582,6 +582,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APMapPin/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need bluetooth to access the autopilot peripheral";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs access to location for navigation";
@@ -590,6 +591,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -617,6 +619,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = APMapPin/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = NO;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Need bluetooth to access the autopilot peripheral";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Need access to location for navigation";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Needs access to location for navigation";
@@ -625,6 +628,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

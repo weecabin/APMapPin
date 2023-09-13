@@ -15,8 +15,14 @@ struct BLEView: View {
     @EnvironmentObject var bleManager: BLEManager
     @EnvironmentObject var gvm:GlobalViewModel
     
+    @EnvironmentObject var sceneDelegate : FSSceneDelegate
+    
+    @State var UrlString = ""
     var body: some View {
+        
         VStack {
+            Text(testUrlString() ?? "None")
+            //Text(sceneDelegate.urlString!)
             BLEState
             scanList
             listButtons
@@ -35,6 +41,19 @@ struct BLEView: View {
 
 
 extension BLEView{
+    func testUrlString()->String?
+    {
+        if sceneDelegate.initialized{
+            do {
+                let text2 = try String(contentsOf: sceneDelegate.url!, encoding: .utf8)
+                print(text2)
+                return text2
+            }
+            catch {return "Error"}
+        }
+        return ""
+    }
+    
     private var listButtons: some View{
         Group{
             HStack{

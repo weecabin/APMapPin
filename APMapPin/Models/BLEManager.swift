@@ -58,7 +58,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     var peripheralName:String = "Adafruit Bluefruit LE"
     var scanningTimer:Timer?
     var sendState:SendState = SendState.ReadyToSend
-
+    
     override init() {
         super.init()
         myCentral = CBCentralManager(delegate: self, queue: nil)
