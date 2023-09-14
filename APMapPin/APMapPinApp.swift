@@ -83,7 +83,7 @@ struct APMapPinApp: App {
 
 func AddCpxRoute(url:URL)
 {
-    var cd = CoreData.shared
+    let cd = CoreData.shared
     do {
         let gpxStr = try String(contentsOf: url, encoding: .utf8)
         print(gpxStr)

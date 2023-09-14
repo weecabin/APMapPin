@@ -14,8 +14,6 @@ struct BLEView: View {
     @State var GoToAPView:Bool = false
     @EnvironmentObject var bleManager: BLEManager
     @EnvironmentObject var gvm:GlobalViewModel
-
-    @EnvironmentObject var sceneDelegate : FSSceneDelegate
     
     @State var UrlString = ""
     var body: some View {

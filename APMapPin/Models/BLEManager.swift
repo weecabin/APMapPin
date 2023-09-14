@@ -48,7 +48,6 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeriph
     @Published var rcvMessage: String = ""
     @Published var found:Bool = false
     @Published var rcvMsg:String = ""
-    @Published var cd = CoreData.shared
     var initialized:Bool = false
     var rcvString: String = ""
     var txCharacteristic: CBCharacteristic!
