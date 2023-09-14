@@ -30,10 +30,8 @@ struct APMapPinApp: App {
 }
 
     class FSSceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
-        @Published var initialized: Bool = false
-        @Published var url: URL?
-        @Published var urlString:String? = ""
-
+        var url: URL?
+        
         func sceneWillEnterForeground(_ scene: UIScene) {
             // ...
         }
@@ -47,12 +45,7 @@ struct APMapPinApp: App {
         }
         // when app is terminated:
         func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-            print("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
-            
-            if let url = connectionOptions.urlContexts.first?.url {
-                print(url)
-                self.url = url
-            }
+            // ...
         }
 
         // when app is background or foreground:
@@ -61,10 +54,8 @@ struct APMapPinApp: App {
 
             if let url = URLContexts.first?.url {
                 print(url)
-                urlString = url.absoluteString
-                print(urlString!)
-                initialized = true
                 self.url = url
+                AddCpxRoute(url: url)
             }
         }
     }
@@ -90,3 +81,23 @@ struct APMapPinApp: App {
         // ...
     }
 
+func AddCpxRoute(url:URL)
+{
+    var cd = CoreData.shared
+    do {
+        let gpxStr = try String(contentsOf: url, encoding: .utf8)
+        print(gpxStr)
+        let gpxRoute = getLatLon(gpxStr:gpxStr)
+        if (cd.getRouteNamed(name: gpxRoute.Name) == nil)
+        {
+            cd.addRoute(name: gpxRoute.Name)
+            for ll in gpxRoute.latLon{
+                let pin = cd.addMapPin(name: "fix", latitude: ll.lat, longitude: ll.lon, type: "fix")
+                let route = cd.getRouteNamed(name: gpxRoute.Name)!
+                route.visible = true
+                cd.addPinToRoute(route: route, pin:pin )
+            }
+        }
+    }
+    catch {print("Gpx load error")}
+}
