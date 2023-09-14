@@ -26,6 +26,7 @@ struct SettingsView: View {
     @State var navMaxCorrection:String = ""
     @State var navPhoneHeadingMode:String = "false"
     @State var navLoopRoute:String = "false"
+    @State var navReverseRoute:String = "false"
     
     @State var simSpeed:String = ""
     @State var simEnabled:String = "false"
@@ -74,33 +75,43 @@ struct SettingsView: View {
             }
             HStack{
                 VStack(alignment: .trailing){
-                    Text("Loop Route:")
-                        .frame(height: 20)
-                    Text("Phone Mode:")
-                        .frame(height: 20)
-                    Text("Timer Mode:")
-                        .frame(height: 20)
-                    Text("interval(s):")
-                        .frame(height: 20)
-                    Text("Arrival Zone(ft):")
-                        .frame(height: 20)
-                    Text("PID-kp:")
-                        .frame(height: 20)
-                    Text("PID-ki:")
-                        .frame(height: 20)
-                    Text("PID-kd:")
-                        .frame(height: 20)
-                    Text("PID Length:")
-                        .frame(height: 20)
-                    Text("Max Err(deg):")
-                        .frame(height: 20)
+                    Group{
+                        Text("Reverse Route:")
+                            .frame(height: 20)
+                        Text("Loop Route:")
+                            .frame(height: 20)
+                        Text("Phone Mode:")
+                            .frame(height: 20)
+                        Text("Timer Mode:")
+                            .frame(height: 20)
+                        Text("interval(s):")
+                            .frame(height: 20)
+                    }
+                    Group{
+                        Text("Arrival Zone(ft):")
+                            .frame(height: 20)
+                        Text("PID-kp:")
+                            .frame(height: 20)
+                        Text("PID-ki:")
+                            .frame(height: 20)
+                        Text("PID-kd:")
+                            .frame(height: 20)
+                        Text("PID Length:")
+                            .frame(height: 20)
+                        Text("Max Err(deg):")
+                            .frame(height: 20)
+                    }
+                    
                 }
                 .frame(width: elementNameWidth)
                 
                 VStack(alignment: .leading){
-                    navLoopRouteView
-                    phoneHeadingModeView
-                    timerModeView
+                    Group{
+                        navReverseRouteView
+                        navLoopRouteView
+                        phoneHeadingModeView
+                        timerModeView
+                    }
                         .frame(height: 20)
                     TextField("interval", text: $navInterval)
                         .frame(height: 20)
@@ -246,6 +257,20 @@ struct SettingsView: View {
             .padding(.top, 20)
         }
     }
+    var navReverseRouteView:some View{
+        HStack{
+            Button {
+                if navReverseRoute=="false"{
+                    navReverseRoute = "true"
+                }else{
+                    navReverseRoute = "false"
+                }
+            } label: {
+                Text(navReverseRoute)
+            }
+        }
+    }
+    
     var navLoopRouteView:some View{
         HStack{
             Button {
@@ -316,6 +341,7 @@ struct SettingsView: View {
         navMaxCorrection = String(settings.navigation.maxCorrectionDeg)
         navPhoneHeadingMode = settings.navigation.phoneHeadingMode ? "true" : "false"
         navLoopRoute = settings.navigation.loopRoute ? "true" : "false"
+        navReverseRoute = settings.navigation.reverseRoute ? "true" : "false"
         
         simSpeed = String(settings.simulator.speed)
         simEnabled = settings.simulator.enabled ? "true" : "false"
@@ -339,6 +365,7 @@ struct SettingsView: View {
         settings.navigation.maxCorrectionDeg = Double(navMaxCorrection) ?? settings.navigation.defaultMaxCorrection
         settings.navigation.phoneHeadingMode = navPhoneHeadingMode == "true"
         settings.navigation.loopRoute = navLoopRoute == "true"
+        settings.navigation.reverseRoute = navReverseRoute == "true"
         
         settings.simulator.speed = Double(simSpeed) ?? settings.simulator.defaultSimSpeed
         let prevSimMode = settings.simulator.enabled

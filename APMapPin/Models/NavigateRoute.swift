@@ -28,6 +28,8 @@ class NavigateRoute : ObservableObject{
     private var navTimer:Timer?
     private var targetPin:MapPin?
     private var routeIndex:Int = -1
+    private var startIndex:Int = 0
+    private var endOfRoute:Bool = false
     private var settings:Settings = Settings()
     private var route:Route?
     private var lastLocation:CLLocation?
@@ -40,6 +42,22 @@ class NavigateRoute : ObservableObject{
     init(){
     }
     func StartNavigation(route:Route, fromIndex:Int = 0) -> Bool{
+        endOfRoute = false
+        startIndex = fromIndex
+        if settings.navigation.reverseRoute{
+            if startIndex == 0{
+                startIndex = route.routePointsArray.count-1
+            }
+            if startIndex==0{
+                endOfRoute = true
+            }
+        }
+        else{
+            if startIndex == route.routePointsArray.count-1{
+                endOfRoute = true
+            }
+        }
+        
         newTargetCourse = true
         timerCounter = 0
         closeToTarget = false
@@ -50,16 +68,9 @@ class NavigateRoute : ObservableObject{
         guard route.routePointsArray.count > 0 else {
             print("No points in the route array")
             return false}
-        routeIndex = fromIndex
+        routeIndex = startIndex
         targetPin = route.routePointsArray[routeIndex].pointPin
-        // skip over any shallow points
-        while (targetPin!.unwrappedType == "shallow"){
-            routeIndex = routeIndex + 1
-            if routeIndex == route.routePointsArray.count{
-                return false
-            }
-            targetPin = route.routePointsArray[routeIndex].pointPin
-        }
+
         route.routePointsArray[routeIndex].setTarget(enabled: true)
         targetPinLocation = CLLocation(latitude: targetPin!.latitude, longitude: targetPin!.longitude)
         desiredBearingToTarget = getBearingBetweenTwoPoints1(point1: lastLoc, point2: targetPinLocation!)
@@ -69,6 +80,45 @@ class NavigateRoute : ObservableObject{
         setTargetStats(lastLoc: lastLoc)
         navigateRoute()
         return true
+    }
+    
+    private func nextRouteIndex(){
+        if endOfRoute // we're looping
+        {
+            if settings.navigation.reverseRoute
+            {
+                if startIndex == 0{
+                    routeIndex = route!.routePointsArray.count-1
+                }else{
+                    routeIndex = startIndex
+                }
+                
+            }
+            else
+            {
+                routeIndex = startIndex
+            }
+            endOfRoute = false
+        }
+        else
+        {
+            if settings.navigation.reverseRoute
+            {
+                routeIndex -= 1
+                if routeIndex == 0
+                {
+                    endOfRoute = true
+                }
+            }
+            else
+            {
+                routeIndex += 1
+                if routeIndex == route!.routePointsArray.count-1
+                {
+                    endOfRoute = true
+                }
+            }
+        }
     }
     
     private func navigateRoute(){
@@ -84,10 +134,10 @@ class NavigateRoute : ObservableObject{
             // change sample time if setting has changed
             startNavTimer(interval: settings.navigation.intervalSeconds)
         }
-        //print("distToTarget: \(distToTarget!)m  arrivalZone: \(settings.navigation.arrivalZoneFeet)ft")
+        
         if distToTarget! < settings.navigation.arrivalZoneMeters{
             print("inside arrival zone")
-            if routeIndex == route!.routePointsArray.count - 1{
+            if endOfRoute{
                 if !settings.navigation.loopRoute{
                     route!.routePointsArray.last!.target = false
                     CancelNavigation()
@@ -99,11 +149,7 @@ class NavigateRoute : ObservableObject{
             route!.routePointsArray[routeIndex].target = false
             // If we're at the end of the route, we're looping,
             // so set the destination to the beginning of the route
-            if routeIndex == route!.routePointsArray.count - 1{
-                routeIndex = 0
-            }else{
-                routeIndex = routeIndex + 1
-            }
+            nextRouteIndex()
             route!.routePointsArray[routeIndex].target = true
             let fromPinLoc = targetPinLocation // save it to compute the desired heading
             targetPin = route!.routePointsArray[routeIndex].pointPin
