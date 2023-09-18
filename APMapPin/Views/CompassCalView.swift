@@ -24,7 +24,10 @@ struct CompassCalView: View{
     var settings:Settings = Settings()
     @State var headingString = ""
     @State var lastCalHeading = ""
+    @State var accuracyString = ""
     @State var locationString = ""
+    @State var sampleDistanceString = ""
+    @State var altitudeString = ""
     @State var speedString = ""
     @State var courseString = ""
     @State var apTarget = ""
@@ -34,6 +37,7 @@ struct CompassCalView: View{
     @State var getHeadingTimer:Timer?
     @State var invalidCourse:Bool = true
     @State var msgCount:Int = 0
+    @State var locationUpdateCount:Int = 0
     @State var accel:String = ""
     @State var gyro:String = ""
     @State var mag:String = ""
@@ -44,15 +48,25 @@ struct CompassCalView: View{
         VStack{
             HStack{
                 VStack(alignment: .leading){
-                    Text("Lat-Lon: \(locationString)")
-                    Text("Speed: \(speedString)")
-                    Text("Course: \(courseString)")
-                    Text("Device Heading: \(headingString)")
-                    Text("Last Cal Heading: \(lastCalHeading)")
-                    Text("")
-                    Text("AP Target: \(apTarget)")
-                    Text("AP Heading: \(apHeading)")
-                    Text("Msg Count: \(msgCount)")
+                    Group{
+                        Text("Loc Update Count: \(locationUpdateCount)")
+                        Text("Accuracy: \(accuracyString)")
+                        Text("SampleDistance: \(sampleDistanceString)")
+                        Text("Lat-Lon: \(locationString)")
+                        Text("Speed: \(speedString)")
+                    }
+                    Group{
+                        Text("Course: \(courseString)")
+                        Text("Altitude: \(altitudeString)")
+                        Text("Device Heading: \(headingString)")
+                        Text("Last Cal Heading: \(lastCalHeading)")
+                    }
+                    Group{
+                        Text("")
+                        Text("AP Target: \(apTarget)")
+                        Text("AP Heading: \(apHeading)")
+                        Text("Msg Count: \(msgCount)")
+                    }
                 }
                 Spacer()
             }
@@ -123,17 +137,27 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
     }
     
     func compassCalLocation(location: CLLocation) {
+        if lastLocation == nil{
+            lastLocation = location
+            return
+        }
+        locationUpdateCount += 1
+        let sampleDistance = location.distance(from: lastLocation!)
+        sampleDistanceString = "\(String(format:"%.1f",sampleDistance * feetInMeters))"
+        altitudeString = "\(String(format:"%.1f",location.altitude * feetInMeters))"
         lastLocation = location
+        
         let coord = location.coordinate
+        accuracyString = "\(String(format: "%.1f", location.horizontalAccuracy))"
         locationString = "\(String(format:"%.4f",coord.latitude)),\(String(format:"%.4f",coord.longitude))"
-        speedString = "\(String(format: "%.2f", lastLocation!.speed))"
-        invalidCourse=location.course == -1
-        courseString = "\(String(format: "%.2f", location.course))"
+        speedString = "\(String(format: "%.2f", location.speed * 2.23694))"
+        invalidCourse=location.course == -1 // used to enable/disable the course button
+        courseString = invalidCourse ? "Invalid" : "\(String(format: "%.1f", location.course))"
     }
     
     func compassCalHeading(heading: CLHeading) {
         lastHeading = heading
-        headingString = "\(String(format: "%.2f",heading.magneticHeading))"
+        headingString = "\(String(format: "%.2f",heading.trueHeading))"
         if settings.navigation.phoneHeadingMode{apTarget = headingString}
     }
     

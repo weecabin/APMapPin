@@ -8,6 +8,8 @@
 import Foundation
 import MapKit
 
+let feetInMeters:Double = 3.28084
+
 func getBearingBetweenTwoPoints1(point1 : CLLocationCoordinate2D, point2 : CLLocationCoordinate2D) -> Double{
     return getBearingBetweenTwoPoints1(
         point1: CLLocation(latitude: point1.latitude, longitude: point1.longitude),

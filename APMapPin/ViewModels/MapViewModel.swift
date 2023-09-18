@@ -54,13 +54,14 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     
     func initMap(ble:BLEManager, gvm:GlobalViewModel){
         if !mapInitialized{
-            checkLocationServicesIsOn()
-            mapInitialized = true
-            navigate.navCompleteDeletate = self
-            self.gvm = gvm
-            self.ble = ble
-            ble.mapMessageDelegate = self
-            gvm.stopNavigationDelegate = self
+            if checkLocationServicesIsOn(){
+                mapInitialized = true
+                navigate.navCompleteDeletate = self
+                self.gvm = gvm
+                self.ble = ble
+                ble.mapMessageDelegate = self
+                gvm.stopNavigationDelegate = self
+            }
         }
         UpdateView()
     }
@@ -501,15 +502,17 @@ extension MapViewModel{ // Location calls
         }
     }
     
-    func checkLocationServicesIsOn(){
+    func checkLocationServicesIsOn()->Bool{
         if CLLocationManager.locationServicesEnabled(){
             locationManager = CLLocationManager()
-            locationManager!.distanceFilter = 0.1
-            locationManager!.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager!.distanceFilter = 3
+            locationManager!.desiredAccuracy = kCLLocationAccuracyBestForNavigation
             locationManager!.delegate = self
+            return true
         }
         else{
             print("turn location services on")
+            return false
         }
     }
     
