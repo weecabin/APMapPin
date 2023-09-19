@@ -27,6 +27,9 @@ struct MapView: View {
         }
         .onAppear {
             mvm.initMap(ble:ble, gvm:gvm)
+            if mvm.locationManager==nil && mvm.locationServicesEnabled{
+                mvm.createLocationManager()
+            }
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -100,11 +103,11 @@ extension MapView{
                     } label: {
                         AddPinToRouteView()
                             .buttonStyle(.plain)
-                            .background(enableButton() ? .blue : .gray)
+                            .background(routeVisibleAndActive() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!enableButton())
+                    .disabled(!routeVisibleAndActive())
                     
                     Button {
                         if let route = mvm.cd.getRouteNamed(name: "Dropped", createIfNotFound: true){
@@ -114,11 +117,11 @@ extension MapView{
                     } label: {
                         AddLocationView()
                             .buttonStyle(.plain)
-                            .background(enableAddLocation() ? .blue : .gray)
+                            .background(goodLastLocation() ? .blue : .gray)
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
-                    .disabled(!enableAddLocation())
+                    .disabled(!goodLastLocation())
                     
                     Button {
                         if mvm.running{mvm.StopNavigation()}
@@ -173,7 +176,7 @@ extension MapView{
         }
     }
     
-    func enableButton()->Bool{
+    func routeVisibleAndActive()->Bool{
         for route in mvm.cd.savedRoutes{
             if route.visible && route.active{
                 return true
@@ -183,30 +186,33 @@ extension MapView{
     }
     
     func enableStartNavButton()->Bool{
-        if mvm.running {return true}
-        if !enableButton() || !gvm.apIsCalibrated{return false}
-        return true
+        if mvm.running {
+            print("running")
+            return true
+        }
+        if (mvm.settings.simulator.enabled || goodLastLocation() && gvm.apIsCalibrated) {return true}
+        return false
     }
     
     func navButtonCollor()->Color{
         if mvm.running{return .orange}
-        if !enableButton(){return .gray}
+        if !routeVisibleAndActive(){return .gray}
         if !gvm.apIsCalibrated{return .gray}
+        if !mvm.settings.simulator.enabled && !goodLastLocation(){return .gray}
         return .blue
     }
 
     func enablePinEdit()->Bool{
-        if !enableButton(){return false}
+        if !routeVisibleAndActive(){return false}
         return mvm.cd.selectedPinCount() == 1
     }
     
     func enableDeletePin()->Bool{
-        if !enableButton(){return false}
+        if !routeVisibleAndActive(){return false}
         return !mvm.running && mvm.cd.selectedPinCount()>0
     }
     
-    func enableAddLocation()->Bool{
-        if !enableButton(){return false}
+    func goodLastLocation()->Bool{
         if let loc = mvm.lastLocation{
             //print ("horiz accuracy: \(loc.horizontalAccuracy)")
             if loc.horizontalAccuracy < 10{

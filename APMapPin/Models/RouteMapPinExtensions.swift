@@ -40,10 +40,10 @@ extension MapPin : Comparable{
     }
     public var speedMph:Double{
         get{
-            return speed * 2.23694
+            return speed * mphInMetersPerSecond
         }
         set(speedInMph){
-            speed = speedInMph / 2.23694
+            speed = speedInMph / mphInMetersPerSecond
         }
     }
 }

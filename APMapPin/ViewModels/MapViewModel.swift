@@ -27,6 +27,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var locationManager : CLLocationManager?
     var navigate:NavigateRoute = NavigateRoute()
     var mapInitialized:Bool = false
+    var locationServicesEnabled = false
     
     var lastLocation:CLLocation?
     var lastDeviceHeading:CLHeading?
@@ -51,17 +52,16 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var breadCrumbTimer:Timer?
     var trackRoute:Route?
     var prevPhoneMode:Bool = false;
-    
+    var updateIn:Bool = false
     func initMap(ble:BLEManager, gvm:GlobalViewModel){
         if !mapInitialized{
-            if checkLocationServicesIsOn(){
-                mapInitialized = true
-                navigate.navCompleteDeletate = self
-                self.gvm = gvm
-                self.ble = ble
-                ble.mapMessageDelegate = self
-                gvm.stopNavigationDelegate = self
-            }
+            navigate.navCompleteDeletate = self
+            self.gvm = gvm
+            self.ble = ble
+            ble.mapMessageDelegate = self
+            gvm.stopNavigationDelegate = self
+            checkLocationServicesIsOn()
+            mapInitialized = true
         }
         UpdateView()
     }
@@ -69,6 +69,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     override init(){
         super.init()
         StartHeadingTimer()
+        StartLocationManagerTimer()
     }
 }
 
@@ -135,16 +136,12 @@ extension MapViewModel{ // Map Functions
     }
     
     func mapMessage(msg: String) {
-//        print("Watch msg: \(msg)")
         if let route = cd.getRouteNamed(name: "Dropped", createIfNotFound: true){
             route.visible = true
-//            print("Updating \(route.Name)")
             switch (msg){
             case "FishOn":
                 DispatchQueue.main.async {
-//                    print("in DispatchQueue")
                     if let loc = self.lastLocation{
-//                        print("Adding fish")
                         let pin = self.cd.addMapPin(name: "", location: loc, type: "fish")
                         self.cd.addPinToRoute(route: route, pin: pin)
                         self.UpdateView()
@@ -155,7 +152,6 @@ extension MapViewModel{ // Map Functions
                 break
             case "Shallow":
                 DispatchQueue.main.async {
-//                    print("Adding shallow")
                     if let loc = self.lastLocation{
                         let pin = self.cd.addMapPin(name: "", location: loc, type: "shallow")
                         self.cd.addPinToRoute(route: route, pin: pin)
@@ -273,7 +269,6 @@ extension MapViewModel{ // Navigation Functions
     }
     
     var running:Bool{
-//        print("running: \(navigate.running)")
         return navigate.running
     }
     
@@ -356,7 +351,6 @@ extension MapViewModel{ // Navigation Functions
         let courseError = HeadingError(target: navigate.desiredBearingToTarget!, actual: courseToTarget)
         pidController.NewError(error: courseError)
         var courseCorrection = pidController.Correction()
-//        var courseCorrection = settings.navigation.proportionalTerm * courseError
         
         let maxCorrection = settings.navigation.maxCorrectionDeg
         if courseCorrection! > maxCorrection {courseCorrection = maxCorrection}
@@ -370,14 +364,12 @@ extension MapViewModel{ // Navigation Functions
             simulatedLocation?.update()
             lastLocation = simulatedLocation?.getNewPosition()
             pin.course = simulatedLocation!.heading
-//            print(lastLocation)
             pin.latitude = lastLocation!.coordinate.latitude
             pin.longitude = lastLocation!.coordinate.longitude
             UpdateMapCenter()
-            //print("UpdateSimulatedLocation lastLocation = \(lastLocation!)")
             navigate.locationUpdate(location: lastLocation!)
             var speed = lastLocation!.speed
-            speed = (speed >= 0) ? speed * 2.23694 : 0
+            speed = (speed >= 0) ? speed * mphInMetersPerSecond : 0
             lastLocationSpeed =  String(format: "%.1f",speed)
             
             let course = lastLocation!.course
@@ -389,19 +381,16 @@ extension MapViewModel{ // Navigation Functions
     }
     
     func NavComplete() {
-//        print("in NavCompleteDelegate")
         StopBlinkTimer()
         if simPin != nil{
             simPin!.latitude = simStartLocation!.latitude
             simPin!.longitude = simStartLocation!.longitude
-//            print("nulling simPin")
             simPin = nil
         }
         if let route = activeRoute(){
             for point in route.routePointsArray{
                 point.selected = false
                 point.target = false
-//                point.pointPin!.type = "fix"
             }
         }
         gvm!.navType = .none
@@ -412,7 +401,6 @@ extension MapViewModel{ // Navigation Functions
     
     func editPinDismissed(){
         UpdateView();
-//        print("EditPinView dismissed")
     }
     
     func setSimPin(){
@@ -471,8 +459,6 @@ extension MapViewModel{ // Navigation Functions
         cd.selectedRoutePoints = []
         UpdateView()
     }
-    
-    
 }
 
 extension MapViewModel{ // Location calls
@@ -502,54 +488,109 @@ extension MapViewModel{ // Location calls
         }
     }
     
-    func checkLocationServicesIsOn()->Bool{
-        if CLLocationManager.locationServicesEnabled(){
-            locationManager = CLLocationManager()
-            locationManager!.distanceFilter = 3
-            locationManager!.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-            locationManager!.delegate = self
-            return true
-        }
-        else{
-            print("turn location services on")
-            return false
-        }
-    }
-    
-    private func checkLocationAuthorization(){
-        print("checkLocationAuthorization")
-        guard let locationManager = locationManager else {return}
-        
-        switch locationManager.authorizationStatus{
-            
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .restricted:
-            print("your location is restricted")
-        case .denied:
-            print("you have denied this app location priveliges")
-        case .authorizedAlways, .authorizedWhenInUse:
-            if let location = locationManager.location {
-                region = MKCoordinateRegion(center: mapInitialized ? region.center : location.coordinate,
-                                            span: region.span)
-                mapInitialized = true
-                locationManager.startUpdatingLocation()
-                locationManager.startUpdatingHeading()
-                locationManager.allowsBackgroundLocationUpdates = true
+    func StartLocationManagerTimer(){
+        headingTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { Timer in
+            if !self.locationServicesEnabled{
+                self.createLocationManager()
             }
-        @unknown default:
-            break
+            else
+            {
+                print("requesing heading")
+                self.updateIn = false
+                self.locationManager?.requestLocation()
+            }
         }
     }
     
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkLocationAuthorization()
+    func checkLocationServicesIsOn(){
+        print("****** in checkLocationServicesIsOn ******")
+        DispatchQueue.global().async {
+            if CLLocationManager.locationServicesEnabled(){
+                self.locationServicesEnabled = true
+                print("****** Enabled ******")
+            }
+            else{
+                self.locationServicesEnabled = false
+                print("****** Disabled ******")
+            }
+        }
+        
     }
     
+    func createLocationManager()
+    {
+        if locationManager == nil{
+            print("****** instantiating locationManager ******")
+            locationManager = CLLocationManager()
+            locationManager!.distanceFilter = kCLDistanceFilterNone
+//            locationManager!.distanceFilter = 3
+            locationManager!.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager!.delegate = self
+            locationManager!.showsBackgroundLocationIndicator = true
+            locationManager!.startUpdatingLocation()
+            locationManager!.startUpdatingHeading()
+            locationManager!.allowsBackgroundLocationUpdates = true
+        }
+    }
+    
+//    private func checkLocationAuthorization(){
+//        print("checkLocationAuthorization")
+//        guard let locationManager = locationManager else {return}
+//
+//        switch locationManager.authorizationStatus{
+//
+//        case .notDetermined:
+//            locationManager.requestWhenInUseAuthorization()
+//        case .restricted:
+//            print("your location is restricted")
+//        case .denied:
+//            print("you have denied this app location priveliges")
+//        case .authorizedAlways, .authorizedWhenInUse:
+//            if let location = locationManager.location {
+//                region = MKCoordinateRegion(center: mapInitialized ? region.center : location.coordinate,
+//                                            span: region.span)
+//                //mapInitialized = true
+//                locationManager.startUpdatingLocation()
+//                locationManager.startUpdatingHeading()
+//                locationManager.allowsBackgroundLocationUpdates = true
+//            }
+//        @unknown default:
+//            break
+//        }
+//    }
+    
+//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+//        print("****** in locationManagerDidChangeAuthorization ******")
+//    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("location error")
+    }
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        print("in locationManager - didUpdateLocations")
-        guard let location = locations.last else {return}
-        if settings.simulator.enabled {return}
+        print("\nin locationManager - didUpdateLocations")
+        if !mapInitialized{
+            print("Map not initialized")
+            return
+            
+        }
+        guard let location = locations.last else {
+            print("invalid location")
+            return
+        }
+        if settings.simulator.enabled {
+            print("simulator enabled")
+            return
+        }
+        if location.horizontalAccuracy == -1 {
+            print("invalid horizontal accuracy")
+            return
+        }
+        if updateIn{
+            return
+        }
+        print("processing location")
+        updateIn = true
         lastLocation = location
         if gvm!.compassCalLocationDelegate != nil{
             gvm!.compassCalLocationDelegate!.compassCalLocation(location: location)
@@ -558,7 +599,7 @@ extension MapViewModel{ // Location calls
 //        print("calling navigate.locationUpdate")
         navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
-        speed = (speed >= 0) ? speed * 2.23694 : 0
+        speed = (speed >= 0) ? speed * mphInMetersPerSecond : 0
         lastLocationSpeed =  String(format: "%.1f",speed)
         
         let heading = lastLocation!.course
@@ -568,7 +609,8 @@ extension MapViewModel{ // Location calls
     
     func locationManager(_ manager: CLLocationManager,
                          didUpdateHeading newHeading: CLHeading){
-//        print("newHeading: \(newHeading.trueHeading)")
+        if !mapInitialized{return}
+        print("newHeading: \(newHeading.trueHeading)")
         lastDeviceHeading = newHeading
         if gvm!.compassCalHeadingDelegate != nil{
             gvm!.compassCalHeadingDelegate!.compassCalHeading(heading: newHeading)

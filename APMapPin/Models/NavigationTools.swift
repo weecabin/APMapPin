@@ -9,6 +9,7 @@ import Foundation
 import MapKit
 
 let feetInMeters:Double = 3.28084
+let mphInMetersPerSecond:Double = 2.23694
 
 func getBearingBetweenTwoPoints1(point1 : CLLocationCoordinate2D, point2 : CLLocationCoordinate2D) -> Double{
     return getBearingBetweenTwoPoints1(
@@ -99,7 +100,7 @@ class SimulatedLocation{
         if let prevCoord = prevLocation?.coordinate{
             let now = Date.now
             let interval:Double = now.timeIntervalSince(prevLocation!.timestamp)
-            let speedInMetersPerSec = settings.simulator.speed / 2.23694 // converting mph to m/s
+            let speedInMetersPerSec = settings.simulator.speed / mphInMetersPerSecond // converting mph to m/s
             let distanceTraveled = Float(speedInMetersPerSec * interval)
             let windPush:Double = (Double(distanceTraveled) * settings.simulator.windPercent * 0.01) / metersPerLatitude// for now wind is always from the south
 //            print("distance: \(distanceTraveled) windPush: \(windPush)")

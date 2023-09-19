@@ -38,11 +38,11 @@ struct CompassCalView: View{
     @State var invalidCourse:Bool = true
     @State var msgCount:Int = 0
     @State var locationUpdateCount:Int = 0
-    @State var accel:String = ""
-    @State var gyro:String = ""
-    @State var mag:String = ""
-    @State var accelRadius:String = ""
-    @State var magRadius:String = ""
+//    @State var accel:String = ""
+//    @State var gyro:String = ""
+//    @State var mag:String = ""
+//    @State var accelRadius:String = ""
+//    @State var magRadius:String = ""
     
     var body: some View {
         VStack{
@@ -143,16 +143,16 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
         }
         locationUpdateCount += 1
         let sampleDistance = location.distance(from: lastLocation!)
-        sampleDistanceString = "\(String(format:"%.1f",sampleDistance * feetInMeters))"
+        sampleDistanceString = "\(String(format:"%.4f",sampleDistance * feetInMeters))"
         altitudeString = "\(String(format:"%.1f",location.altitude * feetInMeters))"
-        lastLocation = location
-        
         let coord = location.coordinate
         accuracyString = "\(String(format: "%.1f", location.horizontalAccuracy))"
         locationString = "\(String(format:"%.4f",coord.latitude)),\(String(format:"%.4f",coord.longitude))"
-        speedString = "\(String(format: "%.2f", location.speed * 2.23694))"
+        speedString = "\(String(format: "%.2f", location.speed * mphInMetersPerSecond))"
         invalidCourse=location.course == -1 // used to enable/disable the course button
         courseString = invalidCourse ? "Invalid" : "\(String(format: "%.1f", location.course))"
+        print(accuracyString,sampleDistanceString,altitudeString,locationString,speedString,courseString)
+        lastLocation = location
     }
     
     func compassCalHeading(heading: CLHeading) {
