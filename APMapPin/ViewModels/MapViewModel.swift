@@ -490,6 +490,7 @@ extension MapViewModel{ // Location calls
     
     func StartLocationManagerTimer(){
         headingTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { Timer in
+            printTimeStamp(prefix: "\nLocTimer:", format: "ss.SSS")
             if !self.locationServicesEnabled{
                 self.createLocationManager()
             }
@@ -526,49 +527,19 @@ extension MapViewModel{ // Location calls
 //            locationManager!.distanceFilter = 3
             locationManager!.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager!.delegate = self
+            locationManager!.allowsBackgroundLocationUpdates = true
             locationManager!.showsBackgroundLocationIndicator = true
             locationManager!.startUpdatingLocation()
             locationManager!.startUpdatingHeading()
-            locationManager!.allowsBackgroundLocationUpdates = true
         }
     }
-    
-//    private func checkLocationAuthorization(){
-//        print("checkLocationAuthorization")
-//        guard let locationManager = locationManager else {return}
-//
-//        switch locationManager.authorizationStatus{
-//
-//        case .notDetermined:
-//            locationManager.requestWhenInUseAuthorization()
-//        case .restricted:
-//            print("your location is restricted")
-//        case .denied:
-//            print("you have denied this app location priveliges")
-//        case .authorizedAlways, .authorizedWhenInUse:
-//            if let location = locationManager.location {
-//                region = MKCoordinateRegion(center: mapInitialized ? region.center : location.coordinate,
-//                                            span: region.span)
-//                //mapInitialized = true
-//                locationManager.startUpdatingLocation()
-//                locationManager.startUpdatingHeading()
-//                locationManager.allowsBackgroundLocationUpdates = true
-//            }
-//        @unknown default:
-//            break
-//        }
-//    }
-    
-//    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-//        print("****** in locationManagerDidChangeAuthorization ******")
-//    }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("location error")
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("\nin locationManager - didUpdateLocations")
+        printTimeStamp(prefix: "lm update:", format: "ss.SSS")
         if !mapInitialized{
             print("Map not initialized")
             return
@@ -587,7 +558,8 @@ extension MapViewModel{ // Location calls
             return
         }
         if updateIn{
-            return
+            print("spurious update")
+//            return
         }
         print("processing location")
         updateIn = true
@@ -610,10 +582,40 @@ extension MapViewModel{ // Location calls
     func locationManager(_ manager: CLLocationManager,
                          didUpdateHeading newHeading: CLHeading){
         if !mapInitialized{return}
-        print("newHeading: \(newHeading.trueHeading)")
+//        print("newHeading: \(newHeading.trueHeading)")
         lastDeviceHeading = newHeading
         if gvm!.compassCalHeadingDelegate != nil{
             gvm!.compassCalHeadingDelegate!.compassCalHeading(heading: newHeading)
         }
     }
+    
+    //    private func checkLocationAuthorization(){
+    //        print("checkLocationAuthorization")
+    //        guard let locationManager = locationManager else {return}
+    //
+    //        switch locationManager.authorizationStatus{
+    //
+    //        case .notDetermined:
+    //            locationManager.requestWhenInUseAuthorization()
+    //        case .restricted:
+    //            print("your location is restricted")
+    //        case .denied:
+    //            print("you have denied this app location priveliges")
+    //        case .authorizedAlways, .authorizedWhenInUse:
+    //            if let location = locationManager.location {
+    //                region = MKCoordinateRegion(center: mapInitialized ? region.center : location.coordinate,
+    //                                            span: region.span)
+    //                //mapInitialized = true
+    //                locationManager.startUpdatingLocation()
+    //                locationManager.startUpdatingHeading()
+    //                locationManager.allowsBackgroundLocationUpdates = true
+    //            }
+    //        @unknown default:
+    //            break
+    //        }
+    //    }
+        
+    //    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    //        print("****** in locationManagerDidChangeAuthorization ******")
+    //    }
 }

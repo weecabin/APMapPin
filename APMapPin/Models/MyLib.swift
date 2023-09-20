@@ -266,6 +266,15 @@ func getLatLon(gpxStr:String)->GpxRoute
     }
     return rr
 }
+
+func printTimeStamp(prefix:String,format:String = "yyyy-MM-dd HH:mm:ss.SSS"){
+    let date = Date()
+    let formatter = DateFormatter()
+    formatter.dateFormat = format
+    let dateString = formatter.string(from: date)
+    print(prefix,dateString)
+}
+
 let CMD_LOCK = Character(UnicodeScalar(1))
 let CMD_DELTA_LEFT = Character(UnicodeScalar(2))
 let CMD_DELTA_RIGHT = Character(UnicodeScalar(3))
