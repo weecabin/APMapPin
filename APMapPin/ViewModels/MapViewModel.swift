@@ -483,7 +483,7 @@ extension MapViewModel{ // Location calls
     }
     
     func StartHeadingTimer(){
-        headingTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { Timer in
+        headingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { Timer in
             self.sendHeadingToAp()
         }
     }
@@ -498,7 +498,9 @@ extension MapViewModel{ // Location calls
             {
                 print("requesing heading")
                 self.updateIn = false
-                self.locationManager?.requestLocation()
+//                self.locationManager!.stopUpdatingLocation()
+//                self.locationManager!.startUpdatingLocation()
+                self.locationManager!.requestLocation()
             }
         }
     }
@@ -529,7 +531,7 @@ extension MapViewModel{ // Location calls
             locationManager!.delegate = self
             locationManager!.allowsBackgroundLocationUpdates = true
             locationManager!.showsBackgroundLocationIndicator = true
-            locationManager!.startUpdatingLocation()
+//            locationManager!.startUpdatingLocation()
             locationManager!.startUpdatingHeading()
         }
     }
@@ -558,17 +560,17 @@ extension MapViewModel{ // Location calls
             return
         }
         if updateIn{
-            print("spurious update")
-//            return
+            print("ignoring extra updates")
+            return // commented this out to see if spurious updates are different
         }
         print("processing location")
+        manager.stopUpdatingLocation()
         updateIn = true
         lastLocation = location
         if gvm!.compassCalLocationDelegate != nil{
             gvm!.compassCalLocationDelegate!.compassCalLocation(location: location)
         }
         UpdateMapCenter()
-//        print("calling navigate.locationUpdate")
         navigate.locationUpdate(location: lastLocation!)
         var speed = lastLocation!.speed
         speed = (speed >= 0) ? speed * mphInMetersPerSecond : 0

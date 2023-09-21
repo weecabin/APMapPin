@@ -229,6 +229,7 @@ extension StringProtocol  {
 }
 
 struct LatLon{
+    var fixName:String="fix"
     var lat:Double
     var lon:Double
 }
@@ -247,22 +248,34 @@ func getLatLon(gpxStr:String)->GpxRoute
 {
     var rr:GpxRoute = GpxRoute()
     
-    let name = gpxStr.substring(from: "<rte><name>",upTo:"</name>")
-    rr.Name = String(name ?? "error")
-    
-    var latlon = gpxStr.substring(from: "</time>")
-    while let ll = latlon?.substring(from: "<rtept"){
-        let lat = ll.substring(from: " lat=\"", upTo: "\"")
-        let lon = ll.substring(from: "lon=\"", upTo: "\"")
-        if (lat != nil && lon != nil)
-        {
-            rr.latLon.append( LatLon(lat:Double(lat!)!,lon:Double(lon!)!))
+    if let name = gpxStr.substring(from: "<rte><name>",upTo:"</name>")
+    {
+        rr.Name = String(name)
+        var latlon = gpxStr.substring(from: "</time>")
+        while let ll = latlon?.substring(from: "<rtept"){
+            let lat = ll.substring(from: " lat=\"", upTo: "\"")
+            let lon = ll.substring(from: "lon=\"", upTo: "\"")
+            if (lat != nil && lon != nil)
+            {
+                rr.latLon.append( LatLon(lat:Double(lat!)!,lon:Double(lon!)!))
+            }
+            else
+            {
+                break
+            }
+            latlon = ll
         }
-        else
-        {
-            break
-        }
-        latlon = ll
+        return rr
+    }
+    // Must be a single waypoint return it as a route called waypoints
+    rr.Name = String("Waypoints")
+    if let ll = gpxStr.substring(from: "<wpt"),
+       let lat = ll.substring(from: "lat=\"", upTo: "\""),
+       let lon = ll.substring(from: "lon=\"", upTo: "\""),
+       let fixName = ll.substring(from: "<name>",upTo: "<")
+    {
+        rr.latLon.append(LatLon(fixName:String(fixName),lat:Double(lat)!,lon:Double(lon)!))
+        return rr
     }
     return rr
 }

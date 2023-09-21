@@ -88,15 +88,23 @@ func AddCpxRoute(url:URL)
         let gpxStr = try String(contentsOf: url, encoding: .utf8)
         print(gpxStr)
         let gpxRoute = getLatLon(gpxStr:gpxStr)
-        if (cd.getRouteNamed(name: gpxRoute.Name) == nil)
+        if let testRoute = cd.getRouteNamed(name: gpxRoute.Name)
+        {
+            if (gpxRoute.Name != "Waypoints") // if it's not a waypoint, delete the route
+            {
+                cd.deleteRoute(route: testRoute)
+                cd.addRoute(name: gpxRoute.Name)
+            }
+        }
+        else // the route didn't exist, so add it
         {
             cd.addRoute(name: gpxRoute.Name)
-            for ll in gpxRoute.latLon{
-                let pin = cd.addMapPin(name: "fix", latitude: ll.lat, longitude: ll.lon, type: "fix")
-                let route = cd.getRouteNamed(name: gpxRoute.Name)!
-                route.visible = true
-                cd.addPinToRoute(route: route, pin:pin )
-            }
+        }
+        for ll in gpxRoute.latLon{
+            let pin = cd.addMapPin(name: ll.fixName, latitude: ll.lat, longitude: ll.lon, type: "fix")
+            let route = cd.getRouteNamed(name: gpxRoute.Name)!
+            route.visible = true
+            cd.addPinToRoute(route: route, pin:pin )
         }
     }
     catch {print("Gpx load error")}
