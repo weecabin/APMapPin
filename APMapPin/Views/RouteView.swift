@@ -35,7 +35,6 @@ struct RouteView_Previews: PreviewProvider {
         NavigationView{
             RouteView()
         }
-        .environmentObject(MapPinViewModel())
         .previewInterfaceOrientation(.portraitUpsideDown)
     }
 }

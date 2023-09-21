@@ -230,8 +230,8 @@
 				91047ECE27EA2DA5004B6070 /* MapPinViewModel.swift */,
 				91298EE827EDC2F000A20C36 /* MapAnnotationView.swift */,
 				91298EEC27EDC3D000A20C36 /* MapViewModel.swift */,
-				91B40B172805F9CF004B5955 /* APConfigViewModel.swift */,
 				91B40B1B2805FAC6004B5955 /* GlobalViewModel.swift */,
+				91B40B172805F9CF004B5955 /* APConfigViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";

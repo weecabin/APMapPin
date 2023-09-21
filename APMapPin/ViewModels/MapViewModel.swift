@@ -496,10 +496,8 @@ extension MapViewModel{ // Location calls
             }
             else
             {
-                print("requesing heading")
+                print("requesing location")
                 self.updateIn = false
-//                self.locationManager!.stopUpdatingLocation()
-//                self.locationManager!.startUpdatingLocation()
                 self.locationManager!.requestLocation()
             }
         }

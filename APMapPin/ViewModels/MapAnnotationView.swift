@@ -162,6 +162,9 @@ struct MapAnnotationView_Previews: PreviewProvider {
                     AnnotationView(type:"fish",label:"fish",rotate: -1)
                     Text("X")
                 }
+                ZStack{
+                    AnnotationView(type:"track",label:"track",rotate: 45)
+                }
             }
             VStack{
                 ZStack{
