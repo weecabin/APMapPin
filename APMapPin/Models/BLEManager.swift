@@ -287,7 +287,7 @@ extension BLEManager{
               return
               }
           }
-//        print("writeOutgoingValue error")
+        print("writeOutgoingValue error")
       }
 }
 

@@ -52,7 +52,7 @@ class MapViewModel : NSObject, ObservableObject, CLLocationManagerDelegate, NavC
     var breadCrumbTimer:Timer?
     var trackRoute:Route?
     var prevPhoneMode:Bool = false;
-    var updateIn:Bool = false
+    
     func initMap(ble:BLEManager, gvm:GlobalViewModel){
         if !mapInitialized{
             navigate.navCompleteDeletate = self
@@ -482,7 +482,7 @@ extension MapViewModel{ // Location calls
         }
     }
     
-    func StartHeadingTimer(){
+    func StartHeadingTimer(){ // used in phone heading mode
         headingTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { Timer in
             self.sendHeadingToAp()
         }
@@ -490,16 +490,12 @@ extension MapViewModel{ // Location calls
     
     func StartLocationManagerTimer(){
         headingTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { Timer in
-            printTimeStamp(prefix: "\nLocTimer:", format: "ss.SSS")
+//            printTimeStamp(prefix: "\nLocTimer:", format: "ss.SSS")
             if !self.locationServicesEnabled{
                 self.createLocationManager()
+                self.headingTimer?.invalidate()
             }
-            else
-            {
-                print("requesing location")
-                self.updateIn = false
-                self.locationManager!.requestLocation()
-            }
+
         }
     }
     
@@ -525,11 +521,12 @@ extension MapViewModel{ // Location calls
             locationManager = CLLocationManager()
             locationManager!.distanceFilter = kCLDistanceFilterNone
 //            locationManager!.distanceFilter = 3
-            locationManager!.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager!.delegate = self
+            locationManager!.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+            locationManager!.activityType = CLActivityType.otherNavigation
             locationManager!.allowsBackgroundLocationUpdates = true
             locationManager!.showsBackgroundLocationIndicator = true
-//            locationManager!.startUpdatingLocation()
+            locationManager!.delegate = self
+            locationManager!.startUpdatingLocation()
             locationManager!.startUpdatingHeading()
         }
     }
@@ -543,7 +540,6 @@ extension MapViewModel{ // Location calls
         if !mapInitialized{
             print("Map not initialized")
             return
-            
         }
         guard let location = locations.last else {
             print("invalid location")
@@ -557,13 +553,7 @@ extension MapViewModel{ // Location calls
             print("invalid horizontal accuracy")
             return
         }
-        if updateIn{
-            print("ignoring extra updates")
-            return // commented this out to see if spurious updates are different
-        }
         print("processing location")
-        manager.stopUpdatingLocation()
-        updateIn = true
         lastLocation = location
         if gvm!.compassCalLocationDelegate != nil{
             gvm!.compassCalLocationDelegate!.compassCalLocation(location: location)
