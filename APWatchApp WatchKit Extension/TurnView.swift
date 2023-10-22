@@ -78,8 +78,6 @@ struct TurnView: View {
             vm.onTurnViewAppear()
         }
     }
-    
-    
 }
 
 struct ContentView_Previews: PreviewProvider {

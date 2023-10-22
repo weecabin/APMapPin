@@ -25,6 +25,8 @@ struct CompassCalView: View{
     @State var headingString = ""
     @State var lastCalHeading = ""
     @State var accuracyString = ""
+    @State var startLocationString = ""
+    @State var totalDistanceString = ""
     @State var locationString = ""
     @State var sampleDistanceString = ""
     @State var altitudeString = ""
@@ -38,6 +40,9 @@ struct CompassCalView: View{
     @State var invalidCourse:Bool = true
     @State var msgCount:Int = 0
     @State var locationUpdateCount:Int = 0
+    @State var startLocation:CLLocation?
+
+    
 //    @State var accel:String = ""
 //    @State var gyro:String = ""
 //    @State var mag:String = ""
@@ -48,11 +53,18 @@ struct CompassCalView: View{
         VStack{
             HStack{
                 VStack(alignment: .leading){
+                    Group{ // debug group
+                        Text("UpdateCount: \(locationUpdateCount)")
+                        Text("Accuracy:    \(accuracyString)")
+                        Text("StartLoc:     \(startLocationString)")
+                        Text("CurrentLoc:  \(locationString)")
+                        Text("TotalDist:    \(totalDistanceString)")
+                        Text("SampleDist:  \(sampleDistanceString)")
+                    }
                     Group{
-                        Text("Loc Update Count: \(locationUpdateCount)")
-                        Text("Accuracy: \(accuracyString)")
-                        Text("SampleDistance: \(sampleDistanceString)")
-                        Text("Lat-Lon: \(locationString)")
+                        
+                        
+                        
                         Text("Speed: \(speedString)")
                     }
                     Group{
@@ -141,17 +153,32 @@ extension CompassCalView: CompassCalLocationDelegate, CompassCalHeadingDelegate,
             lastLocation = location
             return
         }
+        if startLocation == nil{
+            startLocation = location
+        }
         locationUpdateCount += 1
+        let totalDistance = location.distance(from: startLocation!)
+        totalDistanceString = "\(String(format:"%.4f",totalDistance * feetInMeters))"
+        
         let sampleDistance = location.distance(from: lastLocation!)
         sampleDistanceString = "\(String(format:"%.4f",sampleDistance * feetInMeters))"
+        
         altitudeString = "\(String(format:"%.1f",location.altitude * feetInMeters))"
-        let coord = location.coordinate
+        
+        var coord = location.coordinate
+        locationString = "\(String(format:"%.6f",coord.latitude)),\(String(format:"%.6f",coord.longitude))"
+        
+        coord = startLocation!.coordinate
+        startLocationString = "\(String(format:"%.6f",coord.latitude)),\(String(format:"%.6f",coord.longitude))"
+        
         accuracyString = "\(String(format: "%.1f", location.horizontalAccuracy))"
-        locationString = "\(String(format:"%.4f",coord.latitude)),\(String(format:"%.4f",coord.longitude))"
+        
         speedString = "\(String(format: "%.2f", location.speed * mphInMetersPerSecond))"
+        
         invalidCourse=location.course == -1 // used to enable/disable the course button
         courseString = invalidCourse ? "Invalid" : "\(String(format: "%.1f", location.course))"
-        print(accuracyString,sampleDistanceString,altitudeString,locationString,speedString,courseString)
+        
+        print(accuracyString,sampleDistanceString,totalDistanceString,altitudeString,locationString,speedString,courseString)
         lastLocation = location
     }
     
